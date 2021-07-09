@@ -44,16 +44,20 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Color(0xFF22262B),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.trip_origin_rounded),
-            label: 'Trip',
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.savings_sharp),
-            label: 'Savings',
+            icon: Icon(Icons.people),
+            label: 'Consult',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.data_saver_on_rounded),
-            label: 'Database',
+            icon: Icon(Icons.chat_bubble_rounded),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Account',
           ),
         ],
         currentIndex: selectedPage,
