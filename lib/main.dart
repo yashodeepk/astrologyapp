@@ -2,6 +2,7 @@ import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:astrologyapp/pages/ChatPage.dart';
 import 'package:astrologyapp/pages/ConsultPage.dart';
 import 'package:astrologyapp/pages/HomePage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       home: MyHomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -41,23 +43,28 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Color(0xFF03ADC6),
-        backgroundColor: Color(0xFF22262B),
+        unselectedItemColor: Colors.white,
+        elevation: 0,
+        //fixedColor: Color(0xff22262B),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
+              icon: Icon(Icons.home),
+              label: 'Horoscope',
+              backgroundColor: Color(0xff22262B)),
           BottomNavigationBarItem(
-            icon: Icon(Icons.people),
+            icon: Icon(CupertinoIcons.person_2_fill),
             label: 'Consult',
+            backgroundColor: Color(0xFF22262B),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_rounded),
+            icon: Icon(CupertinoIcons.chat_bubble_2_fill),
             label: 'Chat',
+            backgroundColor: Color(0xFF22262B),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Account',
+            backgroundColor: Color(0xFF22262B),
           ),
         ],
         currentIndex: selectedPage,

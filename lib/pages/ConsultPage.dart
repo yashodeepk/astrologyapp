@@ -14,27 +14,27 @@ class _ConsultWidgetState extends State<ConsultWidget> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Color(0xFFFFDD00),
+        backgroundColor: Color(0xFF22262B),
         automaticallyImplyLeading: false,
         title: Text(
           'Consult',
           style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
             fontSize: 24,
           ),
         ),
         actions: [],
         centerTitle: true,
-        elevation: 8,
+        elevation: 0,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFF22262B),
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
             child: ListView(
-              padding: EdgeInsets.zero,
+              padding: EdgeInsets.all(10),
               scrollDirection: Axis.vertical,
               children: [
                 Padding(
@@ -57,7 +57,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.asset(
-                                  'assets/images/512x512bb.jpg',
+                                  'assets/bro.jpg',
                                   width: 74,
                                   height: 74,
                                   fit: BoxFit.cover,
@@ -71,63 +71,69 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                             padding: EdgeInsets.fromLTRB(8, 1, 0, 0),
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    Text(
-                                      'Shivam Karle',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
+                                    Container(
+                                      padding:
+                                          EdgeInsets.fromLTRB(10, 10, 0, 0),
+                                      child: Text(
+                                        'Shivam Karle',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
                                       ),
                                     )
                                   ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 5, 110, 5),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Icon(
-                                          Icons.star_rate,
-                                          color: Color(0xFFFFD700),
-                                          size: 24,
-                                        ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(5),
+                                      child: Icon(
+                                        Icons.star_rate,
+                                        color: Color(0xFFFFD700),
+                                        size: 24,
                                       ),
-                                      Expanded(
-                                        child: Icon(
-                                          Icons.star_rate,
-                                          color: Color(0xFFFFD700),
-                                          size: 24,
-                                        ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(5),
+                                      child: Icon(
+                                        Icons.star_rate,
+                                        color: Color(0xFFFFD700),
+                                        size: 24,
                                       ),
-                                      Expanded(
-                                        child: Icon(
-                                          Icons.star_rate,
-                                          color: Color(0xFFFFD700),
-                                          size: 24,
-                                        ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(5),
+                                      child: Icon(
+                                        Icons.star_rate,
+                                        color: Color(0xFFFFD700),
+                                        size: 24,
                                       ),
-                                      Expanded(
-                                        child: Icon(
-                                          Icons.star_rate,
-                                          color: Color(0xFFFFD700),
-                                          size: 24,
-                                        ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(5),
+                                      child: Icon(
+                                        Icons.star_rate,
+                                        color: Color(0xFFFFD700),
+                                        size: 24,
                                       ),
-                                      Expanded(
-                                        child: Icon(
-                                          Icons.star_rate,
-                                          color: Color(0xFFFFD700),
-                                          size: 24,
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.all(5),
+                                      child: Icon(
+                                        Icons.star_rate,
+                                        color: Color(0xFFFFD700),
+                                        size: 24,
+                                      ),
+                                    )
+                                  ],
                                 ),
                                 Row(
                                   mainAxisSize: MainAxisSize.max,
@@ -143,34 +149,32 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                                     )
                                   ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                Expanded(
                                   child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                        child: Text(
-                                          'Fess  -',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                        child: Text(
-                                          '5 Rs/min',
-                                          style: TextStyle(
-                                            color: Color(0xFFFFDD00),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'Fess  - ',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            Text(
+                                              ' ₹',
+                                              style: TextStyle(
+                                                color: Color(0xFF22262B),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                       TextButton.icon(
@@ -184,7 +188,8 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                                         ),
                                         style: TextButton.styleFrom(
                                           fixedSize: Size(150, 40),
-                                          primary: Color(0xFF4C3CB0),
+                                          primary: Colors.white,
+                                          backgroundColor: Color(0xFF4C3CB0),
                                           textStyle: TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.normal,
@@ -212,7 +217,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                                 padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
                                 child: Icon(
                                   Icons.arrow_forward_ios,
-                                  color: Colors.white,
+                                  color: Color(0xff22262B),
                                   size: 24,
                                 ),
                               ),

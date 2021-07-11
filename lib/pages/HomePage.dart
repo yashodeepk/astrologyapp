@@ -18,42 +18,41 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
         child: AppBar(
-          backgroundColor: Color(0xFFFFDD00),
+          backgroundColor: Color(0xFF22262B),
           automaticallyImplyLeading: false,
           flexibleSpace: Align(
             alignment: Alignment(0, 0.5),
             child: Text(
               'Horoscope',
               style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
                 fontSize: 24,
               ),
             ),
           ),
           actions: [],
-          elevation: 2,
+          elevation: 0,
         ),
       ),
-      backgroundColor: Colors.white,
-      floatingActionButton: FloatingActionButton.extended(
+      backgroundColor: Color(0xFF22262B),
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           print('FloatingActionButton pressed ...');
         },
-        backgroundColor: Color(0xFFFFDD00),
-        icon: Icon(
+        backgroundColor: Color(0xFF03DAC6),
+        child: Icon(
           Icons.edit,
           color: Colors.black,
         ),
         elevation: 8,
-        label: Container(),
       ),
       body: SafeArea(
         child: Container(
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Color(0xff22262B),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -73,7 +72,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         shape: BoxShape.circle,
                       ),
                       child: Image.asset(
-                        'assets/images/1.png',
+                        'assets/1.png',
                         fit: BoxFit.fitHeight,
                       ),
                     ),
@@ -82,8 +81,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       child: Text(
                         'LOL',
                         style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
                           fontSize: 20,
                         ),
                       ),
@@ -96,8 +95,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 child: Text(
                   'Shivam',
                   style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
                     fontSize: 24,
                   ),
                 ),
@@ -109,11 +108,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   height: 350,
                   decoration: BoxDecoration(
                     color: Color(0xFF03DAC6),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xFF82878C),
-                      )
-                    ],
                     borderRadius: BorderRadius.circular(72),
                     border: Border.all(
                       color: Colors.black,
@@ -129,7 +123,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           children: [
                             Icon(
                               Icons.circle,
-                              color: Color(0xFFFFDD00),
+                              color: Color(0xFF22262B),
                               size: 28,
                             ),
                             Padding(
@@ -137,7 +131,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               child: AutoSizeText(
                                 'Daily Horoscope',
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: Color(0xFF22262B),
                                   fontWeight: FontWeight.w600,
                                   fontSize: 26,
                                 ),
@@ -153,7 +147,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           children: [
                             Icon(
                               Icons.done,
-                              color: Color(0xFFFFDD00),
+                              color: Color(0xFF22262B),
                               size: 24,
                             ),
                             Padding(
@@ -161,7 +155,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               child: AutoSizeText(
                                 'you will rock today',
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: Color(0xFF22262B),
                                   fontWeight: FontWeight.w600,
                                   fontSize: 24,
                                 ),
@@ -177,7 +171,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           children: [
                             Icon(
                               Icons.done,
-                              color: Color(0xFFFFDD00),
+                              color: Color(0xFF22262B),
                               size: 24,
                             ),
                             Padding(
@@ -185,7 +179,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               child: AutoSizeText(
                                 'you will rock today',
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: Color(0xFF22262B),
                                   fontWeight: FontWeight.w600,
                                   fontSize: 24,
                                 ),
@@ -201,7 +195,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           children: [
                             Icon(
                               Icons.done,
-                              color: Color(0xFFFFDD00),
+                              color: Color(0xFF22262B),
                               size: 24,
                             ),
                             Padding(
@@ -209,7 +203,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               child: AutoSizeText(
                                 'you will rock today',
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: Color(0xFF22262B),
                                   fontWeight: FontWeight.w600,
                                   fontSize: 24,
                                 ),

@@ -12,7 +12,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFF22262B),
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -24,7 +24,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                   width: MediaQuery.of(context).size.width,
                   height: 210,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color(0xFF22262B),
                     border: Border.all(
                       color: Colors.transparent,
                     ),
@@ -47,7 +47,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                     decoration: BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black,
+                                          color: Colors.white,
                                         )
                                       ],
                                       gradient: LinearGradient(
@@ -74,7 +74,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                         shape: BoxShape.circle,
                                       ),
                                       child: Image.asset(
-                                        'assets/images/512x512bb.jpg',
+                                        'assets/bro.jpg',
                                       ),
                                     ),
                                   ),
@@ -84,8 +84,8 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                   child: Text(
                                     'Shivam Karle',
                                     style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      color: Colors.black,
+                                      fontSize: 24,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
@@ -97,8 +97,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                       'Shivam.Karle@gmail.com',
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        color: Colors.black,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -124,8 +123,8 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                       child: Text(
                         'Account Settings',
                         style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
                           fontSize: 16,
                         ),
                       ),
@@ -146,7 +145,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                         width: MediaQuery.of(context).size.width,
                         height: 50,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Color(0xFF22262B),
                           shape: BoxShape.rectangle,
                           border: Border.all(
                             color: Colors.transparent,
@@ -160,9 +159,9 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                               child: Text(
                                 'Payment History',
                                 style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15,
                                 ),
                               ),
                             ),
@@ -171,7 +170,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                 alignment: Alignment(0.9, 0),
                                 child: Icon(
                                   Icons.arrow_forward_ios,
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   size: 18,
                                 ),
                               ),
@@ -188,7 +187,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                         width: MediaQuery.of(context).size.width,
                         height: 50,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Color(0xFF22262B),
                           shape: BoxShape.rectangle,
                           border: Border.all(
                             color: Colors.transparent,
@@ -202,9 +201,9 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                               child: Text(
                                 'Meetings History',
                                 style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15,
                                 ),
                               ),
                             ),
@@ -213,7 +212,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                 alignment: Alignment(0.9, 0),
                                 child: Icon(
                                   Icons.arrow_forward_ios,
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   size: 18,
                                 ),
                               ),
@@ -232,7 +231,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                           width: MediaQuery.of(context).size.width,
                           height: 50,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Color(0xFF22262B),
                             shape: BoxShape.rectangle,
                           ),
                           child: Row(
@@ -243,9 +242,9 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                 child: Text(
                                   'Change Password',
                                   style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15,
                                   ),
                                 ),
                               ),
@@ -254,7 +253,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                   alignment: Alignment(0.9, 0),
                                   child: Icon(
                                     Icons.arrow_forward_ios,
-                                    color: Colors.black,
+                                    color: Colors.white,
                                     size: 18,
                                   ),
                                 ),
@@ -274,7 +273,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                           width: MediaQuery.of(context).size.width,
                           height: 50,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Color(0xFF22262B),
                             shape: BoxShape.rectangle,
                           ),
                           child: Row(
@@ -285,9 +284,9 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                 child: Text(
                                   'Logout',
                                   style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15,
                                   ),
                                 ),
                               ),
@@ -295,10 +294,10 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                 child: Align(
                                   alignment: Alignment(0.9, 0),
                                   child: Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 280, 0),
+                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     child: Icon(
                                       Icons.logout,
-                                      color: Colors.black,
+                                      color: Colors.white,
                                       size: 18,
                                     ),
                                   ),

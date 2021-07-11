@@ -14,20 +14,18 @@ class _ChatWidgetState extends State<ChatWidget> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Color(0xFFFFDD00),
+        backgroundColor: Color(0xFF22262B),
         automaticallyImplyLeading: false,
         title: AutoSizeText(
           'Chats',
           style: TextStyle(
-            color: Colors.black,
-            fontSize: 30,
-          ),
+              color: Colors.white, fontSize: 24, fontWeight: FontWeight.w500),
         ),
         actions: [],
         centerTitle: true,
-        elevation: 4,
+        elevation: 0,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFF22262B),
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -96,70 +94,74 @@ class _ChatWidgetState extends State<ChatWidget> {
                             ),
                             Padding(
                               padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Container(
-                                          width: 40,
-                                          height: 40,
-                                          clipBehavior: Clip.antiAlias,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Container(
+                                            width: 40,
+                                            height: 40,
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Image.asset(
+                                              'assets/3.jpg',
+                                              fit: BoxFit.fitHeight,
+                                            ),
                                           ),
-                                          child: Image.asset(
-                                            'assets/images/david-gandy.jpg',
-                                            fit: BoxFit.fitHeight,
-                                          ),
-                                        ),
-                                        Container(
-                                          width: 40,
-                                          height: 40,
-                                          clipBehavior: Clip.antiAlias,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Image.asset(
-                                            'assets/images/512x512bb.jpg',
-                                            fit: BoxFit.fitHeight,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 10, 15, 18),
-                                    child: TextButton.icon(
-                                      onPressed: () {
-                                        print('Button pressed ...');
-                                      },
-                                      icon: Icon(
-                                        Icons.arrow_forward_ios,
-                                        color: Colors.white,
-                                        size: 16,
+                                          Container(
+                                            width: 40,
+                                            height: 40,
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Image.asset(
+                                              'assets/bro.jpg',
+                                              fit: BoxFit.fitHeight,
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                      style: TextButton.styleFrom(
-                                        fixedSize: Size(100, 30),
-                                        primary: Color(0xFF4C3CB0),
-                                        textStyle: TextStyle(
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(0, 10, 15, 18),
+                                      child: TextButton.icon(
+                                        onPressed: () {
+                                          print('Button pressed ...');
+                                        },
+                                        icon: Icon(
+                                          Icons.arrow_forward_ios,
                                           color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16,
+                                          size: 16,
                                         ),
-                                        side: BorderSide(
-                                          color: Colors.transparent,
-                                          width: 1,
+                                        style: TextButton.styleFrom(
+                                          fixedSize: Size(100, 30),
+                                          backgroundColor: Color(0xFF4C3CB0),
+                                          primary: Colors.white,
+                                          textStyle: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16,
+                                          ),
+                                          side: BorderSide(
+                                            color: Colors.transparent,
+                                            width: 1,
+                                          ),
                                         ),
+                                        label: Text('join'),
                                       ),
-                                      label: Text('join'),
-                                    ),
-                                  )
-                                ],
+                                    )
+                                  ],
+                                ),
                               ),
                             )
                           ],
@@ -176,7 +178,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                           width: MediaQuery.of(context).size.width,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Color(0xFF22262B),
                             border: Border.all(
                               color: Color(0x000B0B1D),
                               width: 1,
@@ -204,7 +206,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                               shape: BoxShape.circle,
                                             ),
                                             child: Image.asset(
-                                              'assets/images/david-gandy.jpg',
+                                              'assets/1.png',
                                             ),
                                           )
                                         ],
@@ -232,7 +234,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                         Text(
                                           'Alex Edwards',
                                           style: TextStyle(
-                                            color: Colors.black,
+                                            color: Colors.white,
                                             fontSize: 18,
                                           ),
                                         )
@@ -248,8 +250,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                                             child: Text(
                                               'Hi Can i Help you',
                                               style: TextStyle(
-                                                color: Color(0xFFee8b60),
-                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white30,
+                                                fontWeight: FontWeight.w500,
                                                 fontSize: 14,
                                               ),
                                             ),
