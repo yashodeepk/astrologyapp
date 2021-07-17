@@ -1,4 +1,8 @@
+import 'dart:ui';
+
+import 'package:astrologyapp/api/signinapi.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CreateAccountWidget extends StatefulWidget {
   @override
@@ -27,7 +31,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
       autovalidateMode: AutovalidateMode.always,
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Color(0xFFFFDD00),
+        //backgroundColor: Color(0xFFFFDD00),
         body: SafeArea(
           child: Stack(
             children: [
@@ -37,13 +41,13 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                   width: double.infinity,
                   height: double.infinity,
                   decoration: BoxDecoration(
-                    color: Color(0xFFFFDD00),
-                  ),
+                      //color: Color(0xFFFFDD00),
+                      ),
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 1),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 100),
@@ -133,7 +137,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                 padding: EdgeInsets.fromLTRB(0, 0, 0, 1),
                                 child: TextFormField(
                                   controller: textController2,
-                                  obscureText: !passwordVisibility!,
+                                  obscureText: passwordVisibility,
                                   decoration: InputDecoration(
                                     hintText: 'Password',
                                     hintStyle: TextStyle(
@@ -168,7 +172,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                     suffixIcon: InkWell(
                                       onTap: () => setState(
                                         () => passwordVisibility =
-                                            !passwordVisibility!,
+                                            passwordVisibility,
                                       ),
                                       child: Icon(
                                         passwordVisibility
@@ -192,14 +196,23 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
                           child: TextButton(
                             onPressed: () {
-                              print('Button pressed ...');
+                              print('login pressed ...');
                             },
-                            child: Center(child: Text('Login')),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF03ADC6).withOpacity(0.5),
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(20),
+                                    bottomRight: Radius.circular(20),
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
+                                child: Center(child: Text('Login'))),
                             style: TextButton.styleFrom(
                               fixedSize: Size(300, 55),
-                              primary: Color(0xFF4C3CB0),
+                              primary: Colors.black87,
                               textStyle: TextStyle(
-                                color: Color(0xFFFAFAFA),
                                 fontSize: 18,
                               ),
                               side: BorderSide(
@@ -213,14 +226,28 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
                           child: TextButton(
                             onPressed: () {
-                              print('Button pressed ...');
+                              final provider =
+                                  Provider.of<GoogleSignInProvider>(context,
+                                      listen: false);
+                              provider.googleLogin();
                             },
-                            child: Center(child: Text('Create Account')),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF03ADC6).withOpacity(0.5),
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(20),
+                                    bottomRight: Radius.circular(20),
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
+                                child:
+                                    Center(child: Text('Login Using Google'))),
                             style: TextButton.styleFrom(
                               fixedSize: Size(300, 55),
-                              primary: Color(0xFF4C3CB0),
+                              primary: Colors.black87,
                               textStyle: TextStyle(
-                                color: Color(0xFFFAFAFA),
+                                color: Colors.black,
                                 fontSize: 18,
                               ),
                               side: BorderSide(
@@ -231,13 +258,16 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0, 0, 160),
-                          child: Text(
-                            'Forgot Password?',
-                            style: TextStyle(
-                              color: Color(0xFF160972),
-                              fontSize: 22,
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          child: TextButton(
+                            child: Text(
+                              'Forgot Password?',
+                              style: TextStyle(fontSize: 16),
                             ),
+                            style: TextButton.styleFrom(
+                              primary: Colors.black87,
+                            ),
+                            onPressed: () {},
                           ),
                         )
                       ],

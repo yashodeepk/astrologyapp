@@ -14,13 +14,13 @@ class _ConsultWidgetState extends State<ConsultWidget> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Color(0xFF22262B),
+        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Text(
           'Consult',
           style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
             fontSize: 24,
           ),
         ),
@@ -28,7 +28,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
         centerTitle: true,
         elevation: 0,
       ),
-      backgroundColor: Color(0xFF22262B),
+      backgroundColor: Colors.white,
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -40,11 +40,15 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: Container(
-                    width: 200,
-                    height: 200,
+                    width: MediaQuery.of(context).size.width - 40,
+                    height: MediaQuery.of(context).size.height / 4,
                     decoration: BoxDecoration(
-                      color: Color(0xFF03DAC6),
-                      borderRadius: BorderRadius.circular(24),
+                      //color: Color(0xFF03DAC6),
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [Color(0xfffe8c00), Color(0xfff83600)]),
+                      borderRadius: BorderRadius.circular(26),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
@@ -177,28 +181,28 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                                           ],
                                         ),
                                       ),
-                                      TextButton.icon(
-                                        onPressed: () {
-                                          print('Button pressed ...');
-                                        },
-                                        label: Text('Book Meeting'),
-                                        icon: Icon(
-                                          Icons.call_rounded,
-                                          size: 15,
-                                        ),
-                                        style: TextButton.styleFrom(
-                                          fixedSize: Size(150, 40),
-                                          primary: Colors.white,
-                                          backgroundColor: Color(0xFF4C3CB0),
-                                          textStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 16,
+                                      Container(
+                                        width: 150,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                            color: Color(0xff4c3cb0),
+                                            borderRadius:
+                                                BorderRadius.circular(24)),
+                                        child: TextButton.icon(
+                                          onPressed: () {
+                                            print('Button pressed ...');
+                                          },
+                                          label: Text('Book Meeting'),
+                                          icon: Icon(
+                                            Icons.call_rounded,
+                                            size: 15,
                                           ),
-                                          elevation: 8,
-                                          side: BorderSide(
-                                            color: Color(0xE0303030),
-                                            width: 1,
+                                          style: TextButton.styleFrom(
+                                            primary: Colors.white,
+                                            textStyle: TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: 16,
+                                            ),
                                           ),
                                         ),
                                       )
@@ -215,10 +219,13 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                             Expanded(
                               child: Padding(
                                 padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                                child: Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Color(0xff22262B),
-                                  size: 24,
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Color(0xff22262B),
+                                    size: 24,
+                                  ),
+                                  onPressed: () {},
                                 ),
                               ),
                             )

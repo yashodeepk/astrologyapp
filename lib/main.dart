@@ -1,32 +1,65 @@
+import 'package:astrologyapp/LoginPageUtils/LoginPage.dart';
+import 'package:astrologyapp/api/signinapi.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:astrologyapp/pages/ChatPage.dart';
 import 'package:astrologyapp/pages/ConsultPage.dart';
 import 'package:astrologyapp/pages/HomePage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      home: MyHomePage(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+        create: (context) => GoogleSignInProvider(),
+        child: MaterialApp(
+          title: 'Flutter Demo',
+          home: Home(),
+          debugShowCheckedModeBanner: false,
+        ),
+      );
 }
 
-class MyHomePage extends StatefulWidget {
+class Home extends StatelessWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  Widget build(BuildContext context) => Scaffold(
+        body: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasData) {
+                return Navigator();
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text("Oops!!, Something went wrong"),
+                );
+              } else {
+                return CreateAccountWidget();
+              }
+            }),
+      );
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class Navigator extends StatefulWidget {
+  const Navigator({Key? key}) : super(key: key);
+
+  @override
+  _NavigatorState createState() => _NavigatorState();
+}
+
+class _NavigatorState extends State<Navigator> {
   int selectedPage = 0;
 
   final _pageOptions = [
@@ -43,28 +76,25 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Color(0xFF03ADC6),
-        unselectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey[700],
         elevation: 0,
         //fixedColor: Color(0xff22262B),
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Horoscope',
-              backgroundColor: Color(0xff22262B)),
+            icon: Icon(Icons.home),
+            label: 'Horoscope',
+          ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.person_2_fill),
             label: 'Consult',
-            backgroundColor: Color(0xFF22262B),
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.chat_bubble_2_fill),
             label: 'Chat',
-            backgroundColor: Color(0xFF22262B),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Account',
-            backgroundColor: Color(0xFF22262B),
           ),
         ],
         currentIndex: selectedPage,

@@ -1,6 +1,6 @@
 import 'dart:ui';
-
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomePageWidget extends StatefulWidget {
@@ -18,15 +18,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
         child: AppBar(
-          backgroundColor: Color(0xFF22262B),
+          backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           flexibleSpace: Align(
             alignment: Alignment(0, 0.5),
             child: Text(
               'Horoscope',
               style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
                 fontSize: 24,
               ),
             ),
@@ -35,7 +35,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           elevation: 0,
         ),
       ),
-      backgroundColor: Color(0xFF22262B),
+      backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           print('FloatingActionButton pressed ...');
@@ -52,7 +52,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-            color: Color(0xff22262B),
+            color: Colors.white,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -81,7 +81,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       child: Text(
                         'LOL',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontWeight: FontWeight.w500,
                           fontSize: 20,
                         ),
@@ -95,7 +95,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 child: Text(
                   'Shivam',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontWeight: FontWeight.w500,
                     fontSize: 24,
                   ),
@@ -104,21 +104,24 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               Padding(
                 padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
                 child: Container(
-                  width: 400,
-                  height: 350,
+                  width: MediaQuery.of(context).size.width - 40,
+                  height: MediaQuery.of(context).size.height / 2,
                   decoration: BoxDecoration(
-                    color: Color(0xFF03DAC6),
+                    //color: Color(0xFF03DAC6).withOpacity(0.7),
+                    gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [Color(0xfffe8c00), Color(0xfff83600)]),
                     borderRadius: BorderRadius.circular(72),
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
                   ),
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Padding(
-                        padding: EdgeInsets.fromLTRB(40, 30, 0, 0),
+                        padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Icon(
@@ -141,9 +144,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(40, 10, 0, 0),
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                         child: Row(
-                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               Icons.done,
@@ -165,9 +168,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(40, 10, 0, 0),
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                         child: Row(
-                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               Icons.done,
@@ -189,9 +192,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(40, 10, 0, 0),
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                         child: Row(
-                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               Icons.done,

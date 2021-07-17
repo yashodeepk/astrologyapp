@@ -1,4 +1,8 @@
+import 'package:astrologyapp/api/signinapi.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 class AccountPageWidget extends StatefulWidget {
   @override
@@ -10,6 +14,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Color(0xFF22262B),
@@ -66,23 +71,17 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                   alignment: Alignment(0.03, -0.66),
                                   child: Padding(
                                     padding: EdgeInsets.fromLTRB(0, 25, 0, 5),
-                                    child: Container(
-                                      width: 80,
-                                      height: 80,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Image.asset(
-                                        'assets/bro.jpg',
-                                      ),
+                                    child: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(user.photoURL!),
+                                      radius: 40,
                                     ),
                                   ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(24, 140, 0, 0),
                                   child: Text(
-                                    'Shivam Karle',
+                                    user.displayName!,
                                     style: TextStyle(
                                       fontSize: 24,
                                       color: Colors.white,
@@ -94,7 +93,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                                   child: Padding(
                                     padding: EdgeInsets.fromLTRB(24, 174, 0, 0),
                                     child: Text(
-                                      'Shivam.Karle@gmail.com',
+                                      user.email!,
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
                                         color: Colors.white,
@@ -264,6 +263,17 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                       ],
                     ),
                   ),
+                  // Row(
+                  //   children: [
+                  //     ListTile(
+                  //       trailing: Icon(Icons.logout_outlined),
+                  //       title: Text("Logout"),
+                  //       onTap: () {
+
+                  //       },
+                  //     )
+                  //   ],
+                  // )
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
                     child: Row(
@@ -281,28 +291,36 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                             children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(24, 0, 0, 0),
-                                child: Text(
-                                  'Logout',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15,
-                                  ),
-                                ),
+                                child: TextButton(
+                                    onPressed: () {
+                                      final provider =
+                                          Provider.of<GoogleSignInProvider>(
+                                              context,
+                                              listen: false);
+                                      provider.logout();
+                                    },
+                                    child: Text(
+                                      'Logout',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15,
+                                      ),
+                                    )),
                               ),
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment(0.9, 0),
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                    child: Icon(
-                                      Icons.logout,
-                                      color: Colors.white,
-                                      size: 18,
-                                    ),
-                                  ),
-                                ),
-                              )
+                              // Expanded(
+                              //   child: Align(
+                              //     alignment: Alignment(0.9, 0),
+                              //     child: Padding(
+                              //       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              //       child: Icon(
+                              //         Icons.logout,
+                              //         color: Colors.white,
+                              //         size: 18,
+                              //       ),
+                              //     ),
+                              //   ),
+                              // )
                             ],
                           ),
                         )

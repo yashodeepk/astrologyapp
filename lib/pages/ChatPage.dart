@@ -14,18 +14,18 @@ class _ChatWidgetState extends State<ChatWidget> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Color(0xFF22262B),
+        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: AutoSizeText(
           'Chats',
           style: TextStyle(
-              color: Colors.white, fontSize: 24, fontWeight: FontWeight.w500),
+              color: Colors.black, fontSize: 24, fontWeight: FontWeight.w600),
         ),
         actions: [],
         centerTitle: true,
         elevation: 0,
       ),
-      backgroundColor: Color(0xFF22262B),
+      backgroundColor: Colors.white,
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -134,30 +134,31 @@ class _ChatWidgetState extends State<ChatWidget> {
                                     Padding(
                                       padding:
                                           EdgeInsets.fromLTRB(0, 10, 15, 18),
-                                      child: TextButton.icon(
-                                        onPressed: () {
-                                          print('Button pressed ...');
-                                        },
-                                        icon: Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Colors.white,
-                                          size: 16,
-                                        ),
-                                        style: TextButton.styleFrom(
-                                          fixedSize: Size(100, 30),
-                                          backgroundColor: Color(0xFF4C3CB0),
-                                          primary: Colors.white,
-                                          textStyle: TextStyle(
+                                      child: Container(
+                                        width: 100,
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                            color: Color(0xFF4C3CB0),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(24))),
+                                        child: TextButton.icon(
+                                          onPressed: () {
+                                            print('Button pressed ...');
+                                          },
+                                          icon: Icon(
+                                            Icons.arrow_forward_ios,
                                             color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 16,
+                                            size: 16,
                                           ),
-                                          side: BorderSide(
-                                            color: Colors.transparent,
-                                            width: 1,
+                                          style: TextButton.styleFrom(
+                                            primary: Colors.white,
+                                            textStyle: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16,
+                                            ),
                                           ),
+                                          label: Text('join'),
                                         ),
-                                        label: Text('join'),
                                       ),
                                     )
                                   ],
@@ -178,7 +179,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                           width: MediaQuery.of(context).size.width,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: Color(0xFF22262B),
+                            color: Colors.white,
                             border: Border.all(
                               color: Color(0x000B0B1D),
                               width: 1,
@@ -206,7 +207,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                               shape: BoxShape.circle,
                                             ),
                                             child: Image.asset(
-                                              'assets/1.png',
+                                              'assets/bro.jpg',
                                             ),
                                           )
                                         ],
@@ -232,9 +233,9 @@ class _ChatWidgetState extends State<ChatWidget> {
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
                                         Text(
-                                          'Alex Edwards',
+                                          'Kartik',
                                           style: TextStyle(
-                                            color: Colors.white,
+                                            color: Colors.black,
                                             fontSize: 18,
                                           ),
                                         )
@@ -248,9 +249,9 @@ class _ChatWidgetState extends State<ChatWidget> {
                                             padding:
                                                 EdgeInsets.fromLTRB(0, 4, 4, 0),
                                             child: Text(
-                                              'Hi Can i Help you',
+                                              'Hey Can i Help you',
                                               style: TextStyle(
-                                                color: Colors.white30,
+                                                color: Colors.grey[700],
                                                 fontWeight: FontWeight.w500,
                                                 fontSize: 14,
                                               ),

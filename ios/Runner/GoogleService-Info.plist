@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>749828102104-nhfnfcbali49d2k7gb8tdsne85h1fjiv.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.749828102104-nhfnfcbali49d2k7gb8tdsne85h1fjiv</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>749828102104-urpvi5dplkrokkothirkgt4kcu4qg2a0.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC_pNcLSCV0ZcbzThC-GPIvIA3FYBLw5Bs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>749828102104</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.astrologyapp</string>
+	<key>PROJECT_ID</key>
+	<string>astrology-app-d5d25</string>
+	<key>STORAGE_BUCKET</key>
+	<string>astrology-app-d5d25.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:749828102104:ios:623117af486ec8217c04ad</string>
+</dict>
+</plist>
