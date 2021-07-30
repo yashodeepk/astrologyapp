@@ -21,211 +21,178 @@ class _ConsultWidgetState extends State<ConsultWidget> {
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w600,
-            fontSize: 24,
+            fontSize: 20,
           ),
         ),
         actions: [],
         centerTitle: true,
-        elevation: 0,
+        elevation: 5,
       ),
       backgroundColor: Colors.white,
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
+      body: ListView(
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+        scrollDirection: Axis.vertical,
         children: [
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.all(10),
-              scrollDirection: Axis.vertical,
+          Container(
+            width: MediaQuery.of(context).size.width - 40,
+            height: 100,
+            decoration: BoxDecoration(
+              color: Colors.lightBlueAccent[400],
+              // gradient: LinearGradient(
+              //     begin: Alignment.centerLeft,
+              //     end: Alignment.centerRight,
+              //     colors: [Color(0xfffe8c00), Color(0xfff83600)]),
+              borderRadius: BorderRadius.circular(26),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
               children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width - 40,
-                    height: MediaQuery.of(context).size.height / 4,
-                    decoration: BoxDecoration(
-                      //color: Color(0xFF03DAC6),
-                      gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [Color(0xfffe8c00), Color(0xfff83600)]),
-                      borderRadius: BorderRadius.circular(26),
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(8, 8, 0, 8),
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage('assets/bro.jpg'),
+                        radius: 30,
+                      ),
                     ),
-                    child: Row(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Column(
+                        Container(
+                          padding: EdgeInsets.fromLTRB(2, 0, 2, 5),
+                          // padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: Icon(
+                            Icons.star_rate,
+                            color: Color(0xFFFFD700),
+                            size: 24,
+                          ),
+                        ),
+                        Container(
+                          // padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          padding: EdgeInsets.fromLTRB(2, 0, 2, 5),
+                          // padding: EdgeInsets.all(5),
+                          child: Icon(
+                            Icons.star_rate,
+                            color: Color(0xFFFFD700),
+                            size: 24,
+                          ),
+                        ),
+                        Container(
+                          // padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          padding: EdgeInsets.fromLTRB(2, 0, 2, 5),
+                          // padding: EdgeInsets.all(5),
+                          child: Icon(
+                            Icons.star_rate,
+                            color: Color(0xFFFFD700),
+                            size: 24,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(2, 0, 2, 5),
+                          // padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          // padding: EdgeInsets.all(5),
+                          child: Icon(
+                            Icons.star_rate,
+                            color: Color(0xFFFFD700),
+                            size: 24,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(2, 0, 2, 5),
+                          // padding: EdgeInsets.all(5),
+                          child: Icon(
+                            Icons.star_rate,
+                            color: Color(0xFFFFD700),
+                            size: 24,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(10, 1, 0, 0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.asset(
-                                  'assets/bro.jpg',
-                                  width: 74,
-                                  height: 74,
-                                  fit: BoxFit.cover,
+                            Text(
+                              'Shivam Karle',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.arrow_forward_ios))
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              child: AutoSizeText(
+                                'Marriage, Career, Job, Study. Love',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
                                 ),
                               ),
                             )
                           ],
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(8, 1, 0, 0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Container(
-                                      padding:
-                                          EdgeInsets.fromLTRB(10, 10, 0, 0),
-                                      child: Text(
-                                        'Shivam Karle',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(5),
-                                      child: Icon(
-                                        Icons.star_rate,
-                                        color: Color(0xFFFFD700),
-                                        size: 24,
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.all(5),
-                                      child: Icon(
-                                        Icons.star_rate,
-                                        color: Color(0xFFFFD700),
-                                        size: 24,
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.all(5),
-                                      child: Icon(
-                                        Icons.star_rate,
-                                        color: Color(0xFFFFD700),
-                                        size: 24,
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.all(5),
-                                      child: Icon(
-                                        Icons.star_rate,
-                                        color: Color(0xFFFFD700),
-                                        size: 24,
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.all(5),
-                                      child: Icon(
-                                        Icons.star_rate,
-                                        color: Color(0xFFFFD700),
-                                        size: 24,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Expanded(
-                                      child: AutoSizeText(
-                                        'Pandit Sri Shivam Karle Solving Your Life Issues Like Marriage, Career, Job, Study. Love',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              'Fess  - ',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                            Text(
-                                              ' ₹',
-                                              style: TextStyle(
-                                                color: Color(0xFF22262B),
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        width: 150,
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                            color: Color(0xff4c3cb0),
-                                            borderRadius:
-                                                BorderRadius.circular(24)),
-                                        child: TextButton.icon(
-                                          onPressed: () {
-                                            print('Button pressed ...');
-                                          },
-                                          label: Text('Book Meeting'),
-                                          icon: Icon(
-                                            Icons.call_rounded,
-                                            size: 15,
-                                          ),
-                                          style: TextButton.styleFrom(
-                                            primary: Colors.white,
-                                            textStyle: TextStyle(
-                                              fontWeight: FontWeight.normal,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        Column(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Color(0xff22262B),
-                                    size: 24,
+                            Row(
+                              children: [
+                                Text(
+                                  'Fess  - ',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
                                   ),
-                                  onPressed: () {},
+                                ),
+                                Text(
+                                  ' ₹',
+                                  style: TextStyle(
+                                    color: Color(0xFF22262B),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            TextButton.icon(
+                              onPressed: () {
+                                print('Button pressed ...');
+                              },
+                              label: Text('Book Meeting'),
+                              icon: Icon(
+                                Icons.call_rounded,
+                                size: 15,
+                              ),
+                              style: TextButton.styleFrom(
+                                // padding: EdgeInsets.all(8),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                primary: Colors.white,
+                                backgroundColor: Color(0xff4c3cb0),
+                                textStyle: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 16,
                                 ),
                               ),
                             )
@@ -234,7 +201,22 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                       ],
                     ),
                   ),
-                )
+                ),
+                // Column(
+                //   mainAxisSize: MainAxisSize.max,
+                //   children: [
+                //     Expanded(
+                //       child: IconButton(
+                //         icon: Icon(
+                //           Icons.arrow_forward_ios,
+                //           color: Color(0xff22262B),
+                //           size: 24,
+                //         ),
+                //         onPressed: () {},
+                //       ),
+                //     )
+                //   ],
+                // )
               ],
             ),
           )

@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,34 +14,31 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
       key: scaffoldKey,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: AppBar(
-          backgroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          flexibleSpace: Align(
-            alignment: Alignment(0, 0.5),
-            child: Text(
-              'Horoscope',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-                fontSize: 24,
-              ),
-            ),
+      appBar: AppBar(
+        backgroundColor: Colors.lightBlueAccent[400],
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: Text(
+          'Horoscope',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w500,
+            fontSize: 22,
           ),
-          actions: [],
-          elevation: 0,
         ),
+        // flexibleSpace:
+        actions: [],
+        elevation: 0,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.lightBlueAccent[400],
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           print('FloatingActionButton pressed ...');
         },
-        backgroundColor: Color(0xFF03DAC6),
+        backgroundColor: Colors.lightBlueAccent[400],
         child: Icon(
           Icons.edit,
           color: Colors.black,
@@ -52,74 +50,90 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.lightBlueAccent[400],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
+                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      width: 80,
-                      height: 80,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                      ),
-                      child: Image.asset(
-                        'assets/1.png',
-                        fit: BoxFit.fitHeight,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                      child: Text(
-                        'LOL',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
+                        // width: 80,
+                        // height: 80,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
                         ),
-                      ),
+                        child: CircleAvatar(
+                          radius: 30,
+                          backgroundImage: AssetImage('assets/1.png'),
+                        )),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(20, 0, 0, 5),
+                          child: Text(
+                            user.displayName!,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                          child: Text(
+                            'Capricorn',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ],
                     )
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: Text(
-                  'Shivam',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 24,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(10, 15, 10, 0),
+              // Padding(
+              //   padding: EdgeInsets.fromLTRB(0, 10, 0, 15),
+              //   child: Text(
+              //     user.displayName!,
+              //     style: TextStyle(
+              //       color: Colors.black,
+              //       fontWeight: FontWeight.w500,
+              //       fontSize: 20,
+              //     ),
+              //   ),
+              // ),
+              Expanded(
                 child: Container(
-                  width: MediaQuery.of(context).size.width - 40,
-                  height: MediaQuery.of(context).size.height / 2,
+                  width: MediaQuery.of(context).size.width,
+                  // height: MediaQuery.of(context).size.height / 1.7,
                   decoration: BoxDecoration(
-                    //color: Color(0xFF03DAC6).withOpacity(0.7),
-                    gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [Color(0xfffe8c00), Color(0xfff83600)]),
-                    borderRadius: BorderRadius.circular(72),
+                    color: Colors.white,
+                    // gradient: LinearGradient(
+                    //     begin: Alignment.centerLeft,
+                    //     end: Alignment.centerRight,
+                    //     colors: [Color(0xfffe8c00), Color(0xfff83600)]),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(42),
+                        topRight: Radius.circular(42)),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           mainAxisSize: MainAxisSize.max,
@@ -127,7 +141,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             Icon(
                               Icons.circle,
                               color: Color(0xFF22262B),
-                              size: 28,
+                              size: 22,
                             ),
                             Padding(
                               padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -136,7 +150,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 style: TextStyle(
                                   color: Color(0xFF22262B),
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 26,
+                                  fontSize: 22,
                                 ),
                               ),
                             )
@@ -151,7 +165,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             Icon(
                               Icons.done,
                               color: Color(0xFF22262B),
-                              size: 24,
+                              size: 18,
                             ),
                             Padding(
                               padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
@@ -160,7 +174,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 style: TextStyle(
                                   color: Color(0xFF22262B),
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 24,
+                                  fontSize: 22,
                                 ),
                               ),
                             )
@@ -175,7 +189,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             Icon(
                               Icons.done,
                               color: Color(0xFF22262B),
-                              size: 24,
+                              size: 18,
                             ),
                             Padding(
                               padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
@@ -184,7 +198,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 style: TextStyle(
                                   color: Color(0xFF22262B),
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 24,
+                                  fontSize: 22,
                                 ),
                               ),
                             )
@@ -199,7 +213,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                             Icon(
                               Icons.done,
                               color: Color(0xFF22262B),
-                              size: 24,
+                              size: 18,
                             ),
                             Padding(
                               padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
@@ -208,7 +222,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 style: TextStyle(
                                   color: Color(0xFF22262B),
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 24,
+                                  fontSize: 22,
                                 ),
                               ),
                             )

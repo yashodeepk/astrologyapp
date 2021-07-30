@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Flutter Demo',
           home: Home(),
+          theme: ThemeData.light(),
           debugShowCheckedModeBanner: false,
         ),
       );
@@ -78,24 +79,24 @@ class _NavigatorState extends State<Navigator> {
         selectedItemColor: Color(0xFF03ADC6),
         unselectedItemColor: Colors.grey[700],
         elevation: 0,
-        //fixedColor: Color(0xff22262B),
+        // fixedColor: Color(0xff22262B),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Horoscope',
-          ),
+              icon: Icon(Icons.home),
+              label: 'Horoscope',
+              backgroundColor: Colors.white),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.person_2_fill),
-            label: 'Consult',
-          ),
+              icon: Icon(CupertinoIcons.person_2_fill),
+              label: 'Consult',
+              backgroundColor: Colors.white),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.chat_bubble_2_fill),
-            label: 'Chat',
-          ),
+              icon: Icon(CupertinoIcons.chat_bubble_2_fill),
+              label: 'Chat',
+              backgroundColor: Colors.white),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Account',
-          ),
+              icon: Icon(Icons.person),
+              label: 'Account',
+              backgroundColor: Colors.white),
         ],
         currentIndex: selectedPage,
         onTap: (index) {

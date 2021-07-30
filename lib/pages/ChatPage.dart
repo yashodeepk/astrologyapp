@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChatWidget extends StatefulWidget {
@@ -11,17 +12,44 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
-        title: AutoSizeText(
+        title: Text(
           'Chats',
           style: TextStyle(
-              color: Colors.black, fontSize: 24, fontWeight: FontWeight.w600),
+              color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600),
         ),
-        actions: [],
+        actions: [
+          Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(user.photoURL!),
+                      radius: 20,
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(5, 30, 0, 0),
+                child: Icon(
+                  Icons.circle,
+                  color: Color(0xFF28FF00),
+                  size: 15,
+                ),
+              )
+            ],
+          ),
+        ],
         centerTitle: true,
         elevation: 0,
       ),
@@ -42,7 +70,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                       width: double.infinity,
                       height: 110,
                       decoration: BoxDecoration(
-                        color: Color(0xFF03DAC6),
+                        color: Colors.lightBlueAccent[400],
                         borderRadius: BorderRadius.circular(72),
                       ),
                       child: Padding(
@@ -104,62 +132,30 @@ class _ChatWidgetState extends State<ChatWidget> {
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
-                                          Container(
-                                            width: 40,
-                                            height: 40,
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Image.asset(
-                                              'assets/3.jpg',
-                                              fit: BoxFit.fitHeight,
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 40,
-                                            height: 40,
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Image.asset(
-                                              'assets/bro.jpg',
-                                              fit: BoxFit.fitHeight,
-                                            ),
-                                          )
+                                          CircleAvatar(
+                                              backgroundImage:
+                                                  AssetImage('assets/3.jpg'),
+                                              radius: 20),
+                                          CircleAvatar(
+                                              backgroundImage:
+                                                  AssetImage('assets/bro.jpg'),
+                                              radius: 20),
                                         ],
                                       ),
                                     ),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(0, 10, 15, 18),
-                                      child: Container(
-                                        width: 100,
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                            color: Color(0xFF4C3CB0),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(24))),
-                                        child: TextButton.icon(
-                                          onPressed: () {
-                                            print('Button pressed ...');
-                                          },
-                                          icon: Icon(
-                                            Icons.arrow_forward_ios,
-                                            color: Colors.white,
-                                            size: 16,
-                                          ),
-                                          style: TextButton.styleFrom(
-                                            primary: Colors.white,
-                                            textStyle: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          label: Text('join'),
-                                        ),
+                                    ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          primary: Color(0xff4c3cb0)),
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: Colors.white,
+                                        size: 16,
                                       ),
+                                      label: Text('join'),
                                     )
                                   ],
                                 ),
