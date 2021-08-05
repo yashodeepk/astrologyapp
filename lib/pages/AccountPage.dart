@@ -1,7 +1,6 @@
 import 'package:astrologyapp/api/signinapi.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 class AccountPageWidget extends StatefulWidget {
@@ -137,233 +136,64 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                 padding: EdgeInsets.zero,
                 scrollDirection: Axis.vertical,
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.rectangle,
-                          border: Border.all(
-                            color: Colors.transparent,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                              child: TextButton(
-                                child: Text(
-                                  'Payment History',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                onPressed: () {},
-                              ),
-                            ),
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment(0.9, 0),
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.black,
-                                    size: 18,
-                                  ),
-                                  onPressed: () {},
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.rectangle,
-                          border: Border.all(
-                            color: Colors.transparent,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                              child: TextButton(
-                                child: Text(
-                                  'Meetings History',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                onPressed: () {},
-                              ),
-                            ),
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment(0.9, 0),
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.black,
-                                    size: 18,
-                                  ),
-                                  onPressed: () {},
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.rectangle,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                child: TextButton(
-                                  child: Text(
-                                    'Change Password',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                ),
-                              ),
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment(0.9, 0),
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: Colors.black,
-                                      size: 18,
-                                    ),
-                                    onPressed: () {},
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
+                  ListTile(
+                    title: Text(
+                      'Payment History',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),
                     ),
-                  ),
-                  // Row(
-                  //   children: [
-                  //     ListTile(
-                  //       trailing: Icon(Icons.logout_outlined),
-                  //       title: Text("Logout"),
-                  //       onTap: () {
-
-                  //       },
-                  //     )
-                  //   ],
-                  // )
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.rectangle,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                child: TextButton(
-                                    onPressed: () {
-                                      final provider =
-                                          Provider.of<GoogleSignInProvider>(
-                                              context,
-                                              listen: false);
-                                      provider.logout();
-                                    },
-                                    child: Text(
-                                      'Logout',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15,
-                                      ),
-                                    )),
-                              ),
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment(0.9, 0),
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.logout,
-                                      color: Colors.black,
-                                      size: 18,
-                                    ),
-                                    onPressed: () {
-                                      final provider =
-                                          Provider.of<GoogleSignInProvider>(
-                                              context,
-                                              listen: false);
-                                      provider.logout();
-                                    },
-                                  ),
-                                ),
-                              )
-                              // Expanded(
-                              //   child: Align(
-                              //     alignment: Alignment(0.9, 0),
-                              //     child: Padding(
-                              //       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              //       child: Icon(
-                              //         Icons.logout,
-                              //         color: Colors.white,
-                              //         size: 18,
-                              //       ),
-                              //     ),
-                              //   ),
-                              // )
-                            ],
-                          ),
-                        )
-                      ],
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black,
+                      size: 18,
                     ),
-                  )
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    title: Text(
+                      'Meetings History',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black,
+                      size: 18,
+                    ),
+                    onTap: () {
+                      final provider = Provider.of<GoogleSignInProvider>(
+                          context,
+                          listen: false);
+                      provider.logout();
+                    },
+                  ),
+                  ListTile(
+                    title: Text(
+                      'Logout',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.logout,
+                      color: Colors.black,
+                      size: 18,
+                    ),
+                    onTap: () {
+                      final provider = Provider.of<GoogleSignInProvider>(
+                          context,
+                          listen: false);
+                      provider.logout();
+                    },
+                  ),
                 ],
               ),
             )

@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,25 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final currentusers = FirebaseAuth.instance.currentUser!;
+
+  Future<void> storeage() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentusers.displayName)
+        .set({
+      'username': currentusers.displayName!.trim(),
+      'email': currentusers.email!.trim(),
+      'imageUrl': currentusers.photoURL,
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    storeage();
+  }
 
   @override
   Widget build(BuildContext context) {

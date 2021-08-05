@@ -1,4 +1,4 @@
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:astrologyapp/ChatUtils/ChatScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -71,7 +71,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                       height: 110,
                       decoration: BoxDecoration(
                         color: Colors.lightBlueAccent[400],
-                        borderRadius: BorderRadius.circular(72),
+                        borderRadius: BorderRadius.circular(24),
                       ),
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
@@ -86,7 +86,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                                   child: Text(
                                     'Scheduled Meeting',
                                     style: TextStyle(
@@ -128,7 +128,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
@@ -166,124 +166,124 @@ class _ChatWidgetState extends State<ChatWidget> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Color(0x000B0B1D),
-                              width: 1,
-                            ),
-                          ),
+                  ListView(
+                    shrinkWrap: true,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatScreen()),
+                          );
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                child: Stack(
+                              Container(
+                                width: MediaQuery.of(context).size.width - 20,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: Colors.black,
+                                      width: 1,
+                                    ),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                      child: Stack(
                                         children: [
-                                          Container(
-                                            width: 60,
-                                            height: 60,
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
+                                          Padding(
+                                            padding:
+                                                EdgeInsets.fromLTRB(8, 0, 8, 0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  width: 60,
+                                                  height: 60,
+                                                  clipBehavior: Clip.antiAlias,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Image.asset(
+                                                    'assets/bro.jpg',
+                                                  ),
+                                                )
+                                              ],
                                             ),
-                                            child: Image.asset(
-                                              'assets/bro.jpg',
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                10, 1, 0, 0),
+                                            child: Icon(
+                                              Icons.circle,
+                                              color: Color(0xFF28FF00),
+                                              size: 24,
                                             ),
                                           )
                                         ],
                                       ),
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(10, 1, 0, 0),
-                                      child: Icon(
-                                        Icons.circle,
-                                        color: Color(0xFF28FF00),
-                                        size: 24,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Text(
-                                          'Kartik',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 18,
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Text(
+                                                'Kartik',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 18,
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                        )
-                                      ],
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      0, 4, 4, 0),
+                                                  child: Text(
+                                                    'Hey Can i Help you',
+                                                    style: TextStyle(
+                                                      color: Colors.grey[700],
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsets.fromLTRB(0, 4, 4, 0),
-                                            child: Text(
-                                              'Hey Can i Help you',
-                                              style: TextStyle(
-                                                color: Colors.grey[700],
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        print('IconButton pressed ...');
-                                      },
-                                      icon: Icon(
-                                        Icons.arrow_forward_ios,
-                                        color: Colors.black,
-                                        size: 18,
-                                      ),
-                                      iconSize: 18,
-                                    )
                                   ],
                                 ),
                               )
                             ],
                           ),
-                        )
-                      ],
-                    ),
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),

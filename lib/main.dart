@@ -1,4 +1,5 @@
-import 'package:astrologyapp/LoginPageUtils/LoginPage.dart';
+// import 'package:astrologyapp/LoginPageUtils/LoginPage.dart';
+import 'package:astrologyapp/WelcomePageUtils/WelcomePage.dart';
 import 'package:astrologyapp/api/signinapi.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:astrologyapp/pages/ChatPage.dart';
@@ -47,7 +48,7 @@ class Home extends StatelessWidget {
                   child: Text("Oops!!, Something went wrong"),
                 );
               } else {
-                return CreateAccountWidget();
+                return LoginPageWidget();
               }
             }),
       );
