@@ -11,25 +11,24 @@ class HomePageWidget extends StatefulWidget {
 }
 
 class _HomePageWidgetState extends State<HomePageWidget> {
+  final user = FirebaseAuth.instance.currentUser!;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final currentusers = FirebaseAuth.instance.currentUser!;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> storeage() async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentusers.displayName)
-        .set({
-      'username': currentusers.displayName!.trim(),
-      'email': currentusers.email!.trim(),
-      'imageUrl': currentusers.photoURL,
-    });
-  }
+  // Future<void> storeage() async {
+  //   await _firestore.collection('users').doc(_auth.currentUser!.uid).set({
+  //     "name": user.displayName,
+  //     "email": user.email,
+  //     "status": "Unavalible",
+  //     "uid": _auth.currentUser!.uid,
+  //   });
+  // }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    storeage();
+    // storeage();
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:astrologyapp/LoginPageUtils/LoginPage.dart';
 import 'package:astrologyapp/api/signinapi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -127,9 +128,13 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
               padding: const EdgeInsets.only(bottom: 50),
               child: TextButton(
                 onPressed: () async {
-                  final provider =
-                      Provider.of<GoogleSignInProvider>(context, listen: false);
-                  provider.googleLogin();
+                  // final provider =
+                  //     Provider.of<GoogleSignInProvider>(context, listen: false);
+                  // provider.googleLogin();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CreateAccountWidget()));
 
                   print('Button pressed ...');
                 },
@@ -149,7 +154,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                 ),
-                child: Text('Login To Continue',
+                child: Text('Get Started',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,

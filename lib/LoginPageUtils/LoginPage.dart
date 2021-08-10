@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:astrologyapp/api/signinapi.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +15,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
   TextEditingController? textController1;
   TextEditingController? textController2;
   bool passwordVisibility = false;
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -22,6 +26,16 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
     textController1 = TextEditingController();
     textController2 = TextEditingController();
     passwordVisibility = false;
+  }
+
+  Future<void> storeage(String userinfo) async {
+    await _firestore.collection('users').doc(_auth.currentUser!.uid).set({
+      "name": _auth.currentUser!.displayName,
+      "email": _auth.currentUser!.email,
+      "status": "Unavalible",
+      "uid": _auth.currentUser!.uid,
+      "userinfo": userinfo,
+    });
   }
 
   @override
@@ -196,6 +210,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
                           child: TextButton(
                             onPressed: () {
+                              final provider =
+                                  Provider.of<GoogleSignInProvider>(context,
+                                      listen: false);
+                              provider.googleLogin();
+                              storeage("normaluser");
                               print('login pressed ...');
                             },
                             child: Container(
@@ -230,6 +249,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                   Provider.of<GoogleSignInProvider>(context,
                                       listen: false);
                               provider.googleLogin();
+                              storeage("astrologer");
                             },
                             child: Container(
                                 decoration: BoxDecoration(
@@ -242,7 +262,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                   ),
                                 ),
                                 child:
-                                    Center(child: Text('Login Using Google'))),
+                                    Center(child: Text('Login as Astrologer'))),
                             style: TextButton.styleFrom(
                               fixedSize: Size(300, 55),
                               primary: Colors.black87,
@@ -257,19 +277,19 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          child: TextButton(
-                            child: Text(
-                              'Forgot Password?',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            style: TextButton.styleFrom(
-                              primary: Colors.black87,
-                            ),
-                            onPressed: () {},
-                          ),
-                        )
+                        // Padding(
+                        //   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        //   child: TextButton(
+                        //     child: Text(
+                        //       'Forgot Password?',
+                        //       style: TextStyle(fontSize: 16),
+                        //     ),
+                        //     style: TextButton.styleFrom(
+                        //       primary: Colors.black87,
+                        //     ),
+                        //     onPressed: () {},
+                        //   ),
+                        // )
                       ],
                     ),
                   ),
