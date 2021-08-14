@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:749828102104:android:6aac27ceebceb8917c04ad",
+        "mobilesdk_app_id": "1:749828102104:android:ec25877574187e707c04ad",
         "android_client_info": {
-          "package_name": "com.example.astrologyapp"
+          "package_name": "com.yashodeepKacholiya.astrologyapp"
         }
       },
       "oauth_client": [
@@ -29,6 +29,13 @@
             {
               "client_id": "749828102104-c05ce37gb9meu642q90mojdlrgonarmf.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "749828102104-nhfnfcbali49d2k7gb8tdsne85h1fjiv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.astrologyapp"
+              }
             }
           ]
         }
