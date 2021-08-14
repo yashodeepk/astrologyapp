@@ -1,3 +1,4 @@
+import 'package:astrologyapp/GoogleMeetUtils/EventDetails.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
@@ -199,6 +200,10 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                     ),
                     TextButton.icon(
                       onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DashboardScreen()));
                         print('Button pressed ...');
                       },
                       label: Text('Book Meeting'),
