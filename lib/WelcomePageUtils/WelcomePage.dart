@@ -66,102 +66,112 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
             end: Alignment(-0.07, 1),
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              padding: EdgeInsets.only(top: 50),
-              // width: double.infinity,
-              // height: double.infinity,
-              // decoration: BoxDecoration(
-              //   color: Colors.indigo,
-              // ),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                // mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    'Welcome',
-                    style: TextStyle(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 50),
+                // width: double.infinity,
+                // height: double.infinity,
+                // decoration: BoxDecoration(
+                //   color: Colors.indigo,
+                // ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  // mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Welcome',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 28,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Find Your Answers Here',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                // decoration: BoxDecoration(
+                //   color: Colors.white,
+                //   borderRadius: BorderRadius.all(Radius.circular(32)),
+                // ),
+                child: Center(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 400,
+                    child: _bikeArtboard == null
+                        ? const SizedBox(
+                            child: Center(
+                              child: Text(""),
+                            ),
+                          )
+                        : Rive(
+                            fit: BoxFit.fitWidth,
+                            artboard: _bikeArtboard!,
+                          ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 50),
+                child: TextButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        // barrierColor: Colors.black,
+                        context: context,
+                        builder: (context) => SingleChildScrollView(
+                              child: CreateAccountWidget(),
+                            ));
+                    // final provider =
+                    //     Provider.of<GoogleSignInProvider>(context, listen: false);
+                    // provider.googleLogin();
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => CreateAccountWidget()));
+
+                    print('GetStarted pressed ...');
+                  },
+                  style: TextButton.styleFrom(
+                    fixedSize: Size(300, 45),
+                    backgroundColor: Colors.black.withOpacity(0.7),
+                    primary: Colors.white,
+                    textStyle: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 28,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Find Your Answers Here',
-                    style: TextStyle(
-                      color: Colors.white,
                       fontSize: 18,
                     ),
+                    side: BorderSide(
+                      color: Colors.amber,
+                      width: 1,
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
                   ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-              // decoration: BoxDecoration(
-              //   color: Colors.white,
-              //   borderRadius: BorderRadius.all(Radius.circular(32)),
-              // ),
-              child: Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 400,
-                  child: _bikeArtboard == null
-                      ? const SizedBox(
-                          child: Center(
-                            child: Text(""),
-                          ),
-                        )
-                      : Rive(
-                          fit: BoxFit.fitWidth,
-                          artboard: _bikeArtboard!,
-                        ),
+                  child: Text('Get Started',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      )),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 50),
-              child: TextButton(
-                onPressed: () async {
-                  // final provider =
-                  //     Provider.of<GoogleSignInProvider>(context, listen: false);
-                  // provider.googleLogin();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CreateAccountWidget()));
-
-                  print('Button pressed ...');
-                },
-                style: TextButton.styleFrom(
-                  fixedSize: Size(300, 45),
-                  backgroundColor: Colors.black.withOpacity(0.7),
-                  primary: Colors.white,
-                  textStyle: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                  side: BorderSide(
-                    color: Colors.amber,
-                    width: 1,
-                  ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                ),
-                child: Text('Get Started',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                    )),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

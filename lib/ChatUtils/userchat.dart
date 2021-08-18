@@ -3,19 +3,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserChat {
   String id;
   String photoUrl;
-  String nickname;
+  String name;
   String aboutMe;
 
   UserChat(
       {required this.id,
       required this.photoUrl,
-      required this.nickname,
+      required this.name,
       required this.aboutMe});
 
   factory UserChat.fromDocument(DocumentSnapshot doc) {
     String aboutMe = "";
     String photoUrl = "";
-    String nickname = "";
+    String name = "";
     try {
       aboutMe = doc.get('aboutMe');
     } catch (e) {}
@@ -23,12 +23,12 @@ class UserChat {
       photoUrl = doc.get('photoUrl');
     } catch (e) {}
     try {
-      nickname = doc.get('nickname');
+      name = doc.get('name');
     } catch (e) {}
     return UserChat(
       id: doc.id,
       photoUrl: photoUrl,
-      nickname: nickname,
+      name: name,
       aboutMe: aboutMe,
     );
   }

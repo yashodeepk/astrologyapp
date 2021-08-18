@@ -36,7 +36,7 @@ class SettingsScreenState extends State<SettingsScreen> {
   SharedPreferences? prefs;
 
   String id = '';
-  String nickname = '';
+  String name = '';
   String aboutMe = '';
   String photoUrl = '';
 
@@ -55,7 +55,7 @@ class SettingsScreenState extends State<SettingsScreen> {
   void readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs?.getString('id') ?? '';
-    nickname = prefs?.getString('nickname') ?? '';
+    name = prefs?.getString('name') ?? '';
     aboutMe = prefs?.getString('aboutMe') ?? '';
     photoUrl = prefs?.getString('photoUrl') ?? '';
     // Force refresh input
@@ -90,7 +90,7 @@ class SettingsScreenState extends State<SettingsScreen> {
       TaskSnapshot snapshot = await uploadTask;
       photoUrl = await snapshot.ref.getDownloadURL();
       FirebaseFirestore.instance.collection('users').doc(id).update({
-        'nickname': user.displayName,
+        'name': user.displayName,
         'aboutMe': user.email,
         'photoUrl': user.photoURL,
       }).then((data) async {
@@ -121,12 +121,12 @@ class SettingsScreenState extends State<SettingsScreen> {
       isLoading = true;
     });
 
-    FirebaseFirestore.instance.collection('users').doc(id).update({
-      'nickname': nickname,
-      'aboutMe': aboutMe,
-      'photoUrl': photoUrl
-    }).then((data) async {
-      await prefs?.setString('nickname', nickname);
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(id)
+        .update({'name': name, 'aboutMe': aboutMe, 'photoUrl': photoUrl}).then(
+            (data) async {
+      await prefs?.setString('name', name);
       await prefs?.setString('aboutMe', aboutMe);
       await prefs?.setString('photoUrl', photoUrl);
 
@@ -240,7 +240,7 @@ class SettingsScreenState extends State<SettingsScreen> {
       //             // Username
       //             Container(
       //               child: Text(
-      //                 'Nickname',
+      //                 'name',
       //                 style: TextStyle(
       //                     fontStyle: FontStyle.italic,
       //                     fontWeight: FontWeight.bold,
@@ -260,7 +260,7 @@ class SettingsScreenState extends State<SettingsScreen> {
       //                   ),
       //                   controller: controllerNickname,
       //                   onChanged: (value) {
-      //                     nickname = value;
+      //                     name = value;
       //                   },
       //                   focusNode: focusNodeNickname,
       //                 ),
