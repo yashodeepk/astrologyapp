@@ -69,6 +69,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //mainAxisSize: MainAxisSize.max,
             children: [
               Container(
                 padding: EdgeInsets.only(top: 50),
@@ -111,7 +112,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                 child: Center(
                   child: Container(
                     width: MediaQuery.of(context).size.width,
-                    height: 400,
+                    height: MediaQuery.of(context).size.height * 0.7,
                     child: _bikeArtboard == null
                         ? const SizedBox(
                             child: Center(
@@ -125,50 +126,55 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 50),
-                child: TextButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        // barrierColor: Colors.black,
-                        context: context,
-                        builder: (context) => SingleChildScrollView(
-                              child: CreateAccountWidget(),
-                            ));
-                    // final provider =
-                    //     Provider.of<GoogleSignInProvider>(context, listen: false);
-                    // provider.googleLogin();
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => CreateAccountWidget()));
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 50),
+                    child: TextButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            // barrierColor: Colors.black,
+                            context: context,
+                            builder: (context) => SingleChildScrollView(
+                                  child: CreateAccountWidget(),
+                                ));
+                        // final provider =
+                        //     Provider.of<GoogleSignInProvider>(context, listen: false);
+                        // provider.googleLogin();
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => CreateAccountWidget()));
 
-                    print('GetStarted pressed ...');
-                  },
-                  style: TextButton.styleFrom(
-                    fixedSize: Size(300, 45),
-                    backgroundColor: Colors.black.withOpacity(0.7),
-                    primary: Colors.white,
-                    textStyle: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                        print('GetStarted pressed ...');
+                      },
+                      style: TextButton.styleFrom(
+                        fixedSize: Size(300, 45),
+                        backgroundColor: Colors.black.withOpacity(0.7),
+                        primary: Colors.white,
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                        side: BorderSide(
+                          color: Colors.amber,
+                          width: 1,
+                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                      ),
+                      child: Text('Get Started',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                          )),
                     ),
-                    side: BorderSide(
-                      color: Colors.amber,
-                      width: 1,
-                    ),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
                   ),
-                  child: Text('Get Started',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      )),
-                ),
+                ],
               )
             ],
           ),
