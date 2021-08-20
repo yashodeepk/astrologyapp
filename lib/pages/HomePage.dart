@@ -1,6 +1,6 @@
 import 'dart:ui';
+import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,25 +11,32 @@ class HomePageWidget extends StatefulWidget {
 }
 
 class _HomePageWidgetState extends State<HomePageWidget> {
+  final user = FirebaseAuth.instance.currentUser!;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final currentusers = FirebaseAuth.instance.currentUser!;
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> storeage() async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentusers.displayName)
-        .set({
-      'username': currentusers.displayName!.trim(),
-      'email': currentusers.email!.trim(),
-      'imageUrl': currentusers.photoURL,
-    });
-  }
+  // Future<void> storeage() async {
+  //   await _firestore.collection('users').doc(_auth.currentUser!.uid).set({
+  //     "name": user.displayName,
+  //     "email": user.email,
+  //     "status": "Unavalible",
+  //     "uid": _auth.currentUser!.uid,
+  //   });
+  // }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    storeage();
+    // storeage();
+  }
+
+  void handleClick(String value) {
+    switch (value) {
+      case 'Logout':
+        break;
+      case 'Account':
+        break;
+    }
   }
 
   @override
@@ -38,30 +45,46 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.lightBlueAccent[400],
+        backgroundColor: Colors.blue[900],
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text(
           'Horoscope',
           style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
             fontSize: 22,
           ),
         ),
         // flexibleSpace:
-        actions: [],
+        actions: <Widget>[
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AccountPageWidget()),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(user.photoURL!),
+                radius: 18,
+              ),
+            ),
+          ),
+        ],
         elevation: 0,
       ),
-      backgroundColor: Colors.lightBlueAccent[400],
+      backgroundColor: Colors.blue[900],
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           print('FloatingActionButton pressed ...');
         },
-        backgroundColor: Colors.lightBlueAccent[400],
+        backgroundColor: Colors.blue[900],
         child: Icon(
-          Icons.edit,
-          color: Colors.black,
+          Icons.select_all,
+          color: Colors.white,
         ),
         elevation: 8,
       ),
@@ -70,7 +93,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.lightBlueAccent[400],
+            color: Colors.blue[900],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -78,75 +101,37 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             children: [
               Padding(
                 padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                child: Row(
+                child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                        // width: 80,
-                        // height: 80,
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage: AssetImage('assets/1.png'),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 15, 0, 10),
+                      child: Text(
+                        'Capricorn',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
                         ),
-                        child: CircleAvatar(
-                          radius: 30,
-                          backgroundImage: AssetImage('assets/1.png'),
-                        )),
-                    Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 0, 0, 5),
-                          child: Text(
-                            user.displayName!,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                          child: Text(
-                            'Capricorn',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     )
                   ],
                 ),
               ),
-              // Padding(
-              //   padding: EdgeInsets.fromLTRB(0, 10, 0, 15),
-              //   child: Text(
-              //     user.displayName!,
-              //     style: TextStyle(
-              //       color: Colors.black,
-              //       fontWeight: FontWeight.w500,
-              //       fontSize: 20,
-              //     ),
-              //   ),
-              // ),
               Expanded(
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  // height: MediaQuery.of(context).size.height / 1.7,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    // gradient: LinearGradient(
-                    //     begin: Alignment.centerLeft,
-                    //     end: Alignment.centerRight,
-                    //     colors: [Color(0xfffe8c00), Color(0xfff83600)]),
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(42),
-                        topRight: Radius.circular(42)),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -154,101 +139,68 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     children: [
                       Container(
                         padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                        child: Row(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Icon(
-                              Icons.circle,
-                              color: Color(0xFF22262B),
-                              size: 22,
-                            ),
                             Padding(
-                              padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                              padding: EdgeInsets.fromLTRB(0, 10, 0, 15),
                               child: AutoSizeText(
-                                'Daily Horoscope',
+                                'Love and Heath',
                                 style: TextStyle(
-                                  color: Color(0xFF22262B),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 22,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
                                 ),
                               ),
-                            )
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                AutoSizeText(
+                                  '76% Love',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                AutoSizeText(
+                                  '92 % Health',
+                                  style: TextStyle(
+                                    color: Colors.blue[900],
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(0, 30, 0, 8),
+                              child: AutoSizeText(
+                                'General Horoscope',
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(10, 5, 10, 15),
+                              child: AutoSizeText(
+                                "You have a generous spirit, Aries. And today you're feeling particularly altruistic. Finally, you have a chance to help your fellow man in a very real, direct way. Forget about big goals and lofty visions. Don't try to set out to eradicate world hunger. You can go down to a local shelter and help cook a meal for a few dozen people. The personal contact will do you good.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.done,
-                              color: Color(0xFF22262B),
-                              size: 18,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                              child: AutoSizeText(
-                                'you will rock today',
-                                style: TextStyle(
-                                  color: Color(0xFF22262B),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 22,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.done,
-                              color: Color(0xFF22262B),
-                              size: 18,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                              child: AutoSizeText(
-                                'you will rock today',
-                                style: TextStyle(
-                                  color: Color(0xFF22262B),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 22,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.done,
-                              color: Color(0xFF22262B),
-                              size: 18,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                              child: AutoSizeText(
-                                'you will rock today',
-                                style: TextStyle(
-                                  color: Color(0xFF22262B),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 22,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
                     ],
                   ),
                 ),

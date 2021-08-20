@@ -1,4 +1,7 @@
+import 'package:astrologyapp/GoogleMeetUtils/EventDetails.dart';
+import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ConsultWidget extends StatefulWidget {
@@ -8,7 +11,7 @@ class ConsultWidget extends StatefulWidget {
 
 class _ConsultWidgetState extends State<ConsultWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
+  final user = FirebaseAuth.instance.currentUser!;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,9 +27,25 @@ class _ConsultWidgetState extends State<ConsultWidget> {
             fontSize: 20,
           ),
         ),
-        actions: [],
+        actions: <Widget>[
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AccountPageWidget()),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(user.photoURL!),
+                radius: 18,
+              ),
+            ),
+          ),
+        ],
         centerTitle: true,
-        elevation: 5,
+        elevation: 0,
       ),
       backgroundColor: Colors.white,
       body: ListView(
@@ -37,7 +56,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
             width: MediaQuery.of(context).size.width - 40,
             height: 150,
             decoration: BoxDecoration(
-              color: Colors.lightBlueAccent[400],
+              color: Colors.blue[900],
               // gradient: LinearGradient(
               //     begin: Alignment.centerLeft,
               //     end: Alignment.centerRight,
@@ -128,14 +147,11 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                                 Text(
                                   'Shivam Karle',
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
                                   ),
                                 ),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.arrow_forward_ios))
                               ],
                             ),
                             Row(
@@ -145,7 +161,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                                   child: AutoSizeText(
                                     'Marriage, Career, Job, Study. Love',
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.white,
                                       fontSize: 14,
                                     ),
                                   ),
@@ -156,21 +172,6 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                         ),
                       ),
                     ),
-                    // Column(
-                    //   mainAxisSize: MainAxisSize.max,
-                    //   children: [
-                    //     Expanded(
-                    //       child: IconButton(
-                    //         icon: Icon(
-                    //           Icons.arrow_forward_ios,
-                    //           color: Color(0xff22262B),
-                    //           size: 24,
-                    //         ),
-                    //         onPressed: () {},
-                    //       ),
-                    //     )
-                    //   ],
-                    // )
                   ],
                 ),
                 Row(
@@ -182,7 +183,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                         Text(
                           'Fess  - ',
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -190,7 +191,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                         Text(
                           ' ₹',
                           style: TextStyle(
-                            color: Color(0xFF22262B),
+                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -199,6 +200,10 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                     ),
                     TextButton.icon(
                       onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DashboardScreen()));
                         print('Button pressed ...');
                       },
                       label: Text('Book Meeting'),
@@ -212,7 +217,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         primary: Colors.white,
-                        backgroundColor: Color(0xff4c3cb0),
+                        backgroundColor: Colors.orange,
                         textStyle: TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 16,
