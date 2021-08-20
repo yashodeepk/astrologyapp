@@ -146,19 +146,16 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                       //     context,
                       //     MaterialPageRoute(
                       //         builder: (context) => CreateAccountWidget()));
-                        print('GetStarted pressed ...');
-                      },
-                      style: TextButton.styleFrom(
-                        fixedSize: Size(300, 45),
-                        backgroundColor: Colors.blue[900],
-                        primary: Colors.white,
-                        textStyle: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
+                      print('GetStarted pressed ...');
+                    },
+                    style: TextButton.styleFrom(
+                      fixedSize: Size(300, 45),
+                      backgroundColor: Colors.blue[900],
+                      primary: Colors.white,
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
                       ),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
