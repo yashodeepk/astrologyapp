@@ -109,7 +109,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
               'Login',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.blue[900],
                 fontWeight: FontWeight.w500,
                 fontSize: 22,
               ),
@@ -129,11 +129,11 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                   child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Login with Google'),
+                  Text('Login with Google '),
                   Icon(
                     LineIcons.googlePlus,
                     size: 28,
-                    color: Colors.red,
+                    color: Colors.white,
                   )
                 ],
               )),
@@ -141,23 +141,20 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(32.0))),
                 fixedSize: Size(300, 45),
-                primary: Colors.black87,
+                primary: Colors.white,
+                backgroundColor: Colors.blue[900],
                 textStyle: TextStyle(
                   fontSize: 18,
-                ),
-                side: BorderSide(
-                  color: Colors.black,
-                  width: 2,
                 ),
               ),
               icon: Icon(
                 LineIcons.alternateSignIn,
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(15, 0, 15, 25),
+            padding: EdgeInsets.fromLTRB(15, 0, 15, 100),
             child: TextButton.icon(
               onPressed: () {
                 // final provider =
@@ -176,20 +173,17 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
               label: Center(child: Text('Login as Astrologer')),
               icon: Icon(
                 LineIcons.alternateSignIn,
-                color: Colors.black,
+                color: Colors.white,
               ),
               style: TextButton.styleFrom(
                 fixedSize: Size(300, 45),
-                primary: Colors.black87,
+                primary: Colors.white,
+                backgroundColor: Colors.blue[900],
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(32))),
                 textStyle: TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 18,
-                ),
-                side: BorderSide(
-                  color: Colors.black,
-                  width: 2,
                 ),
               ),
             ),

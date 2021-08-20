@@ -171,7 +171,6 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                       if (val!.isEmpty) {
                         return 'please enter the Full Name';
                       }
-
                       return null;
                     },
                   ),
@@ -275,31 +274,34 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                       if (val!.isEmpty) {
                         return 'please enter the Experience in years';
                       }
-
                       return null;
                     },
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
+                  padding: EdgeInsets.fromLTRB(15, 30, 15, 150),
                   child: TextButton.icon(
                     onPressed: () {
-                      final provider = Provider.of<GoogleSignInProvider>(
-                          context,
-                          listen: false);
-                      provider.googleLogin();
-                      handleSignIn();
-                      // storeage("normaluser");
-                      print('login pressed ...');
+                      if (formKey.currentState!.validate()) {
+                        final provider = Provider.of<GoogleSignInProvider>(
+                            context,
+                            listen: false);
+                        provider.googleLogin();
+                        // storeage("normaluser");
+                        print('login pressed ...');
+                      }
                     },
                     label: Center(
                         child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Save & Login'),
+                        Text(
+                          'Save & Login ',
+                          style: TextStyle(color: Colors.white),
+                        ),
                         Icon(
                           LineIcons.googlePlus,
-                          color: Colors.red,
+                          color: Colors.white,
                         )
                       ],
                     )),
@@ -309,17 +311,14 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                               BorderRadius.all(Radius.circular(32.0))),
                       fixedSize: Size(300, 45),
                       primary: Colors.black87,
+                      backgroundColor: Colors.blue[900],
                       textStyle: TextStyle(
                         fontSize: 18,
-                      ),
-                      side: BorderSide(
-                        color: Colors.black,
-                        width: 2,
                       ),
                     ),
                     icon: Icon(
                       LineIcons.alternateSignIn,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                 ),

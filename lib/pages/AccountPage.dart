@@ -15,121 +15,51 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Account Settings'),
+        backgroundColor: Colors.blue[900],
+        elevation: 0,
+      ),
       key: scaffoldKey,
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 210,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                      color: Colors.transparent,
+            Container(
+              width: MediaQuery.of(context).size.width,
+              color: Colors.blue[900],
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(user.photoURL!),
+                      radius: 50,
                     ),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Stack(
-                              children: [
-                                Align(
-                                  alignment: Alignment(-0.99, -0.95),
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 120,
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.white,
-                                        )
-                                      ],
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Color(0xFF03DAC6),
-                                          Color(0x8503DAC6)
-                                        ],
-                                        stops: [0, 1],
-                                        begin: Alignment(0.07, -1),
-                                        end: Alignment(-0.07, 1),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment(0.03, -0.66),
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 25, 0, 5),
-                                    child: CircleAvatar(
-                                      backgroundImage:
-                                          NetworkImage(user.photoURL!),
-                                      radius: 40,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(10, 140, 0, 0),
-                                  child: Text(
-                                    user.displayName!,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment(-1, 0),
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 174, 0, 0),
-                                    child: Text(
-                                      user.email!,
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(10, 12, 0, 12),
-                      child: Text(
-                        'Account Settings',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                        ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    child: Text(
+                      user.displayName!,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
                       ),
-                    )
-                  ],
-                )
-              ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 15),
+                    child: Text(
+                      user.email!,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: ListView(
@@ -166,12 +96,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                       color: Colors.black,
                       size: 18,
                     ),
-                    onTap: () {
-                      final provider = Provider.of<GoogleSignInProvider>(
-                          context,
-                          listen: false);
-                      provider.logout();
-                    },
+                    onTap: () {},
                   ),
                   ListTile(
                     title: Text(
