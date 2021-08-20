@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:astrologyapp/ChatUtils/ChatScreen.dart';
@@ -18,11 +17,12 @@ class ChatWidget extends StatefulWidget {
 }
 
 class _ChatWidgetState extends State<ChatWidget> {
-  String? currentUserId;
+  // String? currentUserId;
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   final ScrollController listScrollController = ScrollController();
+  final user = FirebaseAuth.instance.currentUser!;
 
   int _limit = 20;
   int _limitIncrement = 20;
@@ -54,7 +54,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       print('token: $token');
       FirebaseFirestore.instance
           .collection('userschat')
-          .doc(currentUserId)
+          .doc(user.getIdToken().toString())
           .update({'pushToken': token});
     }).catchError((err) {
       Fluttertoast.showToast(msg: err.message.toString());
@@ -111,8 +111,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
-    currentUserId = user.getIdToken() as String?;
+    // currentUserId = user.getIdToken() as String?;
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -435,7 +434,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   Widget buildItem(BuildContext context, DocumentSnapshot? document) {
     if (document != null) {
       UserChat userChat = UserChat.fromDocument(document);
-      if (userChat.id == currentUserId) {
+      if (userChat.id == user.getIdToken()) {
         return SizedBox.shrink();
       } else {
         return Container(

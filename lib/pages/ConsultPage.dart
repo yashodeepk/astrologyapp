@@ -1,8 +1,31 @@
 import 'package:astrologyapp/GoogleMeetUtils/EventDetails.dart';
+import 'package:astrologyapp/GoogleMeetUtils/calenderevent.dart';
+import 'package:astrologyapp/GoogleMeetUtils/secrate.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:googleapis_auth/googleapis_auth.dart';
+import 'package:googleapis/calendar/v3.dart' as cal;
+import 'package:googleapis_auth/auth_io.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+Future<void> calender() async {
+  var _clientID = new ClientId(Secret.getId(), "");
+  const _scopes = const [cal.CalendarApi.calendarScope];
+  await clientViaUserConsent(_clientID, _scopes, prompt)
+      .then((AuthClient client) async {
+    CalendarClient.calendar = cal.CalendarApi(client);
+  });
+}
+
+void prompt(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
 
 class ConsultWidget extends StatefulWidget {
   @override
@@ -12,6 +35,13 @@ class ConsultWidget extends StatefulWidget {
 class _ConsultWidgetState extends State<ConsultWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final user = FirebaseAuth.instance.currentUser!;
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

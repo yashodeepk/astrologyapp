@@ -13,8 +13,6 @@ class HomePageWidget extends StatefulWidget {
 class _HomePageWidgetState extends State<HomePageWidget> {
   final user = FirebaseAuth.instance.currentUser!;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  FirebaseAuth _auth = FirebaseAuth.instance;
-
   // Future<void> storeage() async {
   //   await _firestore.collection('users').doc(_auth.currentUser!.uid).set({
   //     "name": user.displayName,

@@ -129,26 +129,23 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 50),
-                    child: TextButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            // barrierColor: Colors.black,
-                            context: context,
-                            builder: (context) => SingleChildScrollView(
-                                  child: CreateAccountWidget(),
-                                ));
-                        // final provider =
-                        //     Provider.of<GoogleSignInProvider>(context, listen: false);
-                        // provider.googleLogin();
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => CreateAccountWidget()));
-
+                  TextButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          // barrierColor: Colors.black,
+                          context: context,
+                          builder: (context) => SingleChildScrollView(
+                                child: CreateAccountWidget(),
+                              ));
+                      // final provider =
+                      //     Provider.of<GoogleSignInProvider>(context, listen: false);
+                      // provider.googleLogin();
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => CreateAccountWidget()));
                         print('GetStarted pressed ...');
                       },
                       style: TextButton.styleFrom(
@@ -163,12 +160,14 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
                       ),
-                      child: Text('Get Started',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                          )),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
                     ),
+                    child: Text('Get Started',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        )),
                   ),
                 ],
               )
