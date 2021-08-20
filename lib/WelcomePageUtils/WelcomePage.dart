@@ -1,10 +1,7 @@
 import 'package:astrologyapp/LoginPageUtils/LoginPage.dart';
-import 'package:astrologyapp/api/signinapi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
-import 'package:flutter/src/painting/gradient.dart' as gradian;
 
 class LoginPageWidget extends StatefulWidget {
   @override
@@ -54,18 +51,18 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: gradian.LinearGradient(
-            colors: [
-              Color(0xff0c164f),
-              Color(0xff5643fd),
-              // Color(0xffba1e68),
-            ],
-            // stops: [0, 1],
-            begin: Alignment(0.07, -1),
-            end: Alignment(-0.07, 1),
-          ),
-        ),
+        color: Colors.grey[900],
+        // decoration: BoxDecoration(
+        //   gradient: gradian.LinearGradient(
+        //     colors: [
+        //       Color(0xffffffff),
+        //       Color(0xfffdb903),
+        //     ],
+        //     // stops: [0, 1],
+        //     begin: Alignment(0.07, -1),
+        //     end: Alignment(-0.07, 1),
+        //   ),
+        // ),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -82,12 +79,15 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                   mainAxisSize: MainAxisSize.max,
                   // mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      'Welcome',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 28,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 15, 0, 2),
+                      child: Text(
+                        'Welcome',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -97,7 +97,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                       'Find Your Answers Here',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18,
+                        fontSize: 20,
                       ),
                     ),
                   ],
@@ -146,21 +146,19 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                       //     context,
                       //     MaterialPageRoute(
                       //         builder: (context) => CreateAccountWidget()));
-
-                      print('GetStarted pressed ...');
-                    },
-                    style: TextButton.styleFrom(
-                      fixedSize: Size(300, 45),
-                      backgroundColor: Colors.black.withOpacity(0.7),
-                      primary: Colors.white,
-                      textStyle: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                      side: BorderSide(
-                        color: Colors.amber,
-                        width: 1,
+                        print('GetStarted pressed ...');
+                      },
+                      style: TextButton.styleFrom(
+                        fixedSize: Size(300, 45),
+                        backgroundColor: Colors.blue[900],
+                        primary: Colors.white,
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
                       ),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),

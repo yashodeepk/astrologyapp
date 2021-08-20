@@ -186,11 +186,7 @@ class PageNavigator extends StatefulWidget {
 class _PageNavigatorState extends State<PageNavigator> {
   int selectedPage = 0;
 
-  final _pageOptions = [
-    HomePageWidget(),
-    ConsultWidget(),
-    ChatWidget()
-  ];
+  final _pageOptions = [HomePageWidget(), ConsultWidget(), ChatWidget()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,13 +194,14 @@ class _PageNavigatorState extends State<PageNavigator> {
         child: _pageOptions[selectedPage],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Color(0xFF03ADC6),
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.blue[900],
         unselectedItemColor: Colors.grey[700],
         elevation: 0,
         // fixedColor: Color(0xff22262B),
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.star),
               label: 'Horoscope',
               backgroundColor: Colors.white),
           BottomNavigationBarItem(
