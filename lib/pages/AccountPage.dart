@@ -117,6 +117,7 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                           context,
                           listen: false);
                       provider.logout();
+                      Navigator.pop(context);
                     },
                   ),
                 ],

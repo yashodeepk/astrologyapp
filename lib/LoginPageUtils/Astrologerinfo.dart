@@ -222,8 +222,11 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                             listen: false);
                         provider.googleLogin();
                         Navigator.of(context).pop();
-                      // storeage("normaluser");
-                      astrologer = true;
+                        Navigator.of(context).pop();
+                        // storeage("normaluser");
+                        setState(() {
+                          astrologer = true;
+                        });
                         // storeage("normaluser");
                         print('login pressed ...');
                       }

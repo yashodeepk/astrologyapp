@@ -38,116 +38,15 @@ class MyApp extends StatelessWidget {
       );
 }
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
+
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  SharedPreferences? prefs;
-
-  bool isLoading = false;
-  bool isLoggedIn = false;
-  final currentUser = FirebaseAuth.instance.currentUser;
-  void handleSignInuser() async {
-    prefs = await SharedPreferences.getInstance();
-
-    isLoading = true;
-
-    if (currentUser != null) {
-      print('user');
-      // Check is already sign up
-      final QuerySnapshot result = await FirebaseFirestore.instance
-          .collection('users')
-          .where('id', isEqualTo: currentUser!.uid)
-          .get();
-      final List<DocumentSnapshot> documents = result.docs;
-      if (documents.length == 0) {
-        print('user created');
-        // Update data to server if new user
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentUser!.uid)
-            .set({
-          'name': currentUser!.displayName,
-          'photoUrl': currentUser!.photoURL,
-          'id': currentUser!.uid,
-          'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
-          'chattingWith': null
-        });
-
-        // Write data to local
-        await prefs?.setString('id', currentUser!.uid);
-        await prefs?.setString('name', currentUser!.displayName ?? "");
-        await prefs?.setString('photoUrl', currentUser!.photoURL ?? "");
-      } else {
-        DocumentSnapshot documentSnapshot = documents[0];
-        UserChat userChat = UserChat.fromDocument(documentSnapshot);
-        // Write data to local
-        await prefs?.setString('id', userChat.id);
-        await prefs?.setString('name', userChat.name);
-        await prefs?.setString('photoUrl', userChat.photoUrl);
-        await prefs?.setString('aboutMe', userChat.aboutMe);
-      }
-      Fluttertoast.showToast(msg: "Sign in success");
-      isLoading = false;
-    } else {
-      Fluttertoast.showToast(msg: "Sign in fail");
-      isLoading = false;
-    }
-  }
-
-  void handleSignInAstroloer() async {
-    prefs = await SharedPreferences.getInstance();
-
-    isLoading = true;
-
-    // if (googleUser != null) {
-
-    if (currentUser != null) {
-      print('astrologer');
-      // Check is already sign up
-      final QuerySnapshot result = await FirebaseFirestore.instance
-          .collection('astrologers')
-          .where('id', isEqualTo: currentUser!.uid)
-          .get();
-      final List<DocumentSnapshot> documents = result.docs;
-      if (documents.length == 0) {
-        print('astro user created');
-        // Update data to server if new user
-        FirebaseFirestore.instance
-            .collection('astrologers')
-            .doc(currentUser!.uid)
-            .set({
-          'name': currentUser!.displayName,
-          'photoUrl': currentUser!.photoURL,
-          'id': currentUser!.uid,
-          'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
-          'about': experienceController,
-          'chattingWith': null
-        });
-
-        // Write data to local
-        await prefs?.setString('id', currentUser!.uid);
-        await prefs?.setString('name', currentUser!.displayName ?? "");
-        await prefs?.setString('photoUrl', currentUser!.photoURL ?? "");
-      } else {
-        DocumentSnapshot documentSnapshot = documents[0];
-        UserChat userChat = UserChat.fromDocument(documentSnapshot);
-        // Write data to local
-        await prefs?.setString('id', userChat.id);
-        await prefs?.setString('name', userChat.name);
-        await prefs?.setString('photoUrl', userChat.photoUrl);
-        await prefs?.setString('about', userChat.aboutMe);
-      }
-      Fluttertoast.showToast(msg: "Sign in success");
-      isLoading = false;
-    } else {
-      Fluttertoast.showToast(msg: "Sign in fail");
-      isLoading = false;
-    }
-    // } else {
-    //   Fluttertoast.showToast(msg: "Can not init google sign in");
-    //   isLoading = false;
-    // }
-  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -159,11 +58,6 @@ class Home extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               } else if (snapshot.hasData) {
-                if (astrologer) {
-                  handleSignInAstroloer();
-                } else {
-                  handleSignInuser();
-                }
                 return PageNavigator();
               } else if (snapshot.hasError) {
                 return Center(

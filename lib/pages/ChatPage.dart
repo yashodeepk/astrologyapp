@@ -4,6 +4,7 @@ import 'package:astrologyapp/ChatUtils/ChatScreen.dart';
 import 'package:astrologyapp/ChatUtils/loading.dart';
 import 'package:astrologyapp/ChatUtils/userchat.dart';
 import 'package:astrologyapp/Colors.dart';
+import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -113,6 +114,8 @@ class _ChatWidgetState extends State<ChatWidget> {
   Widget build(BuildContext context) {
     // currentUserId = user.getIdToken() as String?;
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.light(),
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -125,21 +128,32 @@ class _ChatWidgetState extends State<ChatWidget> {
           actions: [
             Stack(
               children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(user.photoURL!),
-                        radius: 20,
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AccountPageWidget()),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        child: CircleAvatar(
+                          child: ClipOval(
+                            child: Image.network(user.photoURL!),
+                          ),
+                          radius: 18,
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(5, 30, 0, 0),
+                  padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
                   child: Icon(
                     Icons.circle,
                     color: Color(0xFF28FF00),
@@ -233,12 +247,12 @@ class _ChatWidgetState extends State<ChatWidget> {
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
                                             CircleAvatar(
-                                                backgroundImage:
-                                                    AssetImage('assets/3.jpg'),
+                                                backgroundImage: AssetImage(
+                                                    'assets/images/3.jpg'),
                                                 radius: 20),
                                             CircleAvatar(
                                                 backgroundImage: AssetImage(
-                                                    'assets/bro.jpg'),
+                                                    'assets/images/bro.jpg'),
                                                 radius: 20),
                                           ],
                                         ),
@@ -391,7 +405,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                     Container(
                       child: StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance
-                            .collection('users')
+                            .collection('astrologer')
                             .limit(_limit)
                             .snapshots(),
                         builder: (BuildContext context,

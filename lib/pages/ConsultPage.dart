@@ -68,7 +68,9 @@ class _ConsultWidgetState extends State<ConsultWidget> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
               child: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL!),
+                child: ClipOval(
+                  child: Image.network(user.photoURL!),
+                ),
                 radius: 18,
               ),
             ),
@@ -104,7 +106,8 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                         Padding(
                           padding: EdgeInsets.fromLTRB(8, 8, 0, 8),
                           child: CircleAvatar(
-                            backgroundImage: AssetImage('assets/bro.jpg'),
+                            backgroundImage:
+                                AssetImage('assets/images/bro.jpg'),
                             radius: 30,
                           ),
                         ),
