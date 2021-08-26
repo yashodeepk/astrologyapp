@@ -38,16 +38,7 @@ class MyApp extends StatelessWidget {
       );
 }
 
-class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  final GoogleSignIn googleSignIn = GoogleSignIn();
-
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: StreamBuilder(
