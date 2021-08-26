@@ -82,7 +82,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
           textAlign: TextAlign.center,
         )),
         content: Container(
-          height: 290,
+          height: 300,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -97,8 +97,8 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
                 textAlign: TextAlign.center,
               ),
-              AutoSizeText(
-                'we will get in contatct with you within 2 to 3 days.',
+              Text(
+                'We will get in contact with you within next 7 days.',
                 textAlign: TextAlign.center,
               )
             ],
@@ -129,7 +129,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
           textAlign: TextAlign.center,
         )),
         content: Container(
-          // height: 300,
+          height: 300,
           child: Column(
             children: [
               CircleAvatar(
@@ -143,7 +143,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
               //   "Thank you for Regstration.",
               //   textAlign: TextAlign.center,
               // ),
-              AutoSizeText('Please check your internet connection.')
+              Text('Oops something went wrong, Please try again..')
             ],
           ),
         ),
