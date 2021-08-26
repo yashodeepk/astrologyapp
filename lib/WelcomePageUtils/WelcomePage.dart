@@ -10,7 +10,7 @@ class LoginPageWidget extends StatefulWidget {
 class _LoginPageWidgetState extends State<LoginPageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String bikeRiveFileName = 'assets/Rive/astrology/astro.riv';
+  String bikeRiveFileName = 'assets/Rive/astro.riv';
 
   @override
   void initState() {
@@ -94,10 +94,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
               ),
             ),
             Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+              // mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
+                  padding: const EdgeInsets.only(bottom: 30.0),
                   child: TextButton(
                     onPressed: () {
                       showModalBottomSheet(

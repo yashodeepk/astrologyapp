@@ -1,12 +1,15 @@
 import 'dart:ui';
-import 'package:astrologyapp/api/signinapi.dart';
+// import 'package:astrologyapp/api/signinapi.dart';
+import 'package:astrologyapp/GoogleMeetUtils/StoreData.dart';
+import 'package:astrologyapp/homepageutils/homepageapi.dart';
 import 'package:astrologyapp/homepageutils/horoscopeselectutils.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
 class HomePageWidget extends StatefulWidget {
@@ -17,6 +20,11 @@ class HomePageWidget extends StatefulWidget {
 class _HomePageWidgetState extends State<HomePageWidget> {
   final user = FirebaseAuth.instance.currentUser!;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final firestoreInstance = FirebaseFirestore.instance;
+  String? love;
+  String? health;
+  String? horoscope;
+  bool checkdata = true;
   // Future<void> storeage() async {
   //   await _firestore.collection('users').doc(_auth.currentUser!.uid).set({
   //     "name": user.displayName,
@@ -29,10 +37,19 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   void initState() {
     super.initState();
-    // storeage();
-    setState(() {});
+    firestoreInstance
+        .collection("horoscope")
+        .doc(zodiacsignname)
+        .get()
+        .then((value) {
+      setState(() {
+        horoscope = value.data()!['General Horoscope'];
+        health = value.data()!['Health'];
+        love = value.data()!['Love'];
+        checkdata = false;
+      });
+    });
   }
-
   // void handleClick(String value) {
   //   switch (value) {
   //     case 'Logout':
@@ -123,15 +140,12 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         child: Container(
                           width: MediaQuery.of(context).size.width / 2.7,
                           height: MediaQuery.of(context).size.width / 2.7,
-                          child: Consumer<SignNotifier>(
-                            builder:
-                                (BuildContext context, SignNotifier, child) =>
-                                    RiveAnimation.asset(
-                              SignNotifier.zodiacsign,
-                              fit: BoxFit.cover,
-                            ),
+                          child: RiveAnimation.asset(
+                            zodiacsign,
+                            fit: BoxFit.cover,
                           ),
                         ),
+
                         // child: CircleAvatar(
                         //   radius: 50,
                         //   backgroundImage: AssetImage('assets/1.png'),
@@ -139,19 +153,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       ),
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 15, 0, 10),
-                        child: Consumer<SignNotifier>(
-                          builder:
-                              (BuildContext context, SignNotifier, child) =>
-                                  Text(
-                            SignNotifier.zodiacsignName,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            ),
+                        child: Text(
+                          zodiacsignname,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20,
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -183,28 +193,58 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     ),
                                   ),
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    AutoSizeText(
-                                      '76% Love',
-                                      style: TextStyle(
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18,
+                                checkdata
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [CircularProgressIndicator()],
+                                      )
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              AutoSizeText(
+                                                love!,
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                              AutoSizeText(
+                                                '% Love',
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              AutoSizeText(
+                                                health!,
+                                                style: TextStyle(
+                                                  color: Colors.blue[900],
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                              AutoSizeText(
+                                                '% Health',
+                                                style: TextStyle(
+                                                  color: Colors.blue[900],
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    AutoSizeText(
-                                      '92 % Health',
-                                      style: TextStyle(
-                                        color: Colors.blue[900],
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                  ],
-                                ),
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(0, 30, 0, 8),
                                   child: AutoSizeText(
@@ -219,7 +259,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(10, 5, 10, 15),
                                   child: AutoSizeText(
-                                    "You have a generous spirit, Aries. And today you're feeling particularly altruistic. Finally, you have a chance to help your fellow man in a very real, direct way. Forget about big goals and lofty visions. Don't try to set out to eradicate world hunger. You can go down to a local shelter and help cook a meal for a few dozen people. The personal contact will do you good.",
+                                    horoscope ?? "Loading...",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.black87,
