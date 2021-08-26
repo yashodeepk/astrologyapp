@@ -128,8 +128,8 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-            child: TextButton.icon(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: TextButton(
               onPressed: () {
                 // final provider =
                 //     Provider.of<GoogleSignInProvider>(context,
@@ -144,20 +144,20 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                     builder: (context) =>
                         SingleChildScrollView(child: AstrologerinfoWidget()));
               },
-              label: Center(child: Text('Register as Astrologer')),
-              icon: Icon(
-                LineIcons.alternateSignIn,
-                color: Colors.white,
-              ),
+              child: Center(
+                  child: Text(
+                'New Astrologer? Click Here',
+                style: TextStyle(fontStyle: FontStyle.italic),
+              )),
               style: TextButton.styleFrom(
-                fixedSize: Size(300, 45),
-                primary: Colors.white,
-                backgroundColor: Colors.blue[900],
+                fixedSize: Size(300, 10),
+                primary: Colors.blue,
+                backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(32))),
                 textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
+                  color: Colors.black,
+                  fontSize: 14,
                 ),
               ),
             ),
