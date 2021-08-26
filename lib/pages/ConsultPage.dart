@@ -84,185 +84,159 @@ class _ConsultWidgetState extends State<ConsultWidget> {
         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
         scrollDirection: Axis.vertical,
         children: [
-          Container(
-            width: MediaQuery.of(context).size.width - 40,
-            height: 150,
-            decoration: BoxDecoration(
-              color: Colors.blue[900],
-              // gradient: LinearGradient(
-              //     begin: Alignment.centerLeft,
-              //     end: Alignment.centerRight,
-              //     colors: [Color(0xfffe8c00), Color(0xfff83600)]),
-              borderRadius: BorderRadius.circular(26),
-            ),
-            child: Column(
+          astrologerCard('assets/bro.jpg', 'Shubham Bhutada',
+              'Love, Career, marraige', '600', 3),
+          astrologerCard('assets/bro.jpg', 'Yashodeep Bhutada',
+              'Love, Career, marraige', '400', 4)
+        ],
+      ),
+    );
+  }
+
+  Widget astrologerCard(
+      String imageUrl, String name, String expertise, String fees, int rating) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        width: MediaQuery.of(context).size.width - 40,
+        height: 160,
+        decoration: BoxDecoration(
+          color: Colors.blue[900],
+          // gradient: LinearGradient(
+          //     begin: Alignment.centerLeft,
+          //     end: Alignment.centerRight,
+          //     colors: [Color(0xfffe8c00), Color(0xfff83600)]),
+          borderRadius: BorderRadius.circular(26),
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.max,
               children: [
-                Row(
+                Column(
                   mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Column(
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(8, 20, 0, 8),
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage(imageUrl),
+                        radius: 30,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(8, 8, 0, 8),
-                          child: CircleAvatar(
-                            backgroundImage:
-                                AssetImage('assets/images/bro.jpg'),
-                            radius: 30,
+                        for (int i = 0; i < 5; i++)
+                          Container(
+                            padding: EdgeInsets.fromLTRB(10, 0, 2, 0),
+                            // padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            child: Icon(
+                              Icons.star_rate,
+                              color:
+                                  rating > i ? Color(0xFFFFD700) : Colors.grey,
+                              size: 18,
+                            ),
                           ),
-                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(10, 1, 0, 5),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Container(
-                              padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                              // padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                              child: Icon(
-                                Icons.star_rate,
-                                color: Color(0xFFFFD700),
-                                size: 24,
+                            Text(
+                              name,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
                               ),
                             ),
-                            Container(
-                              // padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                              padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                              // padding: EdgeInsets.all(5),
-                              child: Icon(
-                                Icons.star_rate,
-                                color: Color(0xFFFFD700),
-                                size: 24,
-                              ),
-                            ),
-                            Container(
-                              // padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                              padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                              // padding: EdgeInsets.all(5),
-                              child: Icon(
-                                Icons.star_rate,
-                                color: Color(0xFFFFD700),
-                                size: 24,
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                              // padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                              // padding: EdgeInsets.all(5),
-                              child: Icon(
-                                Icons.star_rate,
-                                color: Color(0xFFFFD700),
-                                size: 24,
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-                              // padding: EdgeInsets.all(5),
-                              child: Icon(
-                                Icons.star_rate,
-                                color: Color(0xFFFFD700),
-                                size: 24,
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Expanded(
+                              child: AutoSizeText(
+                                expertise,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
                               ),
                             )
                           ],
                         ),
                       ],
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(10, 1, 0, 0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Text(
-                                  'Shivam Karle',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Expanded(
-                                  child: AutoSizeText(
-                                    'Marriage, Career, Job, Study. Love',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Fess  - $fees',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      ' ₹',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          'Fess  - ',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(
-                          ' ₹',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
+                TextButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DashboardScreen()));
+                    print('Button pressed ...');
+                  },
+                  label: Text('Book Meeting'),
+                  icon: Icon(
+                    Icons.call_rounded,
+                    size: 15,
+                  ),
+                  style: TextButton.styleFrom(
+                    // padding: EdgeInsets.all(8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    TextButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => DashboardScreen()));
-                        print('Button pressed ...');
-                      },
-                      label: Text('Book Meeting'),
-                      icon: Icon(
-                        Icons.call_rounded,
-                        size: 15,
-                      ),
-                      style: TextButton.styleFrom(
-                        // padding: EdgeInsets.all(8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        primary: Colors.white,
-                        backgroundColor: Colors.orange,
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16,
-                        ),
-                      ),
-                    )
-                  ],
+                    primary: Colors.white,
+                    backgroundColor: Colors.orange,
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 16,
+                    ),
+                  ),
                 )
               ],
-            ),
-          ),
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
