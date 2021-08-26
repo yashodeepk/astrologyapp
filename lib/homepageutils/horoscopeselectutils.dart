@@ -16,10 +16,10 @@ class _HorescopeWidgetState extends State<HorescopeWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.75,
+      height: MediaQuery.of(context).size.height * 0.7,
       padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
       decoration: BoxDecoration(
-          color: Colors.blue.shade900,
+          color: Colors.blueGrey[700],
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(30), topRight: Radius.circular(30))),
       child: SingleChildScrollView(
@@ -28,12 +28,15 @@ class _HorescopeWidgetState extends State<HorescopeWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Select Your Zodiac Sign',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 22),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 20),
+                  child: Text(
+                    'Select Zodiac Sign',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18),
+                  ),
                 ),
               ],
             ),
