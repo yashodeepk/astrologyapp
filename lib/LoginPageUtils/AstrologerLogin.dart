@@ -1,6 +1,4 @@
 import 'dart:ui';
-
-import 'package:astrologyapp/api/signinapi.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,68 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AstrologerinfoWidget extends StatefulWidget {
+class AstrologerLoginWidget extends StatefulWidget {
   @override
-  _AstrologerinfoWidgetState createState() => _AstrologerinfoWidgetState();
+  _AstrologerLoginWidgetState createState() => _AstrologerLoginWidgetState();
 }
 
-class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
-  TextEditingController nametextController = TextEditingController();
-  TextEditingController experienceController = TextEditingController();
-  TextEditingController phonenumberController = TextEditingController();
+class _AstrologerLoginWidgetState extends State<AstrologerLoginWidget> {
+  TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  final GoogleSignIn googleSignIn = GoogleSignIn();
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  SharedPreferences? prefs;
 
-  bool isLoading = false;
-  User? currentUser;
+  bool passwordVisibility = true;
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
-  Future<void> addItem({
-    required String name,
-    required String phonenumber,
-    required String email,
-    required String experience,
-  }) async {
-    CollectionReference _mainCollection =
-        _firestore.collection('temp_astrologer');
-    DocumentReference documentReferencer =
-        _mainCollection.doc(emailController.text);
-
-    Map<String, dynamic> data = <String, dynamic>{
-      "Name": name,
-      "phonenumber": phonenumber,
-      "email": email,
-      "experience": experience,
-    };
-
-    await documentReferencer
-        .set(data)
-        .whenComplete(
-          () => showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              isLoading = false;
-              return register(context);
-            },
-          ),
-        )
-        .onError(
-          (error, stackTrace) => showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              isLoading = true;
-              return registerfail(context);
-            },
-          ),
-        );
-  }
+  bool isLoading = false;
 
   AlertDialog register(context) => AlertDialog(
         contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -82,7 +33,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
           textAlign: TextAlign.center,
         )),
         content: Container(
-          height: 300,
+          height: 290,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -97,8 +48,8 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
                 textAlign: TextAlign.center,
               ),
-              Text(
-                'We will get in contact with you within next 7 days.',
+              AutoSizeText(
+                'we will get in contatct with you within 2 to 3 days.',
                 textAlign: TextAlign.center,
               )
             ],
@@ -129,7 +80,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
           textAlign: TextAlign.center,
         )),
         content: Container(
-          height: 300,
+          // height: 300,
           child: Column(
             children: [
               CircleAvatar(
@@ -143,7 +94,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
               //   "Thank you for Regstration.",
               //   textAlign: TextAlign.center,
               // ),
-              Text('Oops something went wrong, Please try again..')
+              AutoSizeText('Please check your internet connection.')
             ],
           ),
         ),
@@ -189,121 +140,13 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                   child: Text(
-                    'Please fill all details',
+                    'Login',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.blue.shade900,
                       fontWeight: FontWeight.w500,
                       fontSize: 20,
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child: TextFormField(
-                    controller: nametextController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      hintText: 'Full Name',
-                      hintStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.blue.shade900,
-                          width: 2,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(4.0),
-                          topRight: Radius.circular(4.0),
-                        ),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.blue.shade900,
-                          width: 2,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(4.0),
-                          topRight: Radius.circular(4.0),
-                        ),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.person_outlined,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                    ),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(25),
-                    ],
-                    validator: (String? val) {
-                      if (val!.isEmpty) {
-                        return 'please enter the Full Name';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                  // padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    controller: phonenumberController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      hintText: 'Contact number',
-                      hintStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.blue.shade900,
-                          width: 2,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(4.0),
-                          topRight: Radius.circular(4.0),
-                        ),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.blue.shade900,
-                          width: 2,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(4.0),
-                          topRight: Radius.circular(4.0),
-                        ),
-                      ),
-                      prefixIcon: Icon(
-                        LineIcons.mobilePhone,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                    ),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-                    inputFormatters: <TextInputFormatter>[
-                      LengthLimitingTextInputFormatter(10),
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                    ],
-                    validator: (val) {
-                      if (val!.isEmpty) {
-                        return 'please enter the Contact number';
-                      }
-
-                      return null;
-                    },
                   ),
                 ),
                 Padding(
@@ -314,7 +157,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                     controller: emailController,
                     obscureText: false,
                     decoration: InputDecoration(
-                      hintText: 'Gmail',
+                      hintText: 'Email',
                       hintStyle: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -360,10 +203,10 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                   // padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     keyboardType: TextInputType.phone,
-                    controller: experienceController,
-                    obscureText: false,
+                    controller: passwordController,
+                    obscureText: passwordVisibility,
                     decoration: InputDecoration(
-                      hintText: 'Experience in years',
+                      hintText: 'Password',
                       hintStyle: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -388,20 +231,35 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                           topRight: Radius.circular(4.0),
                         ),
                       ),
-                      prefixIcon: Icon(
-                        LineIcons.clock,
-                        color: Colors.black,
-                        size: 24,
-                      ),
+                      // prefixIcon: Icon(
+                      //   LineIcons.clock,
+                      //   color: Colors.black,
+                      //   size: 24,
+                      // ),
+                      prefixIcon: IconButton(
+                          icon: Icon(Icons.vpn_key),
+                          onPressed: () {
+                            setState(() {});
+                          }),
+                      suffixIcon: IconButton(
+                          icon: Icon(passwordVisibility
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              passwordVisibility = !passwordVisibility;
+                            });
+                          }),
                     ),
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 18,
                     ),
-                    inputFormatters: <TextInputFormatter>[
-                      LengthLimitingTextInputFormatter(2),
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                    ],
+
+                    // inputFormatters: <TextInputFormatter>[
+                    //   LengthLimitingTextInputFormatter(2),
+                    //   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                    // ],
                     validator: (val) {
                       if (val!.isEmpty) {
                         return 'please enter the Experience in years';
@@ -424,11 +282,6 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                               //     context,
                               //     listen: false);
                               // provider.googleLogin();
-                              addItem(
-                                  name: nametextController.text,
-                                  phonenumber: phonenumberController.text,
-                                  email: emailController.text,
-                                  experience: experienceController.text);
 
                               // storeage("normaluser");
                               setState(() {
