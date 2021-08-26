@@ -1,6 +1,5 @@
 import 'package:astrologyapp/LoginPageUtils/LoginPage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
 class LoginPageWidget extends StatefulWidget {
@@ -10,37 +9,12 @@ class LoginPageWidget extends StatefulWidget {
 
 class _LoginPageWidgetState extends State<LoginPageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  bool get isPlaying => _controller.isActive;
 
-  bool button = false;
-  final bikeRiveFileName = 'assets/astro.riv';
-  Artboard? _bikeArtboard;
-  late StateMachineController _controller;
-  SMIInput<bool>? _pressInput;
+  String bikeRiveFileName = 'assets/Rive/astro.riv';
 
   @override
   void initState() {
     super.initState();
-    _bikeRiveFile();
-  }
-
-  void _bikeRiveFile() async {
-    final bytes = await rootBundle.load(bikeRiveFileName);
-    final file = RiveFile.import(bytes);
-
-    final artboard = file.mainArtboard;
-    var controller =
-        StateMachineController.fromArtboard(artboard, 'State Machine 1');
-    if (controller != null) {
-      artboard.addController(controller);
-      _pressInput = controller.findInput('pressed');
-    } else {
-      return;
-    }
-    setState(() {
-      _bikeArtboard = artboard;
-      _pressInput?.value = true;
-    });
   }
 
   @override
@@ -63,73 +37,68 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
         //     end: Alignment(-0.07, 1),
         //   ),
         // ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                padding: EdgeInsets.only(top: 50),
-                // width: double.infinity,
-                // height: double.infinity,
-                // decoration: BoxDecoration(
-                //   color: Colors.indigo,
-                // ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  // mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 15, 0, 2),
-                      child: Text(
-                        'Welcome',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'Find Your Answers Here',
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //mainAxisSize: MainAxisSize.max,
+          children: [
+            Container(
+              // padding: EdgeInsets.only(top: 50),
+              // width: double.infinity,
+              // height: double.infinity,
+              // decoration: BoxDecoration(
+              //   color: Colors.indigo,
+              // ),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                // mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 50, 0, 2),
+                    child: Text(
+                      'Welcome',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Find Your Answers Here',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
               ),
-              Container(
-                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                // decoration: BoxDecoration(
-                //   color: Colors.white,
-                //   borderRadius: BorderRadius.all(Radius.circular(32)),
-                // ),
-                child: Center(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.7,
-                    child: _bikeArtboard == null
-                        ? const SizedBox(
-                            child: Center(
-                              child: Text(""),
-                            ),
-                          )
-                        : Rive(
-                            fit: BoxFit.fitWidth,
-                            artboard: _bikeArtboard!,
-                          ),
+            ),
+            Container(
+              // padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              // decoration: BoxDecoration(
+              //   color: Colors.white,
+              //   borderRadius: BorderRadius.all(Radius.circular(32)),
+              // ),
+              child: Center(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.65,
+                  child: RiveAnimation.asset(
+                    bikeRiveFileName,
+                    fit: BoxFit.fitWidth,
                   ),
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
+            ),
+            Column(
+              // mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 30.0),
+                  child: TextButton(
                     onPressed: () {
                       showModalBottomSheet(
                           isScrollControlled: true,
@@ -166,10 +135,10 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                           fontSize: 18,
                         )),
                   ),
-                ],
-              )
-            ],
-          ),
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );
