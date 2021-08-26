@@ -1,10 +1,9 @@
-import 'package:astrologyapp/api/signinapi.dart';
+import 'package:astrologyapp/main.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
-String? zodiacsign;
-String? zodiacsignname;
+String zodiacsign = 'assets/Rive/Aquarius.riv';
+String zodiacsignname = 'Aquarius';
 
 class HorescopeWidget extends StatefulWidget {
   const HorescopeWidget({Key? key}) : super(key: key);
@@ -65,8 +64,8 @@ class _HorescopeWidgetState extends State<HorescopeWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                selectzodiacsign(context, 'assets/Rive/lio.riv', 'Lio'),
-                selectzodiacsign(context, 'assets/Rive/pisccs.riv', 'Pisccs'),
+                selectzodiacsign(context, 'assets/Rive/lio.riv', 'Leo'),
+                selectzodiacsign(context, 'assets/Rive/pisccs.riv', 'Pisces'),
                 selectzodiacsign(
                     context, 'assets/Rive/Sagittarius.riv', 'Sagittarius'),
               ],
@@ -75,8 +74,8 @@ class _HorescopeWidgetState extends State<HorescopeWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 selectzodiacsign(context, 'assets/Rive/Scorpio.riv', 'Scorpio'),
-                selectzodiacsign(context, 'assets/Rive/taurus.riv', 'taurus'),
-                selectzodiacsign(context, 'assets/Rive/virgo.riv', 'virgo'),
+                selectzodiacsign(context, 'assets/Rive/taurus.riv', 'Taurus'),
+                selectzodiacsign(context, 'assets/Rive/virgo.riv', 'Virgo'),
               ],
             )
           ],
@@ -87,46 +86,51 @@ class _HorescopeWidgetState extends State<HorescopeWidget> {
 
   Widget selectzodiacsign(
       BuildContext context, String zodiacsign1, String zodiacsignname1) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => SignNotifier(),
-        )
-      ],
-      child: InkWell(
-        child: Container(
-          child: Column(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width / 5,
-                height: MediaQuery.of(context).size.width / 5,
-                child: RiveAnimation.asset(
-                  zodiacsign1,
-                  fit: BoxFit.cover,
-                ),
+    return InkWell(
+      child: Container(
+        child: Column(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width / 3.7,
+              height: MediaQuery.of(context).size.width / 3.7,
+              child: RiveAnimation.asset(
+                zodiacsign1,
+                fit: BoxFit.cover,
               ),
-              Text(
-                zodiacsignname1,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16),
-              ),
-              SizedBox(
-                height: 20,
-              )
-            ],
-          ),
+            ),
+            Text(
+              zodiacsignname1,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16),
+            ),
+            SizedBox(
+              height: 20,
+            )
+          ],
         ),
-        onTap: () {
-          // setState(() {
-          //   zodiacsign = zodiacsign1;
-          //   zodiacsignname = zodiacsignname1;
-          // });
-          SignNotifier().zodiacsignchange(zodiacsign1, zodiacsignname1);
-          Navigator.of(context).pop();
-        },
       ),
+      onTap: () {
+        setState(() {
+          zodiacsign = zodiacsign1;
+          zodiacsignname = zodiacsignname1;
+        });
+        // Navigator.pop(context, () {
+        //   setState(() {});
+        // });
+        // Navigator.pop(context,);
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => PageNavigator(),
+        //   ),
+        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PageNavigator()),
+        ).then((value) => setState(() {}));
+      },
     );
   }
 }
