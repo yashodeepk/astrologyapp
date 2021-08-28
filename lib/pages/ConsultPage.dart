@@ -84,9 +84,9 @@ class _ConsultWidgetState extends State<ConsultWidget> {
         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
         scrollDirection: Axis.vertical,
         children: [
-          astrologerCard('assets/bro.jpg', 'Shubham Bhutada',
+          astrologerCard('assets/images/bro.jpg', 'Shubham Bhutada',
               'Love, Career, marraige', '600', 3),
-          astrologerCard('assets/bro.jpg', 'Yashodeep Bhutada',
+          astrologerCard('assets/images/bro.jpg', 'Yashodeep Bhutada',
               'Love, Career, marraige', '400', 4)
         ],
       ),
