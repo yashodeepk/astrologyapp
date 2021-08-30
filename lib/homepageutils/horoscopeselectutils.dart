@@ -128,7 +128,7 @@ class _HorescopeWidgetState extends State<HorescopeWidget> {
         // );
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PageNavigator()),
+          MaterialPageRoute(builder: (context) => Home()),
         ).then((value) => setState(() {}));
       },
     );

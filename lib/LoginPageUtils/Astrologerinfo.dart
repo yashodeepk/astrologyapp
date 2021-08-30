@@ -1,14 +1,11 @@
 import 'dart:ui';
 
-import 'package:astrologyapp/api/signinapi.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AstrologerinfoWidget extends StatefulWidget {
@@ -21,13 +18,12 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
   TextEditingController experienceController = TextEditingController();
   TextEditingController phonenumberController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  final GoogleSignIn googleSignIn = GoogleSignIn();
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  TextEditingController feesController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  SharedPreferences? prefs;
 
   bool isLoading = false;
-  User? currentUser;
+  List _myActivities = [];
+  String? _myActivitiesResult = '';
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -36,6 +32,8 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
     required String phonenumber,
     required String email,
     required String experience,
+    required String expertise,
+    required String fees,
   }) async {
     CollectionReference _mainCollection =
         _firestore.collection('temp_astrologer');
@@ -47,6 +45,8 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
       "phonenumber": phonenumber,
       "email": email,
       "experience": experience,
+      "expertise": expertise,
+      "fees": fees,
     };
 
     await documentReferencer
@@ -139,10 +139,6 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
               SizedBox(
                 height: 12,
               ),
-              // Text(
-              //   "Thank you for Regstration.",
-              //   textAlign: TextAlign.center,
-              // ),
               Text('Oops something went wrong, Please try again..')
             ],
           ),
@@ -252,7 +248,6 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                  // padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     keyboardType: TextInputType.number,
                     controller: phonenumberController,
@@ -357,7 +352,6 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                  // padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     keyboardType: TextInputType.phone,
                     controller: experienceController,
@@ -411,31 +405,147 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                   ),
                 ),
                 Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                  // padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.phone,
+                    controller: feesController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      hintText: 'Fees for 1 Hr Meeting in \u{20B9}',
+                      hintStyle: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.blue.shade900,
+                          width: 2,
+                        ),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(4.0),
+                          topRight: Radius.circular(4.0),
+                        ),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.blue.shade900,
+                          width: 2,
+                        ),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(4.0),
+                          topRight: Radius.circular(4.0),
+                        ),
+                      ),
+                      prefixIcon: Icon(
+                        LineIcons.clock,
+                        color: Colors.black,
+                        size: 24,
+                      ),
+                    ),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                    inputFormatters: <TextInputFormatter>[
+                      LengthLimitingTextInputFormatter(2),
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                    ],
+                    validator: (val) {
+                      if (val!.isEmpty ||
+                          int.parse(val) < 100 ||
+                          int.parse(val) > 1) {
+                        return 'please enter your Fees';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+                  child: MultiSelectFormField(
+                    autovalidate: false,
+                    fillColor: Colors.white,
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.blue.shade900,
+                        width: 2,
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
+                    ),
+                    chipBackGroundColor: Colors.blue.shade900,
+                    chipLabelStyle: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                    dialogTextStyle: TextStyle(fontWeight: FontWeight.normal),
+                    checkBoxActiveColor: Colors.white,
+                    checkBoxCheckColor: Colors.blue.shade900,
+                    dialogShapeBorder: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                    title: Text(
+                      "Expertise",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    dataSource: [
+                      {
+                        "display": "Health",
+                        "value": "Health",
+                      },
+                      {
+                        "display": "Career",
+                        "value": "Career",
+                      },
+                      {
+                        "display": "Love",
+                        "value": "Love",
+                      },
+                      {
+                        "display": "Marraige",
+                        "value": "Marraige",
+                      },
+                      {
+                        "display": "Finance",
+                        "value": "Finance",
+                      },
+                    ],
+                    textField: 'display',
+                    valueField: 'value',
+                    okButtonLabel: 'OK',
+                    cancelButtonLabel: 'CANCEL',
+                    hintWidget: Text('Please choose one or more'),
+                    initialValue: _myActivities,
+                    onSaved: (value) {
+                      if (value == null) return;
+                      setState(() {
+                        _myActivities = value;
+                      });
+                    },
+                  ),
+                ),
+                Padding(
                   padding: EdgeInsets.fromLTRB(15, 30, 15, 0),
                   child: isLoading
                       ? Center(child: CircularProgressIndicator())
                       : TextButton.icon(
                           onPressed: () {
-                            // setState(() {
-                            //   astrologer = true;
-                            // });
+                            _myActivitiesResult = _myActivities.toString();
+                            _myActivitiesResult = _myActivitiesResult!
+                                .substring(1, _myActivitiesResult!.length - 1);
+                            print(_myActivitiesResult);
                             if (formKey.currentState!.validate()) {
-                              // final provider = Provider.of<GoogleSignInProvider>(
-                              //     context,
-                              //     listen: false);
-                              // provider.googleLogin();
                               addItem(
                                   name: nametextController.text,
                                   phonenumber: phonenumberController.text,
                                   email: emailController.text,
-                                  experience: experienceController.text);
+                                  experience: experienceController.text,
+                                  expertise: _myActivitiesResult.toString(),
+                                  fees: feesController.text);
 
-                              // storeage("normaluser");
                               setState(() {
                                 isLoading = true;
                               });
-
-                              // storeage("normaluser");
                               print('Register as astraloger');
                             }
                           },

@@ -1,7 +1,5 @@
 import 'dart:ui';
 // import 'package:astrologyapp/api/signinapi.dart';
-import 'package:astrologyapp/GoogleMeetUtils/StoreData.dart';
-import 'package:astrologyapp/homepageutils/homepageapi.dart';
 import 'package:astrologyapp/homepageutils/horoscopeselectutils.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
