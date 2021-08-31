@@ -408,7 +408,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                   // padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.number,
                     controller: feesController,
                     obscureText: false,
                     decoration: InputDecoration(
@@ -438,7 +438,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                         ),
                       ),
                       prefixIcon: Icon(
-                        LineIcons.clock,
+                        LineIcons.indianRupeeSign,
                         color: Colors.black,
                         size: 24,
                       ),
