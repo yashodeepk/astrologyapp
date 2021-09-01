@@ -136,8 +136,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
                         child: Container(
-                          width: MediaQuery.of(context).size.width / 2.7,
-                          height: MediaQuery.of(context).size.width / 2.7,
+                          width: MediaQuery.of(context).size.width / 2.6,
+                          height: MediaQuery.of(context).size.width / 2.6,
                           child: RiveAnimation.asset(
                             zodiacsign,
                             fit: BoxFit.cover,

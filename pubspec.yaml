@@ -60,32 +60,35 @@ flutter:
   - assets/images/mimi7.gif
   - assets/images/mimi8.gif
   - assets/images/mimi9.gif
-  - assets/Rive/Aquarius.riv
-  - assets/Rive/Aries.riv
+
   - assets/Rive/astro.riv
-  - assets/Rive/cancer.riv
-  - assets/Rive/Capricorn.riv
-  - assets/Rive/gemini.riv
-  - assets/Rive/libra.riv
-  - assets/Rive/lio.riv
-  - assets/Rive/pisccs.riv
-  - assets/Rive/Sagittarius.riv
-  - assets/Rive/Scorpio.riv
-  - assets/Rive/taurus.riv
-  - assets/Rive/virgo.riv
-  - assets/Rive/astrology/Aquarius.riv
-  - assets/Rive/astrology/Aries.riv
-  - assets/Rive/astrology/astro.riv
-  - assets/Rive/astrology/cancer.riv
-  - assets/Rive/astrology/Capricorn.riv
-  - assets/Rive/astrology/gemini.riv
-  - assets/Rive/astrology/libra.riv
-  - assets/Rive/astrology/lio.riv
-  - assets/Rive/astrology/pisccs.riv
-  - assets/Rive/astrology/Sagittarius.riv
-  - assets/Rive/astrology/Scorpio.riv
-  - assets/Rive/astrology/taurus.riv
-  - assets/Rive/astrology/virgo.riv
+
+  - assets/Rive/sunsign/Aquarius.riv
+  - assets/Rive/sunsign/Aries.riv
+  - assets/Rive/sunsign/cancer.riv
+  - assets/Rive/sunsign/Capricorn.riv
+  - assets/Rive/sunsign/gemini.riv
+  - assets/Rive/sunsign/libra.riv
+  - assets/Rive/sunsign/lio.riv
+  - assets/Rive/sunsign/pisccs.riv
+  - assets/Rive/sunsign/Sagittarius.riv
+  - assets/Rive/sunsign/Scorpio.riv
+  - assets/Rive/sunsign/taurus.riv
+  - assets/Rive/sunsign/virgo.riv
+
+  - assets/Rive/moonsign/Aquarius.riv
+  - assets/Rive/moonsign/Aries.riv
+  - assets/Rive/moonsign/cancer.riv
+  - assets/Rive/moonsign/Capricorn.riv
+  - assets/Rive/moonsign/gemini.riv
+  - assets/Rive/moonsign/libra.riv
+  - assets/Rive/moonsign/lio.riv
+  - assets/Rive/moonsign/pisccs.riv
+  - assets/Rive/moonsign/Sagittarius.riv
+  - assets/Rive/moonsign/Scorpio.riv
+  - assets/Rive/moonsign/taurus.riv
+  - assets/Rive/moonsign/virgo.riv
+
   #   - images/a_dot_ham.jpeg
   # example:
   # fonts:
