@@ -1,14 +1,16 @@
 import 'package:astrologyapp/ChatUtils/userchat.dart';
+import 'package:astrologyapp/constants/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
   bool isLoading = false;
+
   // GoogleSignInAccount? _user;
   // GoogleSignInAccount get user => _user!;
   Future googleLogin(bool? astrologer) async {
@@ -62,6 +64,7 @@ class GoogleSignInProvider extends ChangeNotifier {
               await prefs.setString('id', currentUser.uid);
               await prefs.setString('name', currentUser.displayName!);
               await prefs.setString('photoUrl', currentUser.photoURL!);
+              await prefs.setString('type', userX);
             } else {
               DocumentSnapshot documentSnapshot = documents[0];
               UserChat userChat = UserChat.fromDocument(documentSnapshot);
@@ -70,6 +73,7 @@ class GoogleSignInProvider extends ChangeNotifier {
               await prefs.setString('name', userChat.name);
               await prefs.setString('photoUrl', userChat.photoUrl);
               await prefs.setString('aboutMe', userChat.aboutMe);
+              await prefs.setString('type', userX);
             }
             print('user data storage on cloudstore success');
             isLoading = false;
@@ -149,6 +153,7 @@ class GoogleSignInProvider extends ChangeNotifier {
                   await prefs.setString('id', currentUser.uid);
                   await prefs.setString('name', currentUser.displayName!);
                   await prefs.setString('photoUrl', currentUser.photoURL!);
+                  await prefs.setString('type', astrologerX);
                 } else {
                   DocumentSnapshot documentSnapshot = documents[0];
                   UserChat userChat = UserChat.fromDocument(documentSnapshot);
@@ -157,6 +162,7 @@ class GoogleSignInProvider extends ChangeNotifier {
                   await prefs.setString('name', userChat.name);
                   await prefs.setString('photoUrl', userChat.photoUrl);
                   await prefs.setString('aboutMe', userChat.aboutMe);
+                  await prefs.setString('type', astrologerX);
                 }
                 print('user data storage on cloudstore success');
                 isLoading = false;
