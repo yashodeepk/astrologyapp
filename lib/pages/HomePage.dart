@@ -8,8 +8,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 // import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+String? userType;
 
 class HomePageWidget extends StatefulWidget {
   //static variable for document name
@@ -40,6 +44,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   void initState() {
     super.initState();
+
+    getUserType();
     firestoreInstance
         .collection("horoscope")
         .doc(HomePageWidget.zodiacSignName)
@@ -52,6 +58,16 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         checkdata = false;
       });
     });
+  }
+
+  //get user type from shared prefs
+  getUserType() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (preferences.containsKey('type')) {
+      userType = preferences.getString('type');
+    }
+
+    print('type $userType');
   }
 
   // void handleClick(String value) {

@@ -1,7 +1,11 @@
 import 'package:astrologyapp/api/signinapi.dart';
+import 'package:astrologyapp/bottom_sheets/add_day_time.dart';
+import 'package:astrologyapp/constants/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'HomePage.dart';
 
 class AccountPageWidget extends StatefulWidget {
   @override
@@ -66,6 +70,31 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                 padding: EdgeInsets.zero,
                 scrollDirection: Axis.vertical,
                 children: [
+                  //check if user type is astrologer and add slot
+                  userType == astrologerX
+                      ? ListTile(
+                          title: Text(
+                            addTimeAvailable,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.access_time,
+                            color: Colors.black,
+                            size: 18,
+                          ),
+                          onTap: () async {
+                            //push to add time
+                            showModalBottomSheet(
+                                context: context,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) => AddDayAndTimeAvailable());
+                          },
+                        )
+                      : Container(),
                   ListTile(
                     title: Text(
                       'Payment History',
