@@ -1,12 +1,10 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:multiselect_formfield/multiselect_formfield.dart';
 
 class AstrologerinfoWidget extends StatefulWidget {
   @override
@@ -82,7 +80,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
           textAlign: TextAlign.center,
         )),
         content: Container(
-          height: 300,
+          height: 310,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -119,6 +117,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
           ),
         ],
       );
+
   AlertDialog registerfail(context) => AlertDialog(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(32.0))),
@@ -448,17 +447,12 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                       fontSize: 18,
                     ),
                     inputFormatters: <TextInputFormatter>[
-                      LengthLimitingTextInputFormatter(2),
+                      LengthLimitingTextInputFormatter(10),
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                     ],
-                    validator: (val) {
-                      if (val!.isEmpty ||
-                          int.parse(val) < 100 ||
-                          int.parse(val) > 1) {
-                        return 'please enter your Fees';
-                      }
-                      return null;
-                    },
+                    validator: (val) => val!.isEmpty || int.parse(val) > 100
+                        ? null
+                        : 'please enter your Fees',
                   ),
                 ),
                 Container(
