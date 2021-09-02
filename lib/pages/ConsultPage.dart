@@ -148,20 +148,17 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                     padding: EdgeInsets.fromLTRB(10, 1, 0, 5),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              name,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ],
+                        AutoSizeText(
+                          name,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
                         Row(
                           mainAxisSize: MainAxisSize.max,
@@ -169,6 +166,8 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                             Expanded(
                               child: AutoSizeText(
                                 expertise,
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,

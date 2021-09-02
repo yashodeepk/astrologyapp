@@ -2,7 +2,7 @@ import 'package:astrologyapp/main.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-String zodiacsign = 'assets/Rive/Aquarius.riv';
+String zodiacsign = 'assets/Rive/sunsign/Aquarius.riv';
 String zodiacsignname = 'Aquarius';
 
 class HorescopeWidget extends StatefulWidget {
@@ -46,36 +46,44 @@ class _HorescopeWidgetState extends State<HorescopeWidget> {
                 InkWell(
                   onTap: () {},
                   child: selectzodiacsign(
-                      context, 'assets/Rive/Aquarius.riv', 'Aquarius'),
+                      context, 'assets/Rive/sunsign/Aquarius.riv', 'Aquarius'),
                 ),
-                selectzodiacsign(context, 'assets/Rive/Aries.riv', 'Aries'),
-                selectzodiacsign(context, 'assets/Rive/cancer.riv', 'Cancer'),
+                selectzodiacsign(
+                    context, 'assets/Rive/sunsign/Aries.riv', 'Aries'),
+                selectzodiacsign(
+                    context, 'assets/Rive/sunsign/cancer.riv', 'Cancer'),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 selectzodiacsign(
-                    context, 'assets/Rive/Capricorn.riv', 'Capricorn'),
-                selectzodiacsign(context, 'assets/Rive/gemini.riv', 'Gemini'),
-                selectzodiacsign(context, 'assets/Rive/libra.riv', 'Libra'),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                selectzodiacsign(context, 'assets/Rive/lio.riv', 'Leo'),
-                selectzodiacsign(context, 'assets/Rive/pisccs.riv', 'Pisces'),
+                    context, 'assets/Rive/sunsign/Capricorn.riv', 'Capricorn'),
                 selectzodiacsign(
-                    context, 'assets/Rive/Sagittarius.riv', 'Sagittarius'),
+                    context, 'assets/Rive/sunsign/gemini.riv', 'Gemini'),
+                selectzodiacsign(
+                    context, 'assets/Rive/sunsign/libra.riv', 'Libra'),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                selectzodiacsign(context, 'assets/Rive/Scorpio.riv', 'Scorpio'),
-                selectzodiacsign(context, 'assets/Rive/taurus.riv', 'Taurus'),
-                selectzodiacsign(context, 'assets/Rive/virgo.riv', 'Virgo'),
+                selectzodiacsign(context, 'assets/Rive/sunsign/lio.riv', 'Leo'),
+                selectzodiacsign(
+                    context, 'assets/Rive/sunsign/pisccs.riv', 'Pisces'),
+                selectzodiacsign(context, 'assets/Rive/sunsign/Sagittarius.riv',
+                    'Sagittarius'),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                selectzodiacsign(
+                    context, 'assets/Rive/sunsign/Scorpio.riv', 'Scorpio'),
+                selectzodiacsign(
+                    context, 'assets/Rive/sunsign/taurus.riv', 'Taurus'),
+                selectzodiacsign(
+                    context, 'assets/Rive/sunsign/virgo.riv', 'Virgo'),
               ],
             )
           ],

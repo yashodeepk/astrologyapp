@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:astrologyapp/LoginPageUtils/AstrologerLogin.dart';
 import 'package:astrologyapp/LoginPageUtils/Astrologerinfo.dart';
 import 'package:astrologyapp/api/signinapi.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -54,12 +53,10 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
             padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
             child: TextButton.icon(
               onPressed: () {
-                setState(() {
-                  astrologer = false;
-                });
+                setState(() {});
                 final provider =
                     Provider.of<GoogleSignInProvider>(context, listen: false);
-                provider.googleLogin();
+                provider.googleLogin(false);
                 Navigator.of(context).pop();
                 // storeage("normaluser");
                 print('login as user');
@@ -96,18 +93,17 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
             padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
             child: TextButton.icon(
               onPressed: () {
-                // final provider =
-                //     Provider.of<GoogleSignInProvider>(context,
-                //         listen: false);
-                // provider.googleLogin();
-                // storeage("astrologer");
-                showModalBottomSheet(
-                    backgroundColor: Colors.transparent,
-                    isScrollControlled: true,
-                    // barrierColor: Colors.black,
-                    context: context,
-                    builder: (context) =>
-                        SingleChildScrollView(child: AstrologerLoginWidget()));
+                final provider =
+                    Provider.of<GoogleSignInProvider>(context, listen: false);
+                provider.googleLogin(true);
+                Navigator.of(context).pop();
+                // showModalBottomSheet(
+                //     backgroundColor: Colors.transparent,
+                //     isScrollControlled: true,
+                //     // barrierColor: Colors.black,
+                //     context: context,
+                //     builder: (context) =>
+                //         SingleChildScrollView(child: AstrologerLoginWidget()));
               },
               label: Center(child: Text('Login as Astrologer')),
               icon: Icon(

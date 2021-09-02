@@ -1,37 +1,34 @@
 import 'package:astrologyapp/ChatUtils/userchat.dart';
-import 'package:astrologyapp/LoginPageUtils/Astrologerinfo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-bool astrologer = false;
-
 class GoogleSignInProvider extends ChangeNotifier {
-  final googleSignIn = GoogleSignIn();
-  SharedPreferences? prefs;
-
   bool isLoading = false;
-  GoogleSignInAccount? _user;
-  GoogleSignInAccount get user => _user!;
-  Future googleLogin() async {
-    try {
-      final googleUser = await googleSignIn.signIn();
-      if (googleUser == null)
-        return print("google user null");
-      else {
-        _user = googleUser;
+  // GoogleSignInAccount? _user;
+  // GoogleSignInAccount get user => _user!;
+  Future googleLogin(bool? astrologer) async {
+    if (astrologer == false) {
+      final googleSignIn = GoogleSignIn();
+      try {
+        SharedPreferences? prefs;
+        final googleUser = await googleSignIn.signIn();
+        if (googleUser == null)
+          return print("google user null");
+        else {
+          // _user = googleUser;
 
-        final googleAuth = await googleUser.authentication;
+          final googleAuth = await googleUser.authentication;
 
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-        await FirebaseAuth.instance.signInWithCredential(credential);
-        if (astrologer) {
+          final credential = GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+          );
+          await FirebaseAuth.instance.signInWithCredential(credential);
           prefs = await SharedPreferences.getInstance();
 
           isLoading = true;
@@ -42,7 +39,7 @@ class GoogleSignInProvider extends ChangeNotifier {
             // Check is already sign up
             final QuerySnapshot result = await FirebaseFirestore.instance
                 .collection('users')
-                .where('id', isEqualTo: currentUser.uid)
+                .where('id', isEqualTo: currentUser.email)
                 .get();
             final List<DocumentSnapshot> documents = result.docs;
             if (documents.length == 0) {
@@ -50,209 +47,150 @@ class GoogleSignInProvider extends ChangeNotifier {
               // Update data to server if new user
               FirebaseFirestore.instance
                   .collection('users')
-                  .doc(currentUser.uid)
+                  .doc(currentUser.email)
                   .set({
                 'name': currentUser.displayName,
+                'email': currentUser.email,
                 'photoUrl': currentUser.photoURL,
                 'id': currentUser.uid,
-                'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+                'createdAt':
+                    DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
                 'chattingWith': null
               });
 
-              // Write data to local
-              await prefs?.setString('id', currentUser.uid);
-              await prefs?.setString('name', currentUser.displayName!);
-              await prefs?.setString('photoUrl', currentUser.photoURL!);
+              // // Write data to local
+              await prefs.setString('id', currentUser.uid);
+              await prefs.setString('name', currentUser.displayName!);
+              await prefs.setString('photoUrl', currentUser.photoURL!);
             } else {
               DocumentSnapshot documentSnapshot = documents[0];
               UserChat userChat = UserChat.fromDocument(documentSnapshot);
               // Write data to local
-              await prefs?.setString('id', userChat.id);
-              await prefs?.setString('name', userChat.name);
-              await prefs?.setString('photoUrl', userChat.photoUrl);
-              await prefs?.setString('aboutMe', userChat.aboutMe);
+              await prefs.setString('id', userChat.id);
+              await prefs.setString('name', userChat.name);
+              await prefs.setString('photoUrl', userChat.photoUrl);
+              await prefs.setString('aboutMe', userChat.aboutMe);
             }
             print('user data storage on cloudstore success');
             isLoading = false;
+            notifyListeners();
+            Fluttertoast.showToast(msg: "Sign in success");
           } else {
             print('user data storage on cloudstore failed');
-            // Fluttertoast.showToast(msg: "Sign in fail");
+            Fluttertoast.showToast(msg: "Sign in fail");
+            googleSignIn.disconnect();
+            FirebaseAuth.instance.signOut();
             isLoading = false;
           }
           // Fluttertoast.showToast(msg: "Sign in success");
+
         }
-        // else {
-        //   prefs = await SharedPreferences.getInstance();
-
-        //   final currentUser = FirebaseAuth.instance.currentUser;
-        //   isLoading = true;
-
-        //   // if (googleUser != null) {
-
-        //   if (currentUser != null) {
-        //     print('astrologer');
-        //     // Check is already sign up
-        //     final QuerySnapshot result = await FirebaseFirestore.instance
-        //         .collection('tempreryastrologers')
-        //         .where('id', isEqualTo: currentUser.uid)
-        //         .get();
-        //     final List<DocumentSnapshot> documents = result.docs;
-        //     if (documents.length == 0) {
-        //       print('astro user created');
-        //       // Update data to server if new user
-        //       FirebaseFirestore.instance
-        //           .collection('astrologers')
-        //           .doc(currentUser.uid)
-        //           .set({
-        //         'name': currentUser.displayName,
-        //         'photoUrl': currentUser.photoURL,
-        //         'id': currentUser.uid,
-        //         'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
-        //         'about': experienceController,
-        //         'chattingWith': null
-        //       });
-
-        //       // Write data to local
-        //       await prefs?.setString('id', currentUser.uid);
-        //       await prefs?.setString('name', currentUser.displayName!);
-        //       await prefs?.setString('photoUrl', currentUser.photoURL!);
-        //     } else {
-        //       DocumentSnapshot documentSnapshot = documents[0];
-        //       UserChat userChat = UserChat.fromDocument(documentSnapshot);
-        //       // Write data to local
-        //       await prefs?.setString('id', userChat.id);
-        //       await prefs?.setString('name', userChat.name);
-        //       await prefs?.setString('photoUrl', userChat.photoUrl);
-        //       await prefs?.setString('about', userChat.aboutMe);
-        //     }
-        //     // Fluttertoast.showToast(msg: "Sign in success");
-        //     print('data storage on cloudstore success');
-        //     isLoading = false;
-        //   } else {
-        //     // Fluttertoast.showToast(msg: "Sign in fail");
-        //     print('data storage on cloudstore failed');
-        //     isLoading = false;
-        //   }
-        // }
+      } catch (e) {
+        Fluttertoast.showToast(msg: "Sign in fail");
+        googleSignIn.disconnect();
+        FirebaseAuth.instance.signOut();
+        print(e.toString());
       }
-      Fluttertoast.showToast(msg: "Sign in success");
-    } catch (e) {
-      print(e.toString());
-    }
+    } else if (astrologer == true) {
+      final googleSignIn = GoogleSignIn();
+      final googleUser = await googleSignIn.signIn();
+      String email = googleUser!.email;
+      FirebaseFirestore.instance
+          .collection('Astrologer')
+          .doc(email)
+          .get()
+          .then((onValue) async {
+        if (onValue.exists) {
+          try {
+            SharedPreferences? prefs;
+            final googleUser = await googleSignIn.signIn();
+            if (googleUser == null)
+              return print("google user null");
+            else {
+              // _user = googleUser;
 
-    notifyListeners();
+              final googleAuth = await googleUser.authentication;
+
+              final credential = GoogleAuthProvider.credential(
+                accessToken: googleAuth.accessToken,
+                idToken: googleAuth.idToken,
+              );
+              await FirebaseAuth.instance.signInWithCredential(credential);
+              prefs = await SharedPreferences.getInstance();
+
+              isLoading = true;
+              final currentUser = FirebaseAuth.instance.currentUser;
+
+              if (currentUser != null) {
+                print('astrologer');
+                // Check is already sign up
+                final QuerySnapshot result = await FirebaseFirestore.instance
+                    .collection('Astrologer')
+                    .where('id', isEqualTo: currentUser.email)
+                    .get();
+                final List<DocumentSnapshot> documents = result.docs;
+                if (documents.length == 0) {
+                  print('user created');
+                  // Update data to server if new user
+                  FirebaseFirestore.instance
+                      .collection('Astrologer')
+                      .doc(currentUser.email)
+                      .set({
+                    'name': currentUser.displayName,
+                    'email': currentUser.email,
+                    'photoUrl': currentUser.photoURL,
+                    'id': currentUser.uid,
+                    'createdAt':
+                        DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
+                    'chattingWith': null
+                  });
+
+                  // // Write data to local
+                  await prefs.setString('id', currentUser.uid);
+                  await prefs.setString('name', currentUser.displayName!);
+                  await prefs.setString('photoUrl', currentUser.photoURL!);
+                } else {
+                  DocumentSnapshot documentSnapshot = documents[0];
+                  UserChat userChat = UserChat.fromDocument(documentSnapshot);
+                  // Write data to local
+                  await prefs.setString('id', userChat.id);
+                  await prefs.setString('name', userChat.name);
+                  await prefs.setString('photoUrl', userChat.photoUrl);
+                  await prefs.setString('aboutMe', userChat.aboutMe);
+                }
+                print('user data storage on cloudstore success');
+                isLoading = false;
+                notifyListeners();
+                Fluttertoast.showToast(msg: "Sign in success");
+              } else {
+                print('user data storage on cloudstore failed');
+                await googleSignIn.disconnect();
+                FirebaseAuth.instance.signOut();
+                Fluttertoast.showToast(msg: "Sign in fail");
+                isLoading = false;
+              }
+              // Fluttertoast.showToast(msg: "Sign in success");
+
+            }
+          } catch (e) {
+            Fluttertoast.showToast(msg: "Sign in fail");
+            await googleSignIn.disconnect();
+            FirebaseAuth.instance.signOut();
+            print(e.toString());
+          }
+        } else {
+          await googleSignIn.disconnect();
+          FirebaseAuth.instance.signOut();
+          Fluttertoast.showToast(msg: "please register before login");
+        }
+      });
+    }
   }
 
   Future logout() async {
+    final googleSignIn = GoogleSignIn();
     await googleSignIn.disconnect();
     FirebaseAuth.instance.signOut();
     notifyListeners();
   }
 }
-
-// class SignNotifier extends ChangeNotifier {
-//   String zodiacsign = 'assets/Rive/Aquarius.riv';
-//   String zodiacsignName = 'Aquarius';
-//   void zodiacsignchange(String zodiacsign1, String zodiacsignName) {
-//     zodiacsign = zodiacsign1;
-//     zodiacsignName = zodiacsignName;
-//     notifyListeners();
-//   }
-// }
-
-// class Firebaseauthuser {
-//   final GoogleSignIn googleSignIn = GoogleSignIn();
-//   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-//   SharedPreferences? prefs;
-
-//   bool isLoading = false;
-//   bool isLoggedIn = false;
-//   User? currentUser;
-
-//   // @override
-//   // void initState() {
-//   //   super.initState();
-//   // }
-
-//   // void isSignedIn() async {
-//   //   this.setState(() {
-//   //     isLoading = true;
-//   //   });
-
-//   //   prefs = await SharedPreferences.getInstance();
-
-//   //   isLoggedIn = await googleSignIn.isSignedIn();
-//   //   if (isLoggedIn && prefs?.getString('id') != null) {
-//   //     Navigator.pushReplacement(
-//   //       context,
-//   //       MaterialPageRoute(builder: (context) => HomeScreen(currentUserId: prefs!.getString('id') ?? "")),
-//   //     );
-//   //   }
-
-//   //   this.setState(() {
-//   //     isLoading = false;
-//   //   });
-//   // }
-
-//   Future<Null> handleSignIn() async {
-//     prefs = await SharedPreferences.getInstance();
-
-//     isLoading = true;
-
-//     GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-//     if (googleUser != null) {
-//       GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
-//       final AuthCredential credential = GoogleAuthProvider.credential(
-//         accessToken: googleAuth.accessToken,
-//         idToken: googleAuth.idToken,
-//       );
-
-//       User? firebaseUser =
-//           (await firebaseAuth.signInWithCredential(credential)).user;
-
-//       if (firebaseUser != null) {
-//         // Check is already sign up
-//         final QuerySnapshot result = await FirebaseFirestore.instance
-//             .collection('users')
-//             .where('id', isEqualTo: firebaseUser.uid)
-//             .get();
-//         final List<DocumentSnapshot> documents = result.docs;
-//         if (documents.length == 0) {
-//           // Update data to server if new user
-//           FirebaseFirestore.instance
-//               .collection('users')
-//               .doc(firebaseUser.uid)
-//               .set({
-//             'name': firebaseUser.displayName,
-//             'photoUrl': firebaseUser.photoURL,
-//             'id': firebaseUser.uid,
-//             'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
-//             'chattingWith': null
-//           });
-
-//           // Write data to local
-//           currentUser = firebaseUser;
-//           await prefs?.setString('id', currentUser!.uid);
-//           await prefs?.setString('name', currentUser!.displayName ?? "");
-//           await prefs?.setString('photoUrl', currentUser!.photoURL ?? "");
-//         } else {
-//           DocumentSnapshot documentSnapshot = documents[0];
-//           UserChat userChat = UserChat.fromDocument(documentSnapshot);
-//           // Write data to local
-//           await prefs?.setString('id', userChat.id);
-//           await prefs?.setString('name', userChat.name);
-//           await prefs?.setString('photoUrl', userChat.photoUrl);
-//           await prefs?.setString('aboutMe', userChat.aboutMe);
-//         }
-//         Fluttertoast.showToast(msg: "Sign in success");
-//         isLoading = false;
-//       } else {
-//         Fluttertoast.showToast(msg: "Sign in fail");
-//         isLoading = false;
-//       }
-//     } else {
-//       Fluttertoast.showToast(msg: "Can not init google sign in");
-//       isLoading = false;
-//     }
-//   }
-// }
