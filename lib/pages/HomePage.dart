@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 // import 'package:astrologyapp/api/signinapi.dart';
 import 'package:astrologyapp/homepageutils/horoscopeselectutils.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
@@ -11,6 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 class HomePageWidget extends StatefulWidget {
+  //static variable for document name
+  static String zodiacSignName = 'Aquarius';
+
   @override
   _HomePageWidgetState createState() => _HomePageWidgetState();
 }
@@ -23,6 +27,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   String? health;
   String? horoscope;
   bool checkdata = true;
+
   // Future<void> storeage() async {
   //   await _firestore.collection('users').doc(_auth.currentUser!.uid).set({
   //     "name": user.displayName,
@@ -37,7 +42,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     super.initState();
     firestoreInstance
         .collection("horoscope")
-        .doc(zodiacsignname)
+        .doc(HomePageWidget.zodiacSignName)
         .get()
         .then((value) {
       setState(() {
@@ -48,6 +53,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       });
     });
   }
+
   // void handleClick(String value) {
   //   switch (value) {
   //     case 'Logout':
