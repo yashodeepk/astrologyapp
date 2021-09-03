@@ -14,14 +14,15 @@ Astrologer astrologerFromJson(String str) =>
 String astrologerToJson(Astrologer data) => json.encode(data.toJson());
 
 class Astrologer {
-  Astrologer({
-    @required this.name,
-    @required this.email,
-    @required this.experience,
-    @required this.expertise,
-    @required this.phoneNumber,
-    @required this.fees,
-  });
+  Astrologer(
+      {@required this.name,
+      @required this.email,
+      @required this.experience,
+      @required this.expertise,
+      @required this.phoneNumber,
+      @required this.fees,
+      @required this.photoUrl,
+      @required this.rating});
 
   final name;
   final email;
@@ -29,6 +30,8 @@ class Astrologer {
   final expertise;
   final phoneNumber;
   final fees;
+  final photoUrl;
+  final rating;
 
   factory Astrologer.fromJson(Map<String, dynamic> json) => Astrologer(
         name: json["name"],
@@ -37,14 +40,19 @@ class Astrologer {
         expertise: json["expertise"],
         phoneNumber: json["phoneNumber"],
         fees: json["fees"],
+        photoUrl: json["photoUrl"],
+        rating: json["rating"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "name": name,
         "email": email,
         "experience": experience,
         "expertise": expertise,
         "phoneNumber": phoneNumber,
         "fees": fees,
+        "photoUrl": photoUrl,
+        "rating": rating,
       };
 }
