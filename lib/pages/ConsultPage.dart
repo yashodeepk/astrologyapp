@@ -1,13 +1,16 @@
 import 'package:astrologyapp/GoogleMeetUtils/EventDetails.dart';
 import 'package:astrologyapp/GoogleMeetUtils/calenderevent.dart';
 import 'package:astrologyapp/GoogleMeetUtils/secrate.dart';
+import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/calendar/v3.dart' as cal;
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:googleapis_auth/googleapis_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Future<void> calender() async {
@@ -37,15 +40,18 @@ class ConsultWidget extends StatefulWidget {
 class _ConsultWidgetState extends State<ConsultWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final user = FirebaseAuth.instance.currentUser!;
+  List? astrologersList;
+
   @override
   void initState() {
-    // TODO: implement initState
+    astrologersList = Provider.of<List<Astrologer>>(context, listen: false);
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("lenght ${astrologersList!.length}");
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -82,21 +88,18 @@ class _ConsultWidgetState extends State<ConsultWidget> {
         elevation: 0,
       ),
       backgroundColor: Colors.white,
-      body: ListView(
-        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-        scrollDirection: Axis.vertical,
-        children: [
-          astrologerCard('assets/images/bro.jpg', 'Shubham Bhutada',
-              'Love, Career, marraige', '600', 3),
-          astrologerCard('assets/images/bro.jpg', 'Yashodeep Bhutada',
-              'Love, Career, marraige', '400', 4)
-        ],
+      body: ListView.builder(
+        itemBuilder: (BuildContext context, int index) {
+          Astrologer astrologer = astrologersList![index];
+
+          return astrologerCard(astrologer);
+        },
+        itemCount: astrologersList!.length,
       ),
     );
   }
 
-  Widget astrologerCard(
-      String imageUrl, String name, String expertise, String fees, int rating) {
+  Widget astrologerCard(Astrologer astrologer) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -122,7 +125,8 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                     Padding(
                       padding: EdgeInsets.fromLTRB(8, 20, 0, 8),
                       child: CircleAvatar(
-                        backgroundImage: AssetImage(imageUrl),
+                        backgroundImage: CachedNetworkImageProvider(
+                            '${astrologer.photoUrl}'),
                         radius: 30,
                       ),
                     ),
@@ -136,8 +140,9 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                             // padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                             child: Icon(
                               Icons.star_rate,
-                              color:
-                                  rating > i ? Color(0xFFFFD700) : Colors.grey,
+                              color: astrologer.rating > i
+                                  ? Color(0xFFFFD700)
+                                  : Colors.grey,
                               size: 18,
                             ),
                           ),
@@ -153,7 +158,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         AutoSizeText(
-                          name,
+                          astrologer.name,
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           style: TextStyle(
@@ -167,7 +172,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                           children: [
                             Expanded(
                               child: AutoSizeText(
-                                expertise,
+                                astrologer.expertise,
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
                                 style: TextStyle(
@@ -191,7 +196,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                 Row(
                   children: [
                     Text(
-                      'Fess  - $fees',
+                      'Fess  - ${astrologer.fees}',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
