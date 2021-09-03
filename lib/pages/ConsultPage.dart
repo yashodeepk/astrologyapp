@@ -5,9 +5,9 @@ import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:googleapis_auth/googleapis_auth.dart';
 import 'package:googleapis/calendar/v3.dart' as cal;
 import 'package:googleapis_auth/auth_io.dart';
+import 'package:googleapis_auth/googleapis_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Future<void> calender() async {
@@ -28,6 +28,8 @@ void prompt(String url) async {
 }
 
 class ConsultWidget extends StatefulWidget {
+  static const String routeName = '/consultPage';
+
   @override
   _ConsultWidgetState createState() => _ConsultWidgetState();
 }

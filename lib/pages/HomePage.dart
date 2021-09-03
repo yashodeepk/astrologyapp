@@ -14,8 +14,11 @@ import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 String? userType;
+String? email;
 
 class HomePageWidget extends StatefulWidget {
+  static const String routeName = '/HomePageWidget';
+
   //static variable for document name
   static String zodiacSignName = 'Aquarius';
 
@@ -99,9 +102,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           actions: <Widget>[
             InkWell(
               onTap: () {
-                Navigator.push(
+                Navigator.pushNamed(
                   context,
-                  MaterialPageRoute(builder: (context) => AccountPageWidget()),
+                  AccountPageWidget.routeName,
                 );
               },
               child: Padding(
