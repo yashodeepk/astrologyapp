@@ -1,21 +1,21 @@
 // import 'package:astrologyapp/LoginPageUtils/LoginPage.dart';
-import 'package:astrologyapp/ChatUtils/userchat.dart';
-import 'package:astrologyapp/LoginPageUtils/Astrologerinfo.dart';
 import 'package:astrologyapp/WelcomePageUtils/WelcomePage.dart';
 import 'package:astrologyapp/api/signinapi.dart';
-import 'package:astrologyapp/pages/AccountPage.dart';
+import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/pages/ChatPage.dart';
 import 'package:astrologyapp/pages/ConsultPage.dart';
 import 'package:astrologyapp/pages/HomePage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:astrologyapp/provider/slot_provider.dart';
+import 'package:astrologyapp/route_generator.dart';
+import 'package:astrologyapp/service/astrologers_service.dart';
+import 'package:astrologyapp/service/slot_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import 'model/slot.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,20 +25,43 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (context) => GoogleSignInProvider(),
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          home: Home(),
-          theme: ThemeData.light(),
-          debugShowCheckedModeBanner: false,
-        ),
-      );
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: GoogleSignInProvider()),
+        ChangeNotifierProvider.value(value: SlotProvider()),
+        //astrologers
+        StreamProvider<List<Astrologer>>.value(
+            value: AstrologerService.instance.getListOfAstrologers(),
+            lazy: false,
+            initialData: []),
+
+        //slots
+        StreamProvider<List<Slots>>.value(
+            value: SlotService.instance.getSlots(),
+            lazy: false,
+            initialData: []),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        initialRoute: Home.routeName,
+        onGenerateRoute: RouteGenerator.generateRoute,
+        theme: ThemeData.light(),
+        debugShowCheckedModeBanner: false,
+      ),
+    );
+  }
 }
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  static const String routeName = '/home';
+
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: StreamBuilder(
@@ -72,6 +95,7 @@ class _PageNavigatorState extends State<PageNavigator> {
   int selectedPage = 0;
 
   final _pageOptions = [HomePageWidget(), ConsultWidget(), ChatWidget()];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
