@@ -1,3 +1,7 @@
+import 'package:astrologyapp/constants/constants.dart';
+import 'package:astrologyapp/model/slot.dart';
+import 'package:astrologyapp/service/slot_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 class SlotProvider with ChangeNotifier {
@@ -17,7 +21,7 @@ class SlotProvider with ChangeNotifier {
 
   get getSlotTimes => _slotTimes;
 
-  get getOrder => _order;
+  //get getOrder => _order;
 
   //notify listener
   saveSlot(day, date, startTime, endTime, slotTimes) {
@@ -32,7 +36,35 @@ class SlotProvider with ChangeNotifier {
 
   //create record in database
   createSlot() {
-    print(
-        'start TIME $getStartTime  -- endTime $getEndTime -- day $getDay  -- date $getDate -- slots $getSlotTimes');
+    //assign order for days
+    switch (getDay) {
+      case monday:
+        _order = 1;
+        break;
+      case tuesday:
+        _order = 2;
+        break;
+      case wednesday:
+        _order = 3;
+        break;
+      case thursday:
+        _order = 4;
+        break;
+      case friday:
+        _order = 5;
+        break;
+    }
+
+    //create slot object
+    Slots newSlots = Slots(
+        id: FirebaseAuth.instance.currentUser!.uid,
+        day: getDay,
+        date: getDate,
+        startAt: getStartTime,
+        endAt: getEndTime,
+        order: _order,
+        slots: getSlotTimes);
+
+    SlotService.instance.createNewSlot(newSlots);
   }
 }
