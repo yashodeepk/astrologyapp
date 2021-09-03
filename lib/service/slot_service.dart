@@ -22,4 +22,20 @@ class SlotService {
         .doc(slot.day)
         .set(slot.toJson());
   }
+
+  //fetch slots
+  Stream<List<Slots>> getSlots() {
+    return firestoreService
+        .collection(astrologerX)
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .collection(slots)
+        .orderBy("order", descending: false)
+        .snapshots()
+        .map((snapshots) => snapshots.docs
+            .map((document) => Slots.fromJson(document.data()))
+            .toList(growable: true))
+        .handleError((error) {
+      print(error);
+    });
+  }
 }
