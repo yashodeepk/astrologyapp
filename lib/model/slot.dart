@@ -6,12 +6,12 @@ String slotsToJson(Slots data) => json.encode(data.toJson());
 
 class Slots {
   Slots({
-    this.id,
-    this.day,
-    this.date,
-    this.startAt,
-    this.endAt,
-    this.order,
+    required this.id,
+    required this.day,
+    required this.date,
+    required this.startAt,
+    required this.endAt,
+    required this.order,
     required this.slots,
   });
 
