@@ -1,6 +1,6 @@
 import 'package:astrologyapp/api/signinapi.dart';
-import 'package:astrologyapp/bottom_sheets/add_day_time.dart';
 import 'package:astrologyapp/constants/constants.dart';
+import 'package:astrologyapp/pages/schedules_page/schedules.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'HomePage.dart';
 
 class AccountPageWidget extends StatefulWidget {
+  static const String routeName = '/accountPage';
+
   @override
   _AccountPageWidgetState createState() => _AccountPageWidgetState();
 }
@@ -74,24 +76,22 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                   userType == astrologerX
                       ? ListTile(
                           title: Text(
-                            addTimeAvailable,
+                            addSchedule,
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w500,
                               fontSize: 15,
                             ),
                           ),
-                          trailing: Icon(
-                            Icons.access_time,
-                            color: Colors.black,
-                            size: 18,
-                          ),
                           onTap: () async {
-                            //push to add time
-                            showModalBottomSheet(
+                            //push to schedules
+                            Navigator.of(context)
+                                .pushNamed(SchedulesPage.routeName);
+                            /*  showModalBottomSheet(
                                 context: context,
                                 backgroundColor: Colors.transparent,
-                                builder: (context) => AddDayAndTimeAvailable());
+                                builder: (context) => AddDayAndTimeAvailable())*/
+                            ;
                           },
                         )
                       : Container(),
