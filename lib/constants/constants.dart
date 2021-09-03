@@ -1,5 +1,10 @@
 const userX = 'User';
 const astrologerX = 'Astrologer';
+const temp_astrologerX = 'temp_astrologer';
+const slots = 'Slots';
+const schedules = 'Schedules';
+const addSchedule = 'Add Schedule';
+const addSlot = 'Add Slot';
 const addTimeAvailable = 'Add days and time available';
 const selectDay = 'Day of slot';
 const startTime = 'Begin at';
@@ -37,8 +42,10 @@ const threeHundredDp = 300.0;
 const threeFiftyDp = 350.0;
 const fourHundredDp = 400.0;
 //------------days .const.const.const.
-const monday = 'Monday';
-const tuesday = 'Tuesday';
-const wednesday = 'Wednesday';
-const thursday = 'Thursday';
-const friday = 'Friday';
+const monday = 'Mondays';
+const tuesday = 'Tuesdays';
+const wednesday = 'Wednesdays';
+const thursday = 'Thursdays';
+const friday = 'Fridays';
+const saturday = 'Saturdays';
+const sunday = 'Sundays';
