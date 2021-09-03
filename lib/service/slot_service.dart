@@ -6,28 +6,35 @@ import 'package:firebase_auth/firebase_auth.dart';
 class SlotService {
   final firestoreService = FirebaseFirestore.instance;
   static SlotService? _instance;
+  static String? email;
 
   SlotService._();
 
   static SlotService get instance {
+    if (FirebaseAuth.instance.currentUser != null) {
+      email = FirebaseAuth.instance.currentUser!.email;
+    }
+
     return _instance == null ? _instance = SlotService._() : _instance!;
   }
 
 //create new slot
-  Future<void> createNewSlot(Slots slot) {
-    return firestoreService
-        .collection(astrologerX)
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .collection(slots)
-        .doc(slot.day)
-        .set(slot.toJson());
+  Future<void> createNewSlot(Slots slot) async {
+    if (email != null) {
+      return await firestoreService
+          .collection(astrologerX)
+          .doc(email)
+          .collection(slots)
+          .doc(slot.day)
+          .set(slot.toJson());
+    }
   }
 
   //fetch slots
   Stream<List<Slots>> getSlots() {
     return firestoreService
         .collection(astrologerX)
-        .doc(FirebaseAuth.instance.currentUser!.email)
+        .doc()
         .collection(slots)
         .orderBy("order", descending: false)
         .snapshots()
