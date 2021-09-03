@@ -53,6 +53,12 @@ class SlotProvider with ChangeNotifier {
       case friday:
         _order = 5;
         break;
+      case saturday:
+        _order = 6;
+        break;
+      case sunday:
+        _order = 7;
+        break;
     }
 
     //create slot object
