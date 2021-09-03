@@ -3,6 +3,7 @@ import 'package:astrologyapp/pages/HomePage.dart';
 import 'package:astrologyapp/pages/schedules_page/schedules.dart';
 import 'package:flutter/material.dart';
 
+import 'GoogleMeetUtils/EventDetails.dart';
 import 'main.dart';
 
 class RouteGenerator {
@@ -21,6 +22,13 @@ class RouteGenerator {
 
       case SchedulesPage.routeName:
         return MaterialPageRoute(builder: (_) => SchedulesPage());
+
+      case DashboardScreen.routeName:
+        final data = settings.arguments as String;
+        return MaterialPageRoute(
+            builder: (_) => DashboardScreen(
+                  astrologerEmail: data,
+                ));
       default:
         return _errorRoute();
     }
