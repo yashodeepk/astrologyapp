@@ -1,15 +1,20 @@
 import 'package:astrologyapp/constants/constants.dart';
 import 'package:astrologyapp/model/slot.dart';
-import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SlotService {
   final firestoreService = FirebaseFirestore.instance;
   static SlotService? _instance;
+  static String? _email;
 
   SlotService._();
 
   static SlotService get instance {
+    if (FirebaseAuth.instance.currentUser != null) {
+      _email = FirebaseAuth.instance.currentUser!.email;
+      print("email is $_email");
+    }
     return _instance == null ? _instance = SlotService._() : _instance!;
   }
 
@@ -17,7 +22,7 @@ class SlotService {
   Future<void> createNewSlot(Slots slot) async {
     return await firestoreService
         .collection(astrologerX)
-        .doc(email)
+        .doc(_email)
         .collection(slots)
         .doc(slot.day)
         .set(slot.toJson());
@@ -27,7 +32,7 @@ class SlotService {
   Stream<List<Slots>> getSlots() {
     return firestoreService
         .collection(astrologerX)
-        .doc()
+        .doc(_email)
         .collection(slots)
         .orderBy("order", descending: false)
         .snapshots()
@@ -35,7 +40,7 @@ class SlotService {
             .map((document) => Slots.fromJson(document.data()))
             .toList(growable: true))
         .handleError((error) {
-      print(error);
+      print("error --- $error");
     });
   }
 }
