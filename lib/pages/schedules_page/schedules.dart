@@ -63,46 +63,52 @@ class _SchedulesPageState extends State<SchedulesPage> {
                               padding: const EdgeInsets.all(eightDp),
                               child: Text(
                                 slots.day!,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: twentyDp,
-                                color: Colors.black),
-                          ),
-                        ),
-                            Container(
-                          padding: EdgeInsets.only(top: fourDp),
-                          width: oneFiftyDp,
-                          child: ListView.builder(
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                        top: eightDp, bottom: eightDp),
-                                    child: Text(
-                                      '${slots.slotTimes![index]}',
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.black45),
-                                    ),
-                                  );
-                            },
-                            itemCount: slots.slotTimes!.length,
-                            shrinkWrap: true,
-                          ),
-                        ),
-                        IconButton(
-                            onPressed: () async {
-                              await showModalBottomSheet(
-                                  context: context,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (context) =>
-                                      AddSchedule.addAnotherSlot(
-                                        slots: slots,
-                                      ));
-                            },
-                            icon: Icon(
-                              Icons.edit,
-                              color: Colors.blue,
-                            ))
-                      ],
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: twentyDp,
+                                    color: Colors.black),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(top: fourDp),
+                                  width: oneFiftyDp,
+                                  child: ListView.builder(
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(
+                                            top: eightDp, bottom: eightDp),
+                                        child: Text(
+                                          '${slots.slotTimes![index]}',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black45),
+                                        ),
+                                      );
+                                    },
+                                    itemCount: slots.slotTimes!.length,
+                                    shrinkWrap: true,
+                                  ),
+                                ),
+                                IconButton(
+                                    onPressed: () async {
+                                      await showModalBottomSheet(
+                                          context: context,
+                                          backgroundColor: Colors.transparent,
+                                          builder: (context) =>
+                                              AddSchedule.addAnotherSlot(
+                                                slots: slots,
+                                              ));
+                                    },
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: Colors.blue,
+                                    ))
+                              ],
+                            ),
+                          ],
                     ),
                   ),
                 );
