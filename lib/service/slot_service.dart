@@ -28,6 +28,21 @@ class SlotService {
         .set(slot.toJson());
   }
 
+  //update slot
+  Future<void> updateSlot(Slots slot) async {
+    return await firestoreService
+        .collection(astrologerX)
+        .doc(_email)
+        .collection(slots)
+        .doc(slot.day)
+        .update({
+      "slotTimes": FieldValue.arrayUnion(slot.slotTimes!),
+      'slotList': FieldValue.arrayUnion(slot.slotList!)
+    }).onError((error, stackTrace) {
+      print("?????? -- $error");
+    });
+  }
+
   //fetch slots
   Stream<List<Slots>> getSlots() {
     return firestoreService
