@@ -7,6 +7,9 @@ const addSchedule = 'Add Schedule';
 const addSlot = 'Add Slot';
 const ok = 'OK';
 const slotAlertTitle = 'Alert';
+const slotTimeInterval = 'Please select time with 30 minutes interval';
+const slotTimeSlotErrorDescription =
+    'This slot can not be added since there are existing time slots within.Please select another range of time';
 const slotAlertDescription =
     'Slot for day already exists and can not be created.Please tap on the edit to add more slots ';
 const addAnotherSlot = 'Add Another Slot';
