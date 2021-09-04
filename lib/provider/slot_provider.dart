@@ -6,35 +6,47 @@ import 'package:flutter/foundation.dart';
 
 class SlotProvider with ChangeNotifier {
   String? _day, _date;
-  String? _startTime;
-  String? _endTime;
+
+/*  String? _startTime;
+  String? _endTime;*/
   List? _slotTimes;
+  List? _slotLists;
   int? _order;
 
   get getDay => _day;
 
   get getDate => _date;
 
-  get getStartTime => _startTime;
+  /* get getStartTime => _startTime;
 
-  get getEndTime => _endTime;
+  get getEndTime => _endTime;*/
 
   get getSlotTimes => _slotTimes;
+
+  get getSlotList => _slotLists;
 
   //get getOrder => _order;
 
   //notify listener
-  saveSlot(day, date, startTime, endTime, slotTimes) {
+  saveSlot(day, date, slotTimes, slotLists) {
     _day = day;
     _date = date;
-    _startTime = startTime;
-    _endTime = endTime;
     _slotTimes = slotTimes;
+    _slotLists = slotLists;
 
     notifyListeners();
   }
 
-  //create record in database
+  //notify listener
+  updateSlotListener(day, slotTimes, slotLists) {
+    _day = day;
+    _slotTimes = slotTimes;
+    _slotLists = slotLists;
+
+    notifyListeners();
+  }
+
+  //create new slot record in database
   createSlot() {
     //assign order for days
     switch (getDay) {
@@ -66,11 +78,19 @@ class SlotProvider with ChangeNotifier {
         id: FirebaseAuth.instance.currentUser!.uid,
         day: getDay,
         date: getDate,
-        startAt: getStartTime,
-        endAt: getEndTime,
         order: _order,
-        slots: getSlotTimes);
+        slotTimes: getSlotTimes,
+        slotList: getSlotList);
 
     SlotService.instance.createNewSlot(newSlots);
+  }
+
+  //update slot time
+  updateSlot() {
+    //update slot object
+    Slots newSlots =
+        Slots(day: getDay, slotTimes: getSlotTimes, slotList: getSlotList);
+
+    SlotService.instance.updateSlot(newSlots);
   }
 }
