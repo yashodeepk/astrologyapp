@@ -5,6 +5,10 @@ const slots = 'Slots';
 const schedules = 'Schedules';
 const addSchedule = 'Add Schedule';
 const addSlot = 'Add Slot';
+const ok = 'OK';
+const slotAlertTitle = 'Alert';
+const slotAlertDescription =
+    'Slot for day already exists and can not be created.Please tap on the edit to add more slots ';
 const addAnotherSlot = 'Add Another Slot';
 const addTimeAvailable = 'Add days and time available';
 const createNewSlot = 'Create new Slot';
