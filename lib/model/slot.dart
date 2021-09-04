@@ -6,40 +6,37 @@ String slotsToJson(Slots data) => json.encode(data.toJson());
 
 class Slots {
   Slots({
-    required this.id,
-    required this.day,
-    required this.date,
-    required this.startAt,
-    required this.endAt,
-    required this.order,
-    required this.slots,
+    this.id,
+    this.day,
+    this.date,
+    this.order,
+    this.slotList,
+    this.slotTimes,
   });
 
-  final id;
-  final day;
-  final date;
-  final startAt;
-  final endAt;
-  final order;
-  List<dynamic> slots;
+  String? id;
+  String? day;
+  String? date;
+  int? order;
+  List<dynamic>? slotList;
+  List<dynamic>? slotTimes;
 
   factory Slots.fromJson(Map<String, dynamic> json) => Slots(
         id: json["id"],
         day: json["day"],
         date: json["date"],
-        startAt: json["startAt"],
-        endAt: json["endAt"],
         order: json["order"],
-        slots: List<dynamic>.from(json["slots"].map((x) => x)),
+        slotList: List<dynamic>.from(json["slotList"].map((x) => x)),
+        slotTimes: List<dynamic>.from(json["slotTimes"].map((x) => x)),
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "id": id,
         "day": day,
         "date": date,
-        "startAt": startAt,
-        "endAt": endAt,
         "order": order,
-        "slots": List<dynamic>.from(slots.map((x) => x)),
+        "slotList": List<dynamic>.from(slotList!.map((x) => x)),
+        "slotTimes": List<dynamic>.from(slotTimes!.map((x) => x)),
       };
 }
