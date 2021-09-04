@@ -19,6 +19,8 @@ class _SchedulesPageState extends State<SchedulesPage> {
     super.initState();
   }
 
+  //TODO --- 1.MULTIPLE SLOTS 2.DELETE .OVERLAP .MAX 4 SLOTS
+
   @override
   Widget build(BuildContext context) {
     final slotsList = Provider.of<List<Slots>>(context);
@@ -31,8 +33,8 @@ class _SchedulesPageState extends State<SchedulesPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
+        onPressed: () async {
+          await showModalBottomSheet(
               context: context,
               backgroundColor: Colors.transparent,
               builder: (context) => AddSchedule());
@@ -49,38 +51,54 @@ class _SchedulesPageState extends State<SchedulesPage> {
                     return Center(
                       child: Card(
                         elevation: 0,
-                        child: Padding(
-                          padding: const EdgeInsets.all(sixteenDp),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                slots.day,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(eightDp),
+                              child: Text(
+                                slots.day!,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: twentyDp,
                                     color: Colors.black),
                               ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${slots.startAt}  -  ',
-                                    style: TextStyle(
-                                        fontSize: twentyDp,
-                                        color: Colors.black45),
-                                  ),
-                                  Text(
-                                    slots.endAt,
-                                    style: TextStyle(
-                                        fontSize: twentyDp,
-                                        color: Colors.black45),
-                                  )
-                                ],
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(top: fourDp),
+                              width: oneFiftyDp,
+                              child: ListView.builder(
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                        top: eightDp, bottom: eightDp),
+                                    child: Text(
+                                      '${slots.slotTimes![index]}',
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.black45),
+                                    ),
+                                  );
+                                },
+                                itemCount: slots.slotTimes!.length,
+                                shrinkWrap: true,
                               ),
-                            ],
-                          ),
+                            ),
+                            IconButton(
+                                onPressed: () async {
+                                  await showModalBottomSheet(
+                                      context: context,
+                                      backgroundColor: Colors.transparent,
+                                      builder: (context) =>
+                                          AddSchedule.addAnotherSlot(
+                                            slots: slots,
+                                          ));
+                                },
+                                icon: Icon(
+                                  Icons.edit,
+                                  color: Colors.blue,
+                                ))
+                          ],
                         ),
                       ),
                     );
