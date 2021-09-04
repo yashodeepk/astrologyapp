@@ -14,6 +14,8 @@ class SchedulesPage extends StatefulWidget {
 }
 
 class _SchedulesPageState extends State<SchedulesPage> {
+  List day = [];
+
   @override
   void initState() {
     super.initState();
@@ -24,7 +26,7 @@ class _SchedulesPageState extends State<SchedulesPage> {
   @override
   Widget build(BuildContext context) {
     final slotsList = Provider.of<List<Slots>>(context);
-    print(slotsList.length);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -37,7 +39,9 @@ class _SchedulesPageState extends State<SchedulesPage> {
           await showModalBottomSheet(
               context: context,
               backgroundColor: Colors.transparent,
-              builder: (context) => AddSchedule());
+              builder: (context) => AddSchedule(
+                    day: day,
+                  ));
         },
         child: Icon(Icons.add),
         tooltip: addSchedule,
@@ -45,9 +49,9 @@ class _SchedulesPageState extends State<SchedulesPage> {
       body: Container(
         child: Builder(
             builder: (context) => ListView.builder(
-                  itemBuilder: (context, index) {
-                    Slots slots = slotsList[index];
-
+              itemBuilder: (context, index) {
+                Slots slots = slotsList[index];
+                    day.add(slots.day);
                     return Center(
                       child: Card(
                         elevation: 0,
@@ -59,19 +63,19 @@ class _SchedulesPageState extends State<SchedulesPage> {
                               padding: const EdgeInsets.all(eightDp),
                               child: Text(
                                 slots.day!,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: twentyDp,
-                                    color: Colors.black),
-                              ),
-                            ),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: twentyDp,
+                                color: Colors.black),
+                          ),
+                        ),
                             Container(
-                              padding: EdgeInsets.only(top: fourDp),
-                              width: oneFiftyDp,
-                              child: ListView.builder(
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(
+                          padding: EdgeInsets.only(top: fourDp),
+                          width: oneFiftyDp,
+                          child: ListView.builder(
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.only(
                                         top: eightDp, bottom: eightDp),
                                     child: Text(
                                       '${slots.slotTimes![index]}',
@@ -79,33 +83,33 @@ class _SchedulesPageState extends State<SchedulesPage> {
                                           fontSize: 16, color: Colors.black45),
                                     ),
                                   );
-                                },
-                                itemCount: slots.slotTimes!.length,
-                                shrinkWrap: true,
-                              ),
-                            ),
-                            IconButton(
-                                onPressed: () async {
-                                  await showModalBottomSheet(
-                                      context: context,
-                                      backgroundColor: Colors.transparent,
-                                      builder: (context) =>
-                                          AddSchedule.addAnotherSlot(
-                                            slots: slots,
-                                          ));
-                                },
-                                icon: Icon(
-                                  Icons.edit,
-                                  color: Colors.blue,
-                                ))
-                          ],
+                            },
+                            itemCount: slots.slotTimes!.length,
+                            shrinkWrap: true,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  itemCount: slotsList.length,
-                  shrinkWrap: true,
-                )),
+                        IconButton(
+                            onPressed: () async {
+                              await showModalBottomSheet(
+                                  context: context,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (context) =>
+                                      AddSchedule.addAnotherSlot(
+                                        slots: slots,
+                                      ));
+                            },
+                            icon: Icon(
+                              Icons.edit,
+                              color: Colors.blue,
+                            ))
+                      ],
+                    ),
+                  ),
+                );
+              },
+              itemCount: slotsList.length,
+              shrinkWrap: true,
+            )),
       ),
     );
   }
