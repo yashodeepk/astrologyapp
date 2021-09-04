@@ -26,9 +26,13 @@ class _AddScheduleState extends State<AddSchedule> {
   int? startHour, startMinute, endHour, endMinute;
   SlotProvider _slotProvider = SlotProvider();
   final _formKey = GlobalKey<FormState>();
+  List slotTimes = [];
+  List slotTimeList = []; //adds all slot lists available
+  int intervalDuration = 30;
 
   //function to select start time
-  _selectStartTime(BuildContext context, TextEditingController? controller) async {
+  _selectStartTime(
+      BuildContext context, TextEditingController? controller) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: selectedStartTime,
@@ -48,7 +52,8 @@ class _AddScheduleState extends State<AddSchedule> {
   }
 
   //end time
-  _selectEndTime(BuildContext context, TextEditingController? controller) async {
+  _selectEndTime(
+      BuildContext context, TextEditingController? controller) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: selectedStartTime,
@@ -68,7 +73,8 @@ class _AddScheduleState extends State<AddSchedule> {
   }
 
   //function to split time intervals for slots
-  Iterable<TimeOfDay> getSlotTimes(TimeOfDay startTime, TimeOfDay endTime, Duration interval) sync* {
+  Iterable<TimeOfDay> getSlotTimes(
+      TimeOfDay startTime, TimeOfDay endTime, Duration interval) sync* {
     var hour = startTime.hour;
     var minute = startTime.minute;
 
@@ -85,7 +91,6 @@ class _AddScheduleState extends State<AddSchedule> {
 
   @override
   Widget build(BuildContext context) {
-    print('day is ?? === ${widget.day}');
     return Form(
       key: _formKey,
       child: Container(
@@ -106,24 +111,24 @@ class _AddScheduleState extends State<AddSchedule> {
               ),
               widget.slots == null
                   ? Padding(
-                padding: const EdgeInsets.symmetric(horizontal: twentyDp),
-                child: Text(
-                  widget.slots == null
-                      ? createNewSlot
-                      : '$addAnotherSlot for ${widget.slots!.day}',
-                  style: TextStyle(
-                      fontSize:
-                      widget.slots == null ? sixteenDp : twentyDp,
-                      color: Colors.black),
-                ),
-              )
+                      padding: const EdgeInsets.symmetric(horizontal: twentyDp),
+                      child: Text(
+                        widget.slots == null
+                            ? createNewSlot
+                            : '$addAnotherSlot for ${widget.slots!.day}',
+                        style: TextStyle(
+                            fontSize:
+                                widget.slots == null ? sixteenDp : twentyDp,
+                            color: Colors.black),
+                      ),
+                    )
                   : Center(
-                child: Text(
-                  "${widget.slots!.day}",
-                  style:
-                  TextStyle(fontSize: twentyDp, color: Colors.black),
-                ),
-              ),
+                      child: Text(
+                        "${widget.slots!.day}",
+                        style:
+                            TextStyle(fontSize: twentyDp, color: Colors.black),
+                      ),
+                    ),
 
               widget.slots == null ? buildSelectedDay() : buildSlotTimeList(),
               SizedBox(
@@ -134,49 +139,49 @@ class _AddScheduleState extends State<AddSchedule> {
               widget.slots != null && widget.slots!.slotTimes!.length == 4
                   ? Container()
                   : Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  //start
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: twentyDp, vertical: fourDp),
-                        child: Text(
-                          startTime,
-                          style: TextStyle(
-                              fontSize: 15, color: Colors.black),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        //start
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: twentyDp, vertical: fourDp),
+                              child: Text(
+                                startTime,
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.black),
+                              ),
+                            ),
+                            buildTime(startTimeController)
+                          ],
                         ),
-                      ),
-                      buildTime(startTimeController)
-                    ],
-                  ),
-                  //end
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: twentyDp, vertical: fourDp),
-                        child: Text(
-                          endTime,
-                          style: TextStyle(
-                              fontSize: 15, color: Colors.black),
+                        //end
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: twentyDp, vertical: fourDp),
+                              child: Text(
+                                endTime,
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.black),
+                              ),
+                            ),
+                            buildTime(endTimeController)
+                          ],
                         ),
-                      ),
-                      buildTime(endTimeController)
-                    ],
-                  ),
-                ],
-              ),
+                      ],
+                    ),
               widget.slots != null && widget.slots!.slotTimes!.length == 4
                   ? Container()
                   : SizedBox(
-                height: thirtyDp,
-              ),
+                      height: thirtyDp,
+                    ),
 
               //add slot button
               widget.slots != null && widget.slots!.slotTimes!.length == 4
@@ -193,14 +198,14 @@ class _AddScheduleState extends State<AddSchedule> {
   Widget buildSelectedDay() {
     return Padding(
       padding:
-      const EdgeInsets.symmetric(horizontal: twentyDp, vertical: tenDp),
+          const EdgeInsets.symmetric(horizontal: twentyDp, vertical: tenDp),
       child: Container(
         padding: EdgeInsets.all(sixDp),
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(eightDp),
             border:
-            Border.all(width: 0.5, color: Colors.grey.withOpacity(0.5))),
+                Border.all(width: 0.5, color: Colors.grey.withOpacity(0.5))),
         child: DropdownButtonFormField<String>(
           value: _selectedDay,
           elevation: 1,
@@ -341,28 +346,41 @@ class _AddScheduleState extends State<AddSchedule> {
         startMinute != null &&
         endHour != null &&
         endMinute != null) {
-      final startTime = TimeOfDay(hour: startHour!, minute: startMinute!);
-      final endTime = TimeOfDay(hour: endHour!, minute: endMinute!);
-      final interval = Duration(minutes: 30);
-      List slotTimes = []; // adds start and end time
-      slotTimes.add('${startTimeController.text} - ${endTimeController.text}');
+      someMethod(startHour, startMinute, endHour, endMinute);
 
-      final times = getSlotTimes(startTime, endTime, interval)
-          .map((slotsTime) => slotsTime.format(context))
-          .toList();
-      List slotTimeList = []; //adds all slot lists available
-
-      for (int i = 0; i < times.length - 1; i++) {
-        //split times and add to list
-        slotTimeList.add('${times[i]} - ${times[i + 1]}');
+      //check if time has 30 minutes interval
+      if (startMinute! % intervalDuration != 0 ||
+          endMinute! % intervalDuration != 0) {
+        ShowAction.showDetails(
+            slotAlertTitle,
+            slotTimeInterval,
+            context,
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(ok)));
       }
-
-      //save to listeners
-      _slotProvider.updateSlotListener(
-          widget.slots!.day!, slotTimes, slotTimeList);
-      //create slot for day
-      _slotProvider.updateSlot();
-      Navigator.of(context).pop();
+      //check if the time selected or slots matches existing slots
+      else if (widget.slots!.slotList!
+          .any((element) => slotTimeList.contains(element))) {
+        ShowAction.showDetails(
+            slotAlertTitle,
+            slotTimeSlotErrorDescription,
+            context,
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(ok)));
+      } else {
+        //save to listeners
+        _slotProvider.updateSlotListener(
+            widget.slots!.day!, slotTimes, slotTimeList);
+        //create slot for day
+        _slotProvider.updateSlot();
+        Navigator.of(context).pop();
+      }
     }
   }
 
@@ -374,22 +392,8 @@ class _AddScheduleState extends State<AddSchedule> {
           startMinute != null &&
           endHour != null &&
           endMinute != null) {
-        final startTime = TimeOfDay(hour: startHour!, minute: startMinute!);
-        final endTime = TimeOfDay(hour: endHour!, minute: endMinute!);
-        final interval = Duration(minutes: 30);
-        List slotTimes = []; // adds start and end time
-        slotTimes
-            .add('${startTimeController.text} - ${endTimeController.text}');
+        someMethod(startHour, startMinute, endHour, endMinute);
 
-        final times = getSlotTimes(startTime, endTime, interval)
-            .map((slotsTime) => slotsTime.format(context))
-            .toList();
-        List slotTimeList = []; //adds all slot lists available
-
-        for (int i = 0; i < times.length - 1; i++) {
-          //split times and add to list
-          slotTimeList.add('${times[i]} - ${times[i + 1]}');
-        }
         var date = convertDateTimeDisplay(DateTime.now().toString());
 
         //check if slot for day is already created
@@ -433,7 +437,7 @@ class _AddScheduleState extends State<AddSchedule> {
             leading: Text(
               widget.slots!.slotTimes![index],
               style:
-              TextStyle(fontWeight: FontWeight.bold, fontSize: sixteenDp),
+                  TextStyle(fontWeight: FontWeight.bold, fontSize: sixteenDp),
             ),
             trailing: Icon(
               Icons.delete,
@@ -445,5 +449,23 @@ class _AddScheduleState extends State<AddSchedule> {
         shrinkWrap: true,
       ),
     );
+  }
+
+  void someMethod(
+      int? startHour, int? startMinute, int? endHour, int? endMinute) {
+    final startTime = TimeOfDay(hour: startHour!, minute: startMinute!);
+    final endTime = TimeOfDay(hour: endHour!, minute: endMinute!);
+    final interval = Duration(minutes: intervalDuration);
+    // adds start and end time
+    slotTimes.add('${startTimeController.text} - ${endTimeController.text}');
+//split times
+    final times = getSlotTimes(startTime, endTime, interval)
+        .map((slotsTime) => slotsTime.format(context))
+        .toList();
+
+    for (int i = 0; i < times.length - 1; i++) {
+      //add to list
+      slotTimeList.add('${times[i]} - ${times[i + 1]}');
+    }
   }
 }
