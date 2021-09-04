@@ -1,3 +1,4 @@
+import 'package:astrologyapp/actions/actions.dart';
 import 'package:astrologyapp/constants/constants.dart';
 import 'package:astrologyapp/model/slot.dart';
 import 'package:astrologyapp/provider/slot_provider.dart';
@@ -7,8 +8,9 @@ import 'package:intl/intl.dart';
 
 class AddSchedule extends StatefulWidget {
   Slots? slots;
+  List? day;
 
-  AddSchedule({Key? key}) : super(key: key);
+  AddSchedule({Key? key, required this.day}) : super(key: key);
 
   AddSchedule.addAnotherSlot({Key? key, this.slots}) : super(key: key);
 
@@ -26,8 +28,7 @@ class _AddScheduleState extends State<AddSchedule> {
   final _formKey = GlobalKey<FormState>();
 
   //function to select start time
-  _selectStartTime(
-      BuildContext context, TextEditingController? controller) async {
+  _selectStartTime(BuildContext context, TextEditingController? controller) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: selectedStartTime,
@@ -47,8 +48,7 @@ class _AddScheduleState extends State<AddSchedule> {
   }
 
   //end time
-  _selectEndTime(
-      BuildContext context, TextEditingController? controller) async {
+  _selectEndTime(BuildContext context, TextEditingController? controller) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: selectedStartTime,
@@ -68,8 +68,7 @@ class _AddScheduleState extends State<AddSchedule> {
   }
 
   //function to split time intervals for slots
-  Iterable<TimeOfDay> getSlotTimes(
-      TimeOfDay startTime, TimeOfDay endTime, Duration interval) sync* {
+  Iterable<TimeOfDay> getSlotTimes(TimeOfDay startTime, TimeOfDay endTime, Duration interval) sync* {
     var hour = startTime.hour;
     var minute = startTime.minute;
 
@@ -86,6 +85,7 @@ class _AddScheduleState extends State<AddSchedule> {
 
   @override
   Widget build(BuildContext context) {
+    print('day is ?? === ${widget.day}');
     return Form(
       key: _formKey,
       child: Container(
@@ -106,24 +106,24 @@ class _AddScheduleState extends State<AddSchedule> {
               ),
               widget.slots == null
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: twentyDp),
-                      child: Text(
-                        widget.slots == null
-                            ? createNewSlot
-                            : '$addAnotherSlot for ${widget.slots!.day}',
-                        style: TextStyle(
-                            fontSize:
-                                widget.slots == null ? sixteenDp : twentyDp,
-                            color: Colors.black),
-                      ),
-                    )
+                padding: const EdgeInsets.symmetric(horizontal: twentyDp),
+                child: Text(
+                  widget.slots == null
+                      ? createNewSlot
+                      : '$addAnotherSlot for ${widget.slots!.day}',
+                  style: TextStyle(
+                      fontSize:
+                      widget.slots == null ? sixteenDp : twentyDp,
+                      color: Colors.black),
+                ),
+              )
                   : Center(
-                      child: Text(
-                        "${widget.slots!.day}",
-                        style:
-                            TextStyle(fontSize: twentyDp, color: Colors.black),
-                      ),
-                    ),
+                child: Text(
+                  "${widget.slots!.day}",
+                  style:
+                  TextStyle(fontSize: twentyDp, color: Colors.black),
+                ),
+              ),
 
               widget.slots == null ? buildSelectedDay() : buildSlotTimeList(),
               SizedBox(
@@ -134,49 +134,49 @@ class _AddScheduleState extends State<AddSchedule> {
               widget.slots != null && widget.slots!.slotTimes!.length == 4
                   ? Container()
                   : Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        //start
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: twentyDp, vertical: fourDp),
-                              child: Text(
-                                startTime,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.black),
-                              ),
-                            ),
-                            buildTime(startTimeController)
-                          ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  //start
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: twentyDp, vertical: fourDp),
+                        child: Text(
+                          startTime,
+                          style: TextStyle(
+                              fontSize: 15, color: Colors.black),
                         ),
-                        //end
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: twentyDp, vertical: fourDp),
-                              child: Text(
-                                endTime,
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.black),
-                              ),
-                            ),
-                            buildTime(endTimeController)
-                          ],
+                      ),
+                      buildTime(startTimeController)
+                    ],
+                  ),
+                  //end
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: twentyDp, vertical: fourDp),
+                        child: Text(
+                          endTime,
+                          style: TextStyle(
+                              fontSize: 15, color: Colors.black),
                         ),
-                      ],
-                    ),
+                      ),
+                      buildTime(endTimeController)
+                    ],
+                  ),
+                ],
+              ),
               widget.slots != null && widget.slots!.slotTimes!.length == 4
                   ? Container()
                   : SizedBox(
-                      height: thirtyDp,
-                    ),
+                height: thirtyDp,
+              ),
 
               //add slot button
               widget.slots != null && widget.slots!.slotTimes!.length == 4
@@ -193,14 +193,14 @@ class _AddScheduleState extends State<AddSchedule> {
   Widget buildSelectedDay() {
     return Padding(
       padding:
-          const EdgeInsets.symmetric(horizontal: twentyDp, vertical: tenDp),
+      const EdgeInsets.symmetric(horizontal: twentyDp, vertical: tenDp),
       child: Container(
         padding: EdgeInsets.all(sixDp),
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(eightDp),
             border:
-                Border.all(width: 0.5, color: Colors.grey.withOpacity(0.5))),
+            Border.all(width: 0.5, color: Colors.grey.withOpacity(0.5))),
         child: DropdownButtonFormField<String>(
           value: _selectedDay,
           elevation: 1,
@@ -392,13 +392,25 @@ class _AddScheduleState extends State<AddSchedule> {
         }
         var date = convertDateTimeDisplay(DateTime.now().toString());
 
-        print("slot time is $slotTimes");
-
-        //save to listeners
-        _slotProvider.saveSlot(_selectedDay, date, slotTimes, slotTimeList);
-        //create slot for day
-        _slotProvider.createSlot();
-        Navigator.of(context).pop();
+        //check if slot for day is already created
+        if (widget.day != null && widget.day!.contains(_selectedDay)) {
+          ShowAction.showDetails(
+              slotAlertTitle,
+              slotAlertDescription,
+              context,
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                  child: Text(ok)));
+        } else {
+          //save to listeners
+          _slotProvider.saveSlot(_selectedDay, date, slotTimes, slotTimeList);
+          //create slot for day
+          _slotProvider.createSlot();
+          Navigator.of(context).pop();
+        }
       }
     }
   }
@@ -421,7 +433,7 @@ class _AddScheduleState extends State<AddSchedule> {
             leading: Text(
               widget.slots!.slotTimes![index],
               style:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: sixteenDp),
+              TextStyle(fontWeight: FontWeight.bold, fontSize: sixteenDp),
             ),
             trailing: Icon(
               Icons.delete,
