@@ -5,12 +5,14 @@ const slots = 'Slots';
 const schedules = 'Schedules';
 const addSchedule = 'Add Schedule';
 const addSlot = 'Add Slot';
+const addAnotherSlot = 'Add Another Slot';
 const addTimeAvailable = 'Add days and time available';
-const selectDay = 'Day of slot';
+const createNewSlot = 'Create new Slot';
 const startTime = 'Begin at';
 const endTime = 'End at';
 const pleaseSelectDay = 'Please select a day';
 const dayRequired = 'Day required';
+const chooseYourSlot = 'CHOOSE YOUR SLOT';
 
 const sixteenDp = 16.0;
 const eightDp = 8.0;
