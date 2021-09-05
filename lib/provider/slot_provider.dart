@@ -46,6 +46,12 @@ class SlotProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /* //list of slots to delete
+  slotsList(slots) {
+    _slotLists = slots;
+    notifyListeners();
+  }*/
+
   //create new slot record in database
   createSlot() {
     //assign order for days
@@ -92,5 +98,14 @@ class SlotProvider with ChangeNotifier {
         Slots(day: getDay, slotTimes: getSlotTimes, slotList: getSlotList);
 
     SlotService.instance.updateSlot(newSlots);
+  }
+
+  //delete slot list
+  deleteSlotTimeList() {
+    //delete slot object
+    Slots deleteSlot =
+        Slots(day: getDay, slotTimes: getSlotTimes, slotList: getSlotList);
+
+    SlotService.instance.deleteSlot(deleteSlot);
   }
 }

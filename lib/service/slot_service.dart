@@ -13,7 +13,6 @@ class SlotService {
   static SlotService get instance {
     if (FirebaseAuth.instance.currentUser != null) {
       _email = FirebaseAuth.instance.currentUser!.email;
-      print("email is $_email");
     }
     return _instance == null ? _instance = SlotService._() : _instance!;
   }
@@ -39,7 +38,7 @@ class SlotService {
       "slotTimes": FieldValue.arrayUnion(slot.slotTimes!),
       'slotList': FieldValue.arrayUnion(slot.slotList!)
     }).onError((error, stackTrace) {
-      print("?????? -- $error");
+      print(error);
     });
   }
 
@@ -56,6 +55,21 @@ class SlotService {
             .toList(growable: true))
         .handleError((error) {
       print("error --- $error");
+    });
+  }
+
+  //delete slot
+  Future<void> deleteSlot(Slots slot) async {
+    return await firestoreService
+        .collection(astrologerX)
+        .doc(_email)
+        .collection(slots)
+        .doc(slot.day)
+        .update({
+      "slotTimes": FieldValue.arrayRemove(slot.slotTimes!),
+      'slotList': FieldValue.arrayRemove(slot.slotList!)
+    }).onError((error, stackTrace) {
+      print(error);
     });
   }
 }
