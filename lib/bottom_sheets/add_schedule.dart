@@ -380,6 +380,7 @@ class _AddScheduleState extends State<AddSchedule> {
         //create slot for day
         _slotProvider.updateSlot();
         Navigator.of(context).pop();
+        ShowAction().showToast(successful, Colors.green);
       }
     }
   }
@@ -414,6 +415,7 @@ class _AddScheduleState extends State<AddSchedule> {
           //create slot for day
           _slotProvider.createSlot();
           Navigator.of(context).pop();
+          ShowAction().showToast(successful, Colors.green);
         }
       }
     }
@@ -449,33 +451,7 @@ class _AddScheduleState extends State<AddSchedule> {
                         style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.red)),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context, rootNavigator: true).pop();
-
-                          var splitAndExtractTime = widget
-                              .slots!.slotTimes![index]
-                              .toString()
-                              .replaceAll(RegExp("[ \s\s A-Z ]"), '');
-
-                          String startTimer = splitAndExtractTime
-                              .toString()
-                              .split('-')[0]
-                              .toString();
-
-                          String endTimer = splitAndExtractTime
-                              .toString()
-                              .split('-')[1]
-                              .toString();
-                          someMethod(
-                              int.parse(startTimer.split(":")[0]),
-                              int.parse(startTimer.split(":")[1]),
-                              int.parse(endTimer.split(":")[0]),
-                              int.parse(endTimer.split(":")[1]));
-
-                          _slotProvider.slotsList(slotTimeList);
-                          _slotProvider.deleteSlotTimeList();
-                        },
+                        onPressed: () => delete(index),
                         child: Text(yes)),
                     ElevatedButton(
                         onPressed: () {
@@ -496,13 +472,50 @@ class _AddScheduleState extends State<AddSchedule> {
     );
   }
 
+  ///hardest task so far
+  void delete(index) {
+    Navigator.of(context).pop();
+    Navigator.of(context, rootNavigator: true).pop();
+
+    var splitAndExtractTime = widget.slots!.slotTimes![index]
+        .toString()
+        .replaceAll(RegExp("[\s-\s]"), '');
+
+    String startTimer = splitAndExtractTime.toString().split('-')[0].toString();
+
+    String endTimer = splitAndExtractTime.toString().split('-')[1].toString();
+
+    slotTimes.add('$startTimer-$endTimer');
+
+    TimeOfDay startTimeOfDay = stringToTimeOfDay(startTimer);
+    TimeOfDay endTimeOfDay = stringToTimeOfDay(endTimer.substring(1));
+
+    someMethod(startTimeOfDay.hour, startTimeOfDay.minute, endTimeOfDay.hour,
+        endTimeOfDay.minute);
+
+    _slotProvider.updateSlotListener(
+        widget.slots!.day, slotTimes, slotTimeList);
+    _slotProvider.deleteSlotTimeList();
+    ShowAction().showToast(successful, Colors.green);
+  }
+
+  //this method takes a string and converts it to time
+  TimeOfDay stringToTimeOfDay(String timeOfDay) {
+    final format = DateFormat.jm();
+    return TimeOfDay.fromDateTime(format.parse(timeOfDay));
+  }
+
   void someMethod(
       int? startHour, int? startMinute, int? endHour, int? endMinute) {
     final startTime = TimeOfDay(hour: startHour!, minute: startMinute!);
     final endTime = TimeOfDay(hour: endHour!, minute: endMinute!);
     final interval = Duration(minutes: intervalDuration);
-    // adds start and end time
-    slotTimes.add('${startTimeController.text} - ${endTimeController.text}');
+    print('st ? $startTime -- end $endTime');
+    if (_formKey.currentState!.validate()) {
+      // adds start and end time
+      slotTimes.add('${startTimeController.text} - ${endTimeController.text}');
+    }
+
 //split times
     final times = getSlotTimes(startTime, endTime, interval)
         .map((slotsTime) => slotsTime.format(context))
