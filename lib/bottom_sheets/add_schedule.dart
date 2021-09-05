@@ -30,65 +30,6 @@ class _AddScheduleState extends State<AddSchedule> {
   List slotTimeList = []; //adds all slot lists available
   int intervalDuration = 30;
 
-  //function to select start time
-  _selectStartTime(
-      BuildContext context, TextEditingController? controller) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: selectedStartTime,
-    );
-    if (picked != null && picked != selectedStartTime) {
-      setState(() {
-        selectedStartTime = picked;
-        controller!.text = selectedStartTime.format(context);
-        startHour = selectedStartTime.hour;
-        startMinute = selectedStartTime.minute;
-      });
-    } else {
-      setState(() {
-        controller!.text = selectedStartTime.format(context);
-      });
-    }
-  }
-
-  //end time
-  _selectEndTime(
-      BuildContext context, TextEditingController? controller) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: selectedStartTime,
-    );
-    if (picked != null && picked != selectedStartTime) {
-      setState(() {
-        selectedStartTime = picked;
-        controller!.text = selectedStartTime.format(context);
-        endHour = selectedStartTime.hour;
-        endMinute = selectedStartTime.minute;
-      });
-    } else {
-      setState(() {
-        controller!.text = selectedStartTime.format(context);
-      });
-    }
-  }
-
-  //function to split time intervals for slots
-  Iterable<TimeOfDay> getSlotTimes(
-      TimeOfDay startTime, TimeOfDay endTime, Duration interval) sync* {
-    var hour = startTime.hour;
-    var minute = startTime.minute;
-
-    do {
-      yield TimeOfDay(hour: hour, minute: minute);
-      minute += interval.inMinutes;
-      while (minute >= 60) {
-        minute -= 60;
-        hour++;
-      }
-    } while (hour < endTime.hour ||
-        (hour == endTime.hour && minute <= endTime.minute));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -192,6 +133,65 @@ class _AddScheduleState extends State<AddSchedule> {
         ),
       ),
     );
+  }
+
+  //function to select start time
+  _selectStartTime(
+      BuildContext context, TextEditingController? controller) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: selectedStartTime,
+    );
+    if (picked != null && picked != selectedStartTime) {
+      setState(() {
+        selectedStartTime = picked;
+        controller!.text = selectedStartTime.format(context);
+        startHour = selectedStartTime.hour;
+        startMinute = selectedStartTime.minute;
+      });
+    } else {
+      setState(() {
+        controller!.text = selectedStartTime.format(context);
+      });
+    }
+  }
+
+  //end time
+  _selectEndTime(
+      BuildContext context, TextEditingController? controller) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: selectedStartTime,
+    );
+    if (picked != null && picked != selectedStartTime) {
+      setState(() {
+        selectedStartTime = picked;
+        controller!.text = selectedStartTime.format(context);
+        endHour = selectedStartTime.hour;
+        endMinute = selectedStartTime.minute;
+      });
+    } else {
+      setState(() {
+        controller!.text = selectedStartTime.format(context);
+      });
+    }
+  }
+
+  //function to split time intervals for slots
+  Iterable<TimeOfDay> getSlotTimes(
+      TimeOfDay startTime, TimeOfDay endTime, Duration interval) sync* {
+    var hour = startTime.hour;
+    var minute = startTime.minute;
+
+    do {
+      yield TimeOfDay(hour: hour, minute: minute);
+      minute += interval.inMinutes;
+      while (minute >= 60) {
+        minute -= 60;
+        hour++;
+      }
+    } while (hour < endTime.hour ||
+        (hour == endTime.hour && minute <= endTime.minute));
   }
 
   //drop down for selecting day
@@ -439,9 +439,54 @@ class _AddScheduleState extends State<AddSchedule> {
               style:
                   TextStyle(fontWeight: FontWeight.bold, fontSize: sixteenDp),
             ),
-            trailing: Icon(
-              Icons.delete,
-              color: Colors.red,
+            trailing: GestureDetector(
+              onTap: () {
+                ShowAction.showAlertDialog(
+                    deleteSlot,
+                    deleteDescription,
+                    context,
+                    ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.red)),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context, rootNavigator: true).pop();
+
+                          var splitAndExtractTime = widget
+                              .slots!.slotTimes![index]
+                              .toString()
+                              .replaceAll(RegExp("[ \s\s A-Z ]"), '');
+
+                          String startTimer = splitAndExtractTime
+                              .toString()
+                              .split('-')[0]
+                              .toString();
+
+                          String endTimer = splitAndExtractTime
+                              .toString()
+                              .split('-')[1]
+                              .toString();
+                          someMethod(
+                              int.parse(startTimer.split(":")[0]),
+                              int.parse(startTimer.split(":")[1]),
+                              int.parse(endTimer.split(":")[0]),
+                              int.parse(endTimer.split(":")[1]));
+
+                          _slotProvider.slotsList(slotTimeList);
+                          _slotProvider.deleteSlotTimeList();
+                        },
+                        child: Text(yes)),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(no)));
+              },
+              child: Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
             ),
           );
         },
