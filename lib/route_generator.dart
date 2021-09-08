@@ -4,6 +4,7 @@ import 'package:astrologyapp/pages/schedules_page/schedules.dart';
 import 'package:flutter/material.dart';
 
 import 'GoogleMeetUtils/EventDetails.dart';
+import 'api/config_page.dart';
 import 'main.dart';
 
 class RouteGenerator {
@@ -11,6 +12,10 @@ class RouteGenerator {
     final args = settings.arguments;
 
     switch (settings.name) {
+//config page
+      case ConfigurationPage.routeName:
+        return MaterialPageRoute(builder: (_) => ConfigurationPage());
+
       case Home.routeName:
         return MaterialPageRoute(builder: (_) => Home());
 

@@ -1,5 +1,6 @@
 // import 'package:astrologyapp/LoginPageUtils/LoginPage.dart';
 import 'package:astrologyapp/WelcomePageUtils/WelcomePage.dart';
+import 'package:astrologyapp/api/config_page.dart';
 import 'package:astrologyapp/api/signinapi.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/pages/ChatPage.dart';
@@ -25,10 +26,17 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  SlotService _slotService = SlotService.instance;
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        StreamProvider<User?>.value(
+          value: FirebaseAuth.instance.authStateChanges(),
+          initialData: FirebaseAuth.instance.currentUser,
+        ),
+
         ChangeNotifierProvider.value(value: GoogleSignInProvider()),
         ChangeNotifierProvider.value(value: SlotProvider()),
         //astrologers
@@ -39,13 +47,12 @@ class MyApp extends StatelessWidget {
 
         //slots
         StreamProvider<List<Slots>>.value(
-            value: SlotService.instance.getSlots(),
-            lazy: false,
-            initialData: []),
+            lazy: false, value: _slotService.getSlots(), initialData: []),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
-        initialRoute: Home.routeName,
+        title: 'Astrology App',
+        // home: Home(),
+        initialRoute: ConfigurationPage.routeName,
         onGenerateRoute: RouteGenerator.generateRoute,
         theme: ThemeData.light(),
         debugShowCheckedModeBanner: false,
