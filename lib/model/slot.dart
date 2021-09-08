@@ -18,16 +18,16 @@ class Slots {
   String? day;
   String? date;
   int? order;
-  List<dynamic>? slotList;
-  List<dynamic>? slotTimes;
+  List<String>? slotList;
+  List<String>? slotTimes;
 
   factory Slots.fromJson(Map<String, dynamic> json) => Slots(
         id: json["id"],
         day: json["day"],
         date: json["date"],
         order: json["order"],
-        slotList: List<dynamic>.from(json["slotList"].map((x) => x)),
-        slotTimes: List<dynamic>.from(json["slotTimes"].map((x) => x)),
+        slotList: List<String>.from(json["slotList"].map((x) => x)),
+        slotTimes: List<String>.from(json["slotTimes"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() =>
