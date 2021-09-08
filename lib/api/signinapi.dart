@@ -143,14 +143,14 @@ class GoogleSignInProvider extends ChangeNotifier {
                   FirebaseFirestore.instance
                       .collection('Astrologer')
                       .doc(currentUser.email)
-                      .set({
+                      .update({
                     'name': currentUser.displayName,
                     'email': currentUser.email,
                     'photoUrl': currentUser.photoURL,
                     'id': currentUser.uid,
                     'createdAt':
                         DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
-                    'chattingWith': null
+                    // 'chattingWith': null
                   });
 
                   // // Write data to local

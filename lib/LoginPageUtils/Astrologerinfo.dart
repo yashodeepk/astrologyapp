@@ -31,7 +31,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
     required String email,
     required String experience,
     required String expertise,
-    required String fees,
+    required int fees,
   }) async {
     CollectionReference _mainCollection =
         _firestore.collection('temp_astrologer');
@@ -39,12 +39,14 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
         _mainCollection.doc(emailController.text);
 
     Map<String, dynamic> data = <String, dynamic>{
-      "Name": name,
+      "name": name,
       "phonenumber": phonenumber,
       "email": email,
       "experience": experience,
       "expertise": expertise,
       "fees": fees,
+      "rating": 5,
+      "photoUrl": '',
     };
 
     await documentReferencer
@@ -535,7 +537,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                                   email: emailController.text,
                                   experience: experienceController.text,
                                   expertise: _myActivitiesResult.toString(),
-                                  fees: feesController.text);
+                                  fees: int.parse(feesController.text));
 
                               setState(() {
                                 isLoading = true;

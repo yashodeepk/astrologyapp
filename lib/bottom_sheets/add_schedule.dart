@@ -380,7 +380,7 @@ class _AddScheduleState extends State<AddSchedule> {
         //create slot for day
         _slotProvider.updateSlot();
         Navigator.of(context).pop();
-        ShowAction().showToast(successful, Colors.green);
+        ShowAction().showToast('successful', Colors.green);
       }
     }
   }
@@ -415,7 +415,7 @@ class _AddScheduleState extends State<AddSchedule> {
           //create slot for day
           _slotProvider.createSlot();
           Navigator.of(context).pop();
-          ShowAction().showToast(successful, Colors.green);
+          ShowAction().showToast("successful", Colors.green);
         }
       }
     }
@@ -444,20 +444,20 @@ class _AddScheduleState extends State<AddSchedule> {
             trailing: GestureDetector(
               onTap: () {
                 ShowAction.showAlertDialog(
-                    deleteSlot,
-                    deleteDescription,
+                    "deleteSlot",
+                    "deleteDescription",
                     context,
                     ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.red)),
                         onPressed: () => delete(index),
-                        child: Text(yes)),
+                        child: Text("yes")),
                     ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: Text(no)));
+                        child: Text("no")));
               },
               child: Icon(
                 Icons.delete,
@@ -496,7 +496,7 @@ class _AddScheduleState extends State<AddSchedule> {
     _slotProvider.updateSlotListener(
         widget.slots!.day, slotTimes, slotTimeList);
     _slotProvider.deleteSlotTimeList();
-    ShowAction().showToast(successful, Colors.green);
+    ShowAction().showToast("successful", Colors.green);
   }
 
   //this method takes a string and converts it to time
