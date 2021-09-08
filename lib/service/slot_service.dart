@@ -42,13 +42,29 @@ class SlotService {
     });
   }
 
-  //fetch slots
+  //fetch slots for astrologer
   Stream<List<Slots>> getSlots() {
     return firestoreService
         .collection(astrologerX)
         .doc(_email)
         .collection(slots)
         .orderBy("order", descending: false)
+        .snapshots()
+        .map((snapshots) => snapshots.docs
+            .map((document) => Slots.fromJson(document.data()))
+            .toList(growable: true))
+        .handleError((error) {
+      print("error --- $error");
+    });
+  }
+
+  //fetch slots for selected astrologer
+  Stream<List<Slots>> getSelectedAstrologerSlots(String email, String day) {
+    return firestoreService
+        .collection(astrologerX)
+        .doc(email)
+        .collection(slots)
+        .where('day', isEqualTo: day)
         .snapshots()
         .map((snapshots) => snapshots.docs
             .map((document) => Slots.fromJson(document.data()))

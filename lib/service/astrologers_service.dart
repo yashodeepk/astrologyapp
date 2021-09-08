@@ -15,7 +15,7 @@ class AstrologerService {
 //fetch all astrologers
   Stream<List<Astrologer>> getListOfAstrologers() {
     return firestoreService
-        .collection(temp_astrologerX)
+        .collection(astrologerX)
         .snapshots()
         .map((snapshots) => snapshots.docs
             .map((document) => Astrologer.fromJson(document.data()))
