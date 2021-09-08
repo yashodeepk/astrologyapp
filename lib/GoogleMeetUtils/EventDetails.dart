@@ -1,9 +1,12 @@
 import 'package:astrologyapp/GoogleMeetUtils/StoreData.dart';
 import 'package:astrologyapp/constants/constants.dart';
+import 'package:astrologyapp/model/slot.dart';
 import 'package:astrologyapp/model/users.dart';
+import 'package:astrologyapp/service/slot_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -19,14 +22,56 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   Storage storage = Storage();
   Astrologer? _astrologer;
+  List<String> slotsLists = [];
+  Slots? _slots;
+  int? _getDay = DateTime.now().weekday;
+  String? _day;
+  bool _isSelected = false;
+
+  int _itemSelected = 0;
 
   @override
   void initState() {
+    getDayFromDateNow();
+
     final astrologersList =
         Provider.of<List<Astrologer>>(context, listen: false);
     _astrologer = astrologersList.firstWhere(
         (Astrologer astrologer) => astrologer.email == widget.astrologerEmail);
+
+    /*  final slotListFromDb = Provider.of<List<Slots>>(context, listen: false);
+
+    _slots =
+        slotListFromDb.firstWhere((Slots slotTime) => slotTime.day == day!);
+*/
     super.initState();
+  }
+
+  getDayFromDateNow() {
+    switch (_getDay) {
+      case 1:
+        _day = monday;
+        break;
+      case 2:
+        _day = tuesday;
+        break;
+      case 3:
+        _day = wednesday;
+        break;
+      case 4:
+        _day = thursday;
+        break;
+      case 5:
+        _day = friday;
+        break;
+      case 6:
+        _day = saturday;
+        break;
+      case 7:
+        _day = sunday;
+        break;
+    }
+    print("Day is $_day");
   }
 
   @override
@@ -40,69 +85,159 @@ class _DashboardScreenState extends State<DashboardScreen> {
           color: Colors.white, //change your color here
         ),
         title: Text(
-          'Event',
+          'EVENT',
           style: TextStyle(
             color: Colors.white,
             fontSize: 22,
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            height: oneFiftyDp,
-            padding: EdgeInsets.symmetric(horizontal: thirtyDp),
-            decoration: BoxDecoration(
-                color: Colors.blue[900],
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(thirtyDp),
-                    bottomRight: Radius.circular(thirtyDp))),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //image
-                CircleAvatar(
-                  backgroundImage:
-                      CachedNetworkImageProvider('${_astrologer!.photoUrl}'),
-                  radius: fiftyDp,
-                ),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //displays astrologers details
+                        Container(
+                          height: oneTwentyDp,
+                          padding: EdgeInsets.symmetric(horizontal: thirtyDp),
+                          decoration: BoxDecoration(
+                              color: Colors.blue[900],
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(thirtyDp),
+                                  bottomRight: Radius.circular(thirtyDp))),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //image
+                              CircleAvatar(
+                                backgroundImage: CachedNetworkImageProvider(
+                                    '${_astrologer!.photoUrl}'),
+                                radius: fiftyDp,
+                              ),
 
-                //details
-                Container(
-                  margin: EdgeInsets.only(left: twentyDp, top: tenDp),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${_astrologer!.name}",
-                        style:
-                            TextStyle(fontSize: twentyDp, color: Colors.white),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: eightDp),
-                        child: Text(
-                          "${_astrologer!.email}",
-                          style: TextStyle(
-                              fontSize: sixteenDp, color: Colors.white),
+                              //details
+                              Container(
+                                margin:
+                                    EdgeInsets.only(left: twentyDp, top: tenDp),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "${_astrologer!.name}",
+                                      style: TextStyle(
+                                          fontSize: twentyDp,
+                                          color: Colors.white),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: eightDp),
+                                      child: Text(
+                                        "${_astrologer!.email}",
+                                        style: TextStyle(
+                                            fontSize: sixteenDp,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: Text(
+                                        "${_astrologer!.expertise}",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: sixteenDp,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: Text(
-                          "${_astrologer!.expertise}",
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: sixteenDp, color: Colors.white),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16, top: 8),
+                          child: Text(
+                            chooseYourSlot,
+                            style: TextStyle(fontSize: twentyDp),
+                          ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: sixteenDp, right: sixteenDp),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('<',
+                                  style: TextStyle(
+                                      fontSize: twentyDp, color: Colors.grey)),
+                              Text('>',
+                                  style: TextStyle(
+                                      fontSize: twentyDp, color: Colors.grey)),
+                            ],
+                          ),
+                        ),
+                        buildItemSection(),
+
+                        StreamBuilder<List<Slots>>(
+                            stream: SlotService.instance
+                                .getSelectedAstrologerSlots(
+                                    widget.astrologerEmail, _day!),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Expanded(
+                                    child: Center(
+                                  child: CircularProgressIndicator(),
+                                ));
+                              } else if (snapshot.hasData) {
+                                Slots sl = Slots();
+                                slotsLists.clear();
+                                for (int i = 0;
+                                    i < snapshot.data!.length;
+                                    i++) {
+                                  sl = snapshot.data![i];
+
+                                  for (int j = 0;
+                                      j < sl.slotList!.length;
+                                      j++) {
+                                    slotsLists.add(sl.slotList![j]);
+                                  }
+                                }
+                                return Builder(
+                                  builder: (BuildContext context) {
+                                    return buildSlotItemList(slotsLists);
+                                  },
+                                );
+                              } else {
+                                return Center(
+                                  child: Text('No slots'),
+                                );
+                              }
+                            }),
+
+                        //  buildContainer(),
+                      ],
+                    ),
                   ),
-                )
-              ],
-            ),
-          )
-        ],
+                  buildPaymentButton()
+                ],
+              ),
+            )
+          ],
+        ),
       ),
       /*  floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.cyan[900],
@@ -284,6 +419,202 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),*/
+    );
+  }
+
+  Widget buildItemSection() {
+    return Center(
+      child: Container(
+          height: 75,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+          ),
+          child: ListView.builder(
+              itemCount: 7,
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              primary: true,
+              itemBuilder: (ctx, position) {
+                int day = DateTime.now().day + position;
+                var ss = DateFormat('EE')
+                    .format(DateTime.now().add(Duration(days: position)));
+
+                return GestureDetector(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          ss,
+                          style: TextStyle(
+                              color: _itemSelected == day
+                                  ? Colors.black
+                                  : Colors.grey[700],
+                              fontSize: sixteenDp),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Container(
+                            height: 50,
+                            width: 40,
+                            margin: EdgeInsets.only(right: tenDp),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.black54, width: 0.9),
+                                color: _itemSelected == day
+                                    ? Colors.blue
+                                    : Colors.grey.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(sixDp)),
+                            child: Text(
+                                DateTime.now()
+                                    .add(Duration(days: position))
+                                    .day
+                                    .toString(),
+                                style: TextStyle(
+                                  fontSize: twentyDp,
+                                  color: _itemSelected == day
+                                      ? Colors.white
+                                      : Colors.black87,
+                                ))),
+                      ],
+                    ),
+                    onTap: () {
+                      switch (ss) {
+                        case 'Mon':
+                          _day = monday;
+                          break;
+                        case 'Tue':
+                          _day = tuesday;
+                          break;
+                        case 'Wed':
+                          _day = wednesday;
+                          break;
+                        case 'Thu':
+                          _day = thursday;
+                          break;
+                        case 'Fri':
+                          _day = friday;
+                          break;
+                        case 'Sat':
+                          _day = saturday;
+                          break;
+                        case 'Sun':
+                          _day = sunday;
+                          break;
+                      }
+
+                      setState(() {
+                        _itemSelected = DateTime.now().day + position;
+                      });
+                    });
+              })),
+    );
+  }
+
+  Widget buildContainer() {
+    return Container(
+      height: MediaQuery.of(context).size.height / 2.35,
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(14),
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            childAspectRatio: MediaQuery.of(context).size.width /
+                (MediaQuery.of(context).size.height / 4),
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 0),
+        itemBuilder: (BuildContext context, int index) {
+          return buildPaymentButton();
+        },
+        itemCount: 50,
+        shrinkWrap: true,
+      ),
+    );
+  }
+
+  Widget buildSlotItemList(List<String> slotList) {
+    return slotList.isEmpty
+        ? Expanded(
+            child: Container(
+            child: Center(child: Text("No slots...")),
+          ))
+        : Expanded(
+            child: SingleChildScrollView(
+              child: Wrap(
+                children: slotList
+                    .map((f) => GestureDetector(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 10.0),
+                            margin: EdgeInsets.only(
+                                left: 5.0, right: 5.0, top: 10.0, bottom: 10.0),
+                            decoration: BoxDecoration(
+                              color: _isSelected ? Colors.blue : Colors.white,
+                              border:
+                                  Border.all(color: Colors.black54, width: 1.3),
+                              borderRadius: BorderRadius.all(Radius.circular(
+                                      32) //                 <--- border radius here
+                                  ),
+                            ),
+                            child: Text(
+                              f,
+                              style: TextStyle(
+                                color:
+                                    _isSelected ? Colors.white : Colors.black,
+                                fontSize: 14.0,
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            _isSelected = true;
+                            print("www ? ${f.toString()}");
+                          },
+                        ))
+                    .toList(),
+              ),
+            ),
+          );
+  }
+
+  /*Widget buildSlotList(slotsFromList) {
+    return Builder(
+      builder: (BuildContext context) {
+        return ListView.builder(
+          itemBuilder: (context, index) {
+            print('?? $slotsFromList');
+            var slots = slotsFromList[index];
+           // print('?? $slots');
+
+            return buildSlotItemList(slots);
+          },
+          itemCount: _slots!.slotList!.length,
+          shrinkWrap: true,
+        );
+      },
+    );
+  }*/
+
+  //payment button
+  Widget buildPaymentButton() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 48,
+      margin: EdgeInsets.symmetric(horizontal: sixtyDp, vertical: twentyDp),
+      child: MaterialButton(
+        onPressed: () {},
+        child: Text(
+          proceedToPay,
+        ),
+        textColor: Colors.white,
+        color: Color(0xFF4736B5),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(thirtyDp)),
+      ),
     );
   }
 }
