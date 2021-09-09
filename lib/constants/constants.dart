@@ -26,6 +26,7 @@ const endTime = 'End at';
 const pleaseSelectDay = 'Please select a day';
 const dayRequired = 'Day required';
 const chooseYourSlot = 'CHOOSE YOUR SLOT';
+const pleaseSelectSlot = 'Please select a slot';
 
 const sixteenDp = 16.0;
 const eightDp = 8.0;
