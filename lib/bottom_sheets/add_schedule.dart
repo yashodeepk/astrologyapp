@@ -36,7 +36,7 @@ class _AddScheduleState extends State<AddSchedule> {
       key: _formKey,
       child: Container(
         height: widget.slots == null
-            ? MediaQuery.of(context).size.height * 0.4
+            ? MediaQuery.of(context).size.height * 0.6
             : MediaQuery.of(context).size.height * 0.6,
         padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
         decoration: BoxDecoration(
@@ -80,13 +80,14 @@ class _AddScheduleState extends State<AddSchedule> {
               widget.slots != null && widget.slots!.slotTimes!.length == 4
                   ? Container()
                   : Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      // mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         //start
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          // mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
                               padding: const EdgeInsets.symmetric(
@@ -103,6 +104,7 @@ class _AddScheduleState extends State<AddSchedule> {
                         //end
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          // mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Padding(
                               padding: const EdgeInsets.symmetric(
@@ -245,7 +247,7 @@ class _AddScheduleState extends State<AddSchedule> {
   Widget buildTime(TextEditingController controller) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: twentyDp),
-      width: oneFiftyDp,
+      width: MediaQuery.of(context).size.width * 0.385,
       child: TextFormField(
         validator: (value) => value!.isNotEmpty ? null : 'time can\'t be empty',
         cursorColor: Colors.blueAccent,
