@@ -1,5 +1,6 @@
 import 'package:astrologyapp/actions/actions.dart';
 import 'package:astrologyapp/constants/constants.dart';
+import 'package:astrologyapp/paymentMethodUtils/RazorpayPayment.dart';
 import 'package:flutter/material.dart';
 
 class SlotLists extends StatefulWidget {
@@ -105,7 +106,8 @@ class _SlotListsState extends State<SlotLists> {
         onPressed: () {
           _itemSelected.isEmpty
               ? ShowAction().showToast(pleaseSelectSlot, Colors.red)
-              : "";
+              : Navigator.of(context)
+                  .pushNamed(PaymentPage.routeName); //proceed to payment
         },
         child: Text(
           proceedToPay,
@@ -117,7 +119,4 @@ class _SlotListsState extends State<SlotLists> {
       ),
     );
   }
-
-//proceed to payment
-
 }

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-class Paymentpage extends StatefulWidget {
-  const Paymentpage({Key? key}) : super(key: key);
+class PaymentPage extends StatefulWidget {
+  static const routeName = '/paymentPage';
+
+  const PaymentPage({Key? key}) : super(key: key);
 
   @override
-  _PaymentpageState createState() => _PaymentpageState();
+  _PaymentPageState createState() => _PaymentPageState();
 }
 
-class _PaymentpageState extends State<Paymentpage> {
+class _PaymentPageState extends State<PaymentPage> {
   final TextEditingController name = TextEditingController();
   final TextEditingController phoneNo = TextEditingController();
   final TextEditingController email = TextEditingController();
@@ -49,14 +51,14 @@ class _PaymentpageState extends State<Paymentpage> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    print("Payment Sucessfull");
+    print("Payment Sucessful");
 
     print(
         "${response.orderId} \n${response.paymentId} \n${response.signature}");
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    print("Payemt Failed");
+    print("Payment Failed");
 
     print("${response.code}\n${response.message}");
   }

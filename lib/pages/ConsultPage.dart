@@ -51,7 +51,6 @@ class _ConsultWidgetState extends State<ConsultWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print("lenght ${astrologersList!.length}");
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -215,11 +214,8 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                 ),
                 TextButton.icon(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DashboardScreen()));
-                    print('Button pressed ...');
+                    Navigator.of(context).pushNamed(DashboardScreen.routeName,
+                        arguments: astrologer.email);
                   },
                   label: Text('Book Meeting'),
                   icon: Icon(
