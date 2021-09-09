@@ -1,4 +1,5 @@
 import 'package:astrologyapp/GoogleMeetUtils/StoreData.dart';
+import 'package:astrologyapp/GoogleMeetUtils/slot_lists/SlotLists.dart';
 import 'package:astrologyapp/constants/constants.dart';
 import 'package:astrologyapp/model/slot.dart';
 import 'package:astrologyapp/model/users.dart';
@@ -23,27 +24,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Storage storage = Storage();
   Astrologer? _astrologer;
   List<String> slotsLists = [];
-  Slots? _slots;
   int? _getDay = DateTime.now().weekday;
   String? _day;
-  bool _isSelected = false;
-
+  bool isItemSelected = false;
   int _itemSelected = 0;
+  int? _slotSelected;
 
   @override
   void initState() {
     getDayFromDateNow();
-
     final astrologersList =
         Provider.of<List<Astrologer>>(context, listen: false);
     _astrologer = astrologersList.firstWhere(
         (Astrologer astrologer) => astrologer.email == widget.astrologerEmail);
 
-    /*  final slotListFromDb = Provider.of<List<Slots>>(context, listen: false);
-
-    _slots =
-        slotListFromDb.firstWhere((Slots slotTime) => slotTime.day == day!);
-*/
     super.initState();
   }
 
@@ -71,7 +65,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _day = sunday;
         break;
     }
-    print("Day is $_day");
   }
 
   @override
@@ -196,6 +189,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 .getSelectedAstrologerSlots(
                                     widget.astrologerEmail, _day!),
                             builder: (context, snapshot) {
+                              slotsLists.clear();
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return Expanded(
@@ -204,21 +198,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ));
                               } else if (snapshot.hasData) {
                                 Slots sl = Slots();
-                                slotsLists.clear();
+
                                 for (int i = 0;
                                     i < snapshot.data!.length;
-                                    i++) {
+                                i++) {
                                   sl = snapshot.data![i];
 
                                   for (int j = 0;
-                                      j < sl.slotList!.length;
-                                      j++) {
+                                  j < sl.slotList!.length;
+                                  j++) {
                                     slotsLists.add(sl.slotList![j]);
                                   }
                                 }
                                 return Builder(
                                   builder: (BuildContext context) {
-                                    return buildSlotItemList(slotsLists);
+                                    return SlotLists(
+                                      slotList: slotsLists,
+                                    );
                                   },
                                 );
                               } else {
@@ -232,7 +228,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ],
                     ),
                   ),
-                  buildPaymentButton()
+                  //  buildPaymentButton()
                 ],
               ),
             )
@@ -440,6 +436,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               primary: true,
               itemBuilder: (ctx, position) {
                 int day = DateTime.now().day + position;
+
                 var ss = DateFormat('EE')
                     .format(DateTime.now().add(Duration(days: position)));
 
@@ -466,9 +463,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             decoration: BoxDecoration(
                                 border: Border.all(
                                     color: Colors.black54, width: 0.9),
-                                color: _itemSelected == day
-                                    ? Colors.blue
-                                    : Colors.grey.withOpacity(0.1),
+                                color:
+                                    _day!.contains(ss) || _itemSelected == day
+                                        ? Colors.blue
+                                        : Colors.grey.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(sixDp)),
                             child: Text(
                                 DateTime.now()
@@ -477,9 +475,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     .toString(),
                                 style: TextStyle(
                                   fontSize: twentyDp,
-                                  color: _itemSelected == day
-                                      ? Colors.white
-                                      : Colors.black87,
+                                  color:
+                                      _day!.contains(ss) || _itemSelected == day
+                                          ? Colors.white
+                                          : Colors.black87,
                                 ))),
                       ],
                     ),
@@ -509,31 +508,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       }
 
                       setState(() {
+                        isItemSelected = false;
                         _itemSelected = DateTime.now().day + position;
                       });
                     });
               })),
-    );
-  }
-
-  Widget buildContainer() {
-    return Container(
-      height: MediaQuery.of(context).size.height / 2.35,
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.all(14),
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: MediaQuery.of(context).size.width /
-                (MediaQuery.of(context).size.height / 4),
-            crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 0),
-        itemBuilder: (BuildContext context, int index) {
-          return buildPaymentButton();
-        },
-        itemCount: 50,
-        shrinkWrap: true,
-      ),
     );
   }
 
@@ -546,58 +525,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
         : Expanded(
             child: SingleChildScrollView(
               child: Wrap(
-                children: slotList
-                    .map((f) => GestureDetector(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 10.0),
-                            margin: EdgeInsets.only(
-                                left: 5.0, right: 5.0, top: 10.0, bottom: 10.0),
-                            decoration: BoxDecoration(
-                              color: _isSelected ? Colors.blue : Colors.white,
-                              border:
-                                  Border.all(color: Colors.black54, width: 1.3),
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                      32) //                 <--- border radius here
-                                  ),
+                children: slotList.map((f) {
+                  return GestureDetector(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 10.0),
+                      margin: EdgeInsets.only(
+                          left: 5.0, right: 5.0, top: 10.0, bottom: 10.0),
+                      decoration: BoxDecoration(
+                        color: _slotSelected == slotList.indexOf(f)
+                            ? Colors.blue
+                            : Colors.white,
+                        border: Border.all(color: Colors.black54, width: 1.3),
+                        borderRadius: BorderRadius.all(Radius.circular(
+                                32) //                 <--- border radius here
                             ),
-                            child: Text(
-                              f,
-                              style: TextStyle(
-                                color:
-                                    _isSelected ? Colors.white : Colors.black,
-                                fontSize: 14.0,
-                              ),
-                            ),
-                          ),
-                          onTap: () {
-                            _isSelected = true;
-                            print("www ? ${f.toString()}");
-                          },
-                        ))
-                    .toList(),
+                      ),
+                      child: Text(
+                        f,
+                        style: TextStyle(
+                          color: _slotSelected == slotList.indexOf(f)
+                              ? Colors.white
+                              : Colors.black,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      isItemSelected = true;
+                      _slotSelected = slotList.indexOf(f);
+                      setState(() {});
+                    },
+                  );
+                }).toList(),
               ),
             ),
           );
   }
-
-  /*Widget buildSlotList(slotsFromList) {
-    return Builder(
-      builder: (BuildContext context) {
-        return ListView.builder(
-          itemBuilder: (context, index) {
-            print('?? $slotsFromList');
-            var slots = slotsFromList[index];
-           // print('?? $slots');
-
-            return buildSlotItemList(slots);
-          },
-          itemCount: _slots!.slotList!.length,
-          shrinkWrap: true,
-        );
-      },
-    );
-  }*/
 
   //payment button
   Widget buildPaymentButton() {
