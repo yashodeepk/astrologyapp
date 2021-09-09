@@ -1,4 +1,5 @@
 import 'package:astrologyapp/main.dart';
+import 'package:astrologyapp/pages/HomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
@@ -123,6 +124,7 @@ class _HorescopeWidgetState extends State<HorescopeWidget> {
         setState(() {
           zodiacsign = zodiacsign1;
           zodiacsignname = zodiacsignname1;
+          HomePageWidget.zodiacSignName = zodiacsignname1;
         });
         // Navigator.pop(context, () {
         //   setState(() {});
@@ -134,10 +136,15 @@ class _HorescopeWidgetState extends State<HorescopeWidget> {
         //     builder: (context) => PageNavigator(),
         //   ),
         // );
-        Navigator.push(
+        /*  Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Home()),
-        ).then((value) => setState(() {}));
+        ).then((value) => setState(() {}));*/
+
+        Navigator.of(context)
+            .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Home()),
+                (route) => false)
+            .then((value) => setState(() {}));
       },
     );
   }

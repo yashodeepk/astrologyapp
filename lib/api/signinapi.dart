@@ -1,21 +1,25 @@
 import 'package:astrologyapp/ChatUtils/userchat.dart';
+import 'package:astrologyapp/constants/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
   bool isLoading = false;
+  SharedPreferences? prefs;
+
   // GoogleSignInAccount? _user;
   // GoogleSignInAccount get user => _user!;
   Future googleLogin(bool? astrologer) async {
+    prefs = await SharedPreferences.getInstance();
+
     if (astrologer == false) {
       final googleSignIn = GoogleSignIn();
       try {
-        SharedPreferences? prefs;
         final googleUser = await googleSignIn.signIn();
         if (googleUser == null)
           return print("google user null");
@@ -29,7 +33,8 @@ class GoogleSignInProvider extends ChangeNotifier {
             idToken: googleAuth.idToken,
           );
           await FirebaseAuth.instance.signInWithCredential(credential);
-          prefs = await SharedPreferences.getInstance();
+          await prefs!.setString('type', userX);
+          // prefs = await SharedPreferences.getInstance();
 
           isLoading = true;
           final currentUser = FirebaseAuth.instance.currentUser;
@@ -59,17 +64,19 @@ class GoogleSignInProvider extends ChangeNotifier {
               });
 
               // // Write data to local
-              await prefs.setString('id', currentUser.uid);
-              await prefs.setString('name', currentUser.displayName!);
-              await prefs.setString('photoUrl', currentUser.photoURL!);
+              await prefs!.setString('id', currentUser.uid);
+              await prefs!.setString('name', currentUser.displayName!);
+              await prefs!.setString('photoUrl', currentUser.photoURL!);
+              await prefs!.setString('type', userX);
             } else {
               DocumentSnapshot documentSnapshot = documents[0];
               UserChat userChat = UserChat.fromDocument(documentSnapshot);
               // Write data to local
-              await prefs.setString('id', userChat.id);
-              await prefs.setString('name', userChat.name);
-              await prefs.setString('photoUrl', userChat.photoUrl);
-              await prefs.setString('aboutMe', userChat.aboutMe);
+              await prefs!.setString('id', userChat.id);
+              await prefs!.setString('name', userChat.name);
+              await prefs!.setString('photoUrl', userChat.photoUrl);
+              await prefs!.setString('aboutMe', userChat.aboutMe);
+              await prefs!.setString('type', userX);
             }
             print('user data storage on cloudstore success');
             isLoading = false;
@@ -94,6 +101,7 @@ class GoogleSignInProvider extends ChangeNotifier {
     } else if (astrologer == true) {
       final googleSignIn = GoogleSignIn();
       final googleUser = await googleSignIn.signIn();
+      await prefs!.setString('type', astrologerX);
       String email = googleUser!.email;
       FirebaseFirestore.instance
           .collection('Astrologer')
@@ -102,7 +110,7 @@ class GoogleSignInProvider extends ChangeNotifier {
           .then((onValue) async {
         if (onValue.exists) {
           try {
-            SharedPreferences? prefs;
+            //  SharedPreferences? prefs;
             final googleUser = await googleSignIn.signIn();
             if (googleUser == null)
               return print("google user null");
@@ -116,7 +124,7 @@ class GoogleSignInProvider extends ChangeNotifier {
                 idToken: googleAuth.idToken,
               );
               await FirebaseAuth.instance.signInWithCredential(credential);
-              prefs = await SharedPreferences.getInstance();
+              //  prefs = await SharedPreferences.getInstance();
 
               isLoading = true;
               final currentUser = FirebaseAuth.instance.currentUser;
@@ -135,28 +143,30 @@ class GoogleSignInProvider extends ChangeNotifier {
                   FirebaseFirestore.instance
                       .collection('Astrologer')
                       .doc(currentUser.email)
-                      .set({
+                      .update({
                     'name': currentUser.displayName,
                     'email': currentUser.email,
                     'photoUrl': currentUser.photoURL,
                     'id': currentUser.uid,
                     'createdAt':
                         DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
-                    'chattingWith': null
+                    // 'chattingWith': null
                   });
 
                   // // Write data to local
-                  await prefs.setString('id', currentUser.uid);
-                  await prefs.setString('name', currentUser.displayName!);
-                  await prefs.setString('photoUrl', currentUser.photoURL!);
+                  await prefs!.setString('id', currentUser.uid);
+                  await prefs!.setString('name', currentUser.displayName!);
+                  await prefs!.setString('photoUrl', currentUser.photoURL!);
+                  await prefs!.setString('type', astrologerX);
                 } else {
                   DocumentSnapshot documentSnapshot = documents[0];
                   UserChat userChat = UserChat.fromDocument(documentSnapshot);
                   // Write data to local
-                  await prefs.setString('id', userChat.id);
-                  await prefs.setString('name', userChat.name);
-                  await prefs.setString('photoUrl', userChat.photoUrl);
-                  await prefs.setString('aboutMe', userChat.aboutMe);
+                  await prefs!.setString('id', userChat.id);
+                  await prefs!.setString('name', userChat.name);
+                  await prefs!.setString('photoUrl', userChat.photoUrl);
+                  await prefs!.setString('aboutMe', userChat.aboutMe);
+                  await prefs!.setString('type', astrologerX);
                 }
                 print('user data storage on cloudstore success');
                 isLoading = false;

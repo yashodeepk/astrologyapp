@@ -1,18 +1,33 @@
-import 'package:astrologyapp/GoogleMeetUtils/AddEvent.dart';
-import 'package:astrologyapp/GoogleMeetUtils/Editevent.dart';
 import 'package:astrologyapp/GoogleMeetUtils/StoreData.dart';
-import 'package:astrologyapp/GoogleMeetUtils/eventinfo.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:astrologyapp/constants/constants.dart';
+import 'package:astrologyapp/model/users.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
+  final astrologerEmail;
+  static const routeName = '/dashboard';
+
+  const DashboardScreen({Key? key, this.astrologerEmail}) : super(key: key);
+
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
   Storage storage = Storage();
+  Astrologer? _astrologer;
+
+  @override
+  void initState() {
+    final astrologersList =
+        Provider.of<List<Astrologer>>(context, listen: false);
+    _astrologer = astrologersList.firstWhere(
+        (Astrologer astrologer) => astrologer.email == widget.astrologerEmail);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,19 +35,76 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.blue[900],
         iconTheme: IconThemeData(
-          color: Colors.grey, //change your color here
+          color: Colors.white, //change your color here
         ),
         title: Text(
-          'Event Details',
+          'Event',
           style: TextStyle(
-            color: Colors.blue[900],
+            color: Colors.white,
             fontSize: 22,
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      body: Column(
+        children: [
+          Container(
+            height: oneFiftyDp,
+            padding: EdgeInsets.symmetric(horizontal: thirtyDp),
+            decoration: BoxDecoration(
+                color: Colors.blue[900],
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(thirtyDp),
+                    bottomRight: Radius.circular(thirtyDp))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //image
+                CircleAvatar(
+                  backgroundImage:
+                      CachedNetworkImageProvider('${_astrologer!.photoUrl}'),
+                  radius: fiftyDp,
+                ),
+
+                //details
+                Container(
+                  margin: EdgeInsets.only(left: twentyDp, top: tenDp),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${_astrologer!.name}",
+                        style:
+                            TextStyle(fontSize: twentyDp, color: Colors.white),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: eightDp),
+                        child: Text(
+                          "${_astrologer!.email}",
+                          style: TextStyle(
+                              fontSize: sixteenDp, color: Colors.white),
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: Text(
+                          "${_astrologer!.expertise}",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: sixteenDp, color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+      /*  floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.cyan[900],
         child: Icon(Icons.add),
         onPressed: () {
@@ -211,7 +283,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
           ),
         ),
-      ),
+      ),*/
     );
   }
 }

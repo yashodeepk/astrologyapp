@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 // import 'package:astrologyapp/api/signinapi.dart';
 import 'package:astrologyapp/homepageutils/horoscopeselectutils.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
@@ -7,10 +8,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 // import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+String? userType;
+String? email;
 
 class HomePageWidget extends StatefulWidget {
+  static const String routeName = '/HomePageWidget';
+
+  //static variable for document name
+  static String zodiacSignName = 'Aquarius';
+
   @override
   _HomePageWidgetState createState() => _HomePageWidgetState();
 }
@@ -23,6 +34,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   String? health;
   String? horoscope;
   bool checkdata = true;
+
   // Future<void> storeage() async {
   //   await _firestore.collection('users').doc(_auth.currentUser!.uid).set({
   //     "name": user.displayName,
@@ -35,9 +47,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   void initState() {
     super.initState();
+
+    getUserType();
     firestoreInstance
         .collection("horoscope")
-        .doc(zodiacsignname)
+        .doc(HomePageWidget.zodiacSignName)
         .get()
         .then((value) {
       setState(() {
@@ -48,6 +62,17 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       });
     });
   }
+
+  //get user type from shared prefs
+  getUserType() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (preferences.containsKey('type')) {
+      userType = preferences.getString('type');
+    }
+
+    print('type $userType');
+  }
+
   // void handleClick(String value) {
   //   switch (value) {
   //     case 'Logout':
@@ -77,9 +102,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           actions: <Widget>[
             InkWell(
               onTap: () {
-                Navigator.push(
+                Navigator.pushNamed(
                   context,
-                  MaterialPageRoute(builder: (context) => AccountPageWidget()),
+                  AccountPageWidget.routeName,
                 );
               },
               child: Padding(

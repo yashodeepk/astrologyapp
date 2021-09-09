@@ -1,9 +1,15 @@
 import 'package:astrologyapp/api/signinapi.dart';
+import 'package:astrologyapp/constants/constants.dart';
+import 'package:astrologyapp/pages/schedules_page/schedules.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'HomePage.dart';
+
 class AccountPageWidget extends StatefulWidget {
+  static const String routeName = '/accountPage';
+
   @override
   _AccountPageWidgetState createState() => _AccountPageWidgetState();
 }
@@ -66,6 +72,29 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                 padding: EdgeInsets.zero,
                 scrollDirection: Axis.vertical,
                 children: [
+                  //check if user type is astrologer and add slot
+                  userType == astrologerX
+                      ? ListTile(
+                          title: Text(
+                            addSchedule,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                            ),
+                          ),
+                          onTap: () async {
+                            //push to schedules
+                            Navigator.of(context)
+                                .pushNamed(SchedulesPage.routeName);
+                            /*  showModalBottomSheet(
+                                context: context,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) => AddDayAndTimeAvailable())*/
+                            ;
+                          },
+                        )
+                      : Container(),
                   ListTile(
                     title: Text(
                       'Payment History',
