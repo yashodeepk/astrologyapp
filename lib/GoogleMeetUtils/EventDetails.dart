@@ -4,6 +4,7 @@ import 'package:astrologyapp/constants/constants.dart';
 import 'package:astrologyapp/model/slot.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/service/slot_service.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -121,40 +122,45 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
 
                               //details
-                              Container(
-                                margin:
-                                    EdgeInsets.only(left: twentyDp, top: tenDp),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${_astrologer!.name}",
-                                      style: TextStyle(
-                                          fontSize: twentyDp,
-                                          color: Colors.white),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: eightDp),
-                                      child: Text(
-                                        "${_astrologer!.email}",
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      left: twentyDp, top: tenDp),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      AutoSizeText(
+                                        "${_astrologer!.name}",
                                         style: TextStyle(
-                                            fontSize: sixteenDp,
+                                            fontSize: twentyDp,
                                             color: Colors.white),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width / 2,
-                                      child: Text(
-                                        "${_astrologer!.expertise}",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: sixteenDp,
-                                            color: Colors.white),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: eightDp),
+                                        child: AutoSizeText(
+                                          "${_astrologer!.email}",
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              // fontSize: sixteenDp,
+                                              color: Colors.white),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        child: AutoSizeText(
+                                          "${_astrologer!.expertise}",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              // fontSize: sixteenDp,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               )
                             ],
@@ -201,12 +207,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                                 for (int i = 0;
                                     i < snapshot.data!.length;
-                                i++) {
+                                    i++) {
                                   sl = snapshot.data![i];
 
                                   for (int j = 0;
-                                  j < sl.slotList!.length;
-                                  j++) {
+                                      j < sl.slotList!.length;
+                                      j++) {
                                     slotsLists.add(sl.slotList![j]);
                                   }
                                 }
@@ -444,13 +450,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        AutoSizeText(
                           ss,
                           style: TextStyle(
-                              color: _itemSelected == day
-                                  ? Colors.black
-                                  : Colors.grey[700],
-                              fontSize: sixteenDp),
+                            color: _itemSelected == day
+                                ? Colors.black
+                                : Colors.grey[700],
+                          ),
                         ),
                         SizedBox(
                           height: 4,
