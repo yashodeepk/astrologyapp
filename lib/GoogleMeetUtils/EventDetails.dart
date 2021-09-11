@@ -107,8 +107,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           decoration: BoxDecoration(
                               color: Colors.blue[900],
                               borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(thirtyDp),
-                                  bottomRight: Radius.circular(thirtyDp))),
+                                  bottomLeft: Radius.circular(twentyDp),
+                                  bottomRight: Radius.circular(twentyDp))),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,13 +117,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               CircleAvatar(
                                 backgroundImage: CachedNetworkImageProvider(
                                     '${_astrologer!.photoUrl}'),
-                                radius: fiftyDp,
+                                radius: 40,
                               ),
 
                               //details
                               Container(
                                 margin:
-                                    EdgeInsets.only(left: twentyDp, top: tenDp),
+                                    EdgeInsets.only(left: twelveDp, top: tenDp),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -133,14 +133,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           fontSize: twentyDp,
                                           color: Colors.white),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: eightDp),
-                                      child: Text(
-                                        "${_astrologer!.email}",
-                                        style: TextStyle(
-                                            fontSize: sixteenDp,
-                                            color: Colors.white),
+                                    SizedBox(
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: eightDp),
+                                        child: Text(
+                                          "${_astrologer!.email}",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontSize: sixteenDp,
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ),
                                     SizedBox(
@@ -164,25 +169,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           padding: const EdgeInsets.only(left: 16, top: 8),
                           child: Text(
                             chooseYourSlot,
-                            style: TextStyle(fontSize: twentyDp),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: sixteenDp, right: sixteenDp),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('<',
-                                  style: TextStyle(
-                                      fontSize: twentyDp, color: Colors.grey)),
-                              Text('>',
-                                  style: TextStyle(
-                                      fontSize: twentyDp, color: Colors.grey)),
-                            ],
+                            style: TextStyle(fontSize: sixteenDp),
                           ),
                         ),
                         buildItemSection(),
+                        SizedBox(
+                          height: sixteenDp,
+                        ),
 
                         StreamBuilder<List<Slots>>(
                             stream: SlotService.instance
@@ -201,12 +194,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                                 for (int i = 0;
                                     i < snapshot.data!.length;
-                                i++) {
+                                    i++) {
                                   sl = snapshot.data![i];
 
                                   for (int j = 0;
-                                  j < sl.slotList!.length;
-                                  j++) {
+                                      j < sl.slotList!.length;
+                                      j++) {
                                     slotsLists.add(sl.slotList![j]);
                                   }
                                 }
@@ -214,6 +207,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   builder: (BuildContext context) {
                                     return SlotLists(
                                       slotList: slotsLists,
+                                      astrologer: _astrologer,
                                     );
                                   },
                                 );
@@ -464,8 +458,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 border: Border.all(
                                     color: Colors.black54, width: 0.9),
                                 color:
-                                    _day!.contains(ss) || _itemSelected == day
-                                        ? Colors.blue
+                                _day!.contains(ss) || _itemSelected == day
+                                        ? Colors.blue[900]
                                         : Colors.grey.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(sixDp)),
                             child: Text(
@@ -516,69 +510,5 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget buildSlotItemList(List<String> slotList) {
-    return slotList.isEmpty
-        ? Expanded(
-            child: Container(
-            child: Center(child: Text("No slots...")),
-          ))
-        : Expanded(
-            child: SingleChildScrollView(
-              child: Wrap(
-                children: slotList.map((f) {
-                  return GestureDetector(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 10.0),
-                      margin: EdgeInsets.only(
-                          left: 5.0, right: 5.0, top: 10.0, bottom: 10.0),
-                      decoration: BoxDecoration(
-                        color: _slotSelected == slotList.indexOf(f)
-                            ? Colors.blue
-                            : Colors.white,
-                        border: Border.all(color: Colors.black54, width: 1.3),
-                        borderRadius: BorderRadius.all(Radius.circular(
-                                32) //                 <--- border radius here
-                            ),
-                      ),
-                      child: Text(
-                        f,
-                        style: TextStyle(
-                          color: _slotSelected == slotList.indexOf(f)
-                              ? Colors.white
-                              : Colors.black,
-                          fontSize: 14.0,
-                        ),
-                      ),
-                    ),
-                    onTap: () {
-                      isItemSelected = true;
-                      _slotSelected = slotList.indexOf(f);
-                      setState(() {});
-                    },
-                  );
-                }).toList(),
-              ),
-            ),
-          );
-  }
 
-  //payment button
-  Widget buildPaymentButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 48,
-      margin: EdgeInsets.symmetric(horizontal: sixtyDp, vertical: twentyDp),
-      child: MaterialButton(
-        onPressed: () {},
-        child: Text(
-          proceedToPay,
-        ),
-        textColor: Colors.white,
-        color: Color(0xFF4736B5),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(thirtyDp)),
-      ),
-    );
-  }
 }
