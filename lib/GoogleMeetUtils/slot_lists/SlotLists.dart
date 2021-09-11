@@ -1,15 +1,16 @@
 import 'package:astrologyapp/actions/actions.dart';
 import 'package:astrologyapp/constants/constants.dart';
-import 'package:astrologyapp/paymentMethodUtils/RazorpayPayment.dart';
+import 'package:astrologyapp/model/users.dart';
+import 'package:astrologyapp/provider/payment_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SlotLists extends StatefulWidget {
   final List<String> slotList;
+  final Astrologer? astrologer;
 
-  SlotLists({
-    Key? key,
-    required this.slotList,
-  }) : super(key: key);
+  SlotLists({Key? key, required this.slotList, required this.astrologer})
+      : super(key: key);
 
   @override
   _SlotListsState createState() => _SlotListsState();
@@ -19,9 +20,14 @@ class _SlotListsState extends State<SlotLists> {
   int? _slotSelected;
   bool isItemSelected = false;
   String _itemSelected = '';
+  User? _user;
+  PaymentProvider _paymentProvider = PaymentProvider();
 
   @override
   void initState() {
+    _user = FirebaseAuth.instance.currentUser!;
+    //  PaymentApi.instance.initializeRazorPay();
+
     super.initState();
   }
 
@@ -30,7 +36,11 @@ class _SlotListsState extends State<SlotLists> {
     return widget.slotList.isEmpty
         ? Expanded(
             child: Container(
-            child: Center(child: Text("No slots...")),
+            child: Center(
+                child: Text(
+              noSlotsAvailableForThisDay,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: twentyDp),
+            )),
           ))
         : Expanded(
             child: Scaffold(
@@ -55,7 +65,7 @@ class _SlotListsState extends State<SlotLists> {
                                 decoration: BoxDecoration(
                                   color: _slotSelected ==
                                           widget.slotList.indexOf(f)
-                                      ? Colors.blue
+                                      ? Colors.blue[900]
                                       : Colors.white,
                                   border: Border.all(
                                       color: Colors.black54, width: 1.3),
@@ -106,8 +116,12 @@ class _SlotListsState extends State<SlotLists> {
         onPressed: () {
           _itemSelected.isEmpty
               ? ShowAction().showToast(pleaseSelectSlot, Colors.red)
-              : Navigator.of(context)
-                  .pushNamed(PaymentPage.routeName); //proceed to payment
+              : callPaymentMethod(
+                  amountToPay: widget.astrologer!.fees,
+                  name: _user!.displayName!,
+                  description:
+                      'Payment made from User ( ${_user!.displayName!} ) to Astrologer  ( ${widget.astrologer!.name!} )',
+                  email: _user!.email!); //proceed to payment
         },
         child: Text(
           proceedToPay,
@@ -118,5 +132,14 @@ class _SlotListsState extends State<SlotLists> {
             borderRadius: BorderRadius.circular(thirtyDp)),
       ),
     );
+  }
+
+  void callPaymentMethod(
+      {required int amountToPay,
+      required String name,
+      required String description,
+      required String email}) {
+    _paymentProvider.savePaymentInfo(amountToPay, name, description, email);
+    _paymentProvider.makePayment(context);
   }
 }
