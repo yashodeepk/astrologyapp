@@ -123,11 +123,20 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                   children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(8, 20, 0, 8),
-                      child: CircleAvatar(
-                        backgroundImage: CachedNetworkImageProvider(
-                            '${astrologer.photoUrl}'),
-                        radius: 30,
-                      ),
+                      child:CircleAvatar(
+                              child: ClipOval(
+                                child: FadeInImage.assetNetwork(
+                                  image: '${astrologer.photoUrl}',
+                                  placeholder: 'assets/images/bro.jpg',
+                                ),
+                              ),
+                              radius: 20,
+                            ),
+                      // child: CircleAvatar(
+                      //   backgroundImage: CachedNetworkImageProvider(
+                      //       '${astrologer.photoUrl}'),
+                      //   radius: 30,
+                      // ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
