@@ -4,6 +4,7 @@ import 'package:astrologyapp/pages/schedules_page/schedules.dart';
 import 'package:astrologyapp/paymentMethodUtils/RazorpayPayment.dart';
 import 'package:flutter/material.dart';
 
+import 'GoogleMeetUtils/AddEvent.dart';
 import 'GoogleMeetUtils/EventDetails.dart';
 import 'api/config_page.dart';
 import 'main.dart';
@@ -31,6 +32,9 @@ class RouteGenerator {
 
       case PaymentPage.routeName:
         return MaterialPageRoute(builder: (_) => PaymentPage());
+
+      case CreateScreen.routeName:
+        return MaterialPageRoute(builder: (_) => CreateScreen());
 
       case DashboardScreen.routeName:
         final data = settings.arguments as String;
