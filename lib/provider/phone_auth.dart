@@ -151,9 +151,9 @@ class PhoneAuthDataProvider with ChangeNotifier {
     _authCredential = PhoneAuthProvider.credential(
         verificationId: actualCode, smsCode: smsCode!);
 
-    FireBase.auth
-        .signInWithCredential(_authCredential)
-        .then((UserCredential result) async {
+    FirebaseAuth.instance.currentUser
+        ?.updatePhoneNumber(_authCredential)
+        .then((value) async {
       _addStatusMessage('Authentication successful');
       _addStatus(PhoneAuthState.Verified);
       if (onVerified != null) onVerified!();

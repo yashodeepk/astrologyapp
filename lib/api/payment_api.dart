@@ -18,8 +18,8 @@ class PaymentApi {
     _razorpay!.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
-  void launchRazorPay(
-      int amount, String name, String description, String email) {
+  void launchRazorPay(int amount, String name, String description, String email,
+      String phoneNumber) {
     amount = amount * 100;
 
     var options = {
@@ -27,28 +27,23 @@ class PaymentApi {
       'amount': "$amount",
       'name': name,
       'description': description,
-      'prefill': {'contact': "", 'email': email}
+      'prefill': {'contact': phoneNumber, 'email': email}
     };
 
     try {
       _razorpay!.open(options);
-
     } catch (e) {
       print("Error: $e");
     }
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-
-    if(response.orderId != null ){
+    if (response.orderId != null) {
       paymentState = PaymentState.SUCCESS;
       print(" success");
       print(
           "${response.orderId} \n${response.paymentId} \n${response.signature}");
     }
-
-
-
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
