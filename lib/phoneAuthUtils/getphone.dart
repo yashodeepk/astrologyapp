@@ -1,3 +1,4 @@
+import 'package:astrologyapp/Colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:astrologyapp/phoneAuthUtils/selectCountry.dart';
@@ -63,15 +64,17 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
     _fixedPadding = _height! * 0.025;
     final countriesProvider = Provider.of<CountryProvider>(context);
     final loader = Provider.of<PhoneAuthDataProvider>(context).loading;
-    /*  Scaffold: Using a Scaffold widget as parent
-     *  SafeArea: As a precaution - wrapping all child descendants in SafeArea, so that even notched phones won't loose data
-     *  Center: As we are just having Card widget - making it to stay in Center would really look good
-     *  SingleChildScrollView: There can be chances arising where
-     */
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: Colors.white.withOpacity(0.95),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: BackButton(
+          color: Colors.black,
+        ),
+        elevation: 0,
+        backgroundColor: Colors.white,
+      ),
       body: SafeArea(
         child: Stack(
           children: <Widget>[
@@ -129,7 +132,15 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
                   color: Colors.white,
                   fontSize: 24.0,
                   fontWeight: FontWeight.w700)),
-
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Verify, Your mobile number before making payment",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w700)),
+          ),
           Padding(
             padding: EdgeInsets.only(top: _fixedPadding!, left: _fixedPadding!),
             child: SubTitle(text: 'Select your country'),
@@ -242,7 +253,7 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
     var countryProvider = Provider.of<CountryProvider>(context, listen: false);
     bool validPhone = await phoneAuthDataProvider.instantiate(
         dialCode: countryProvider.selectedCountry.dialCode,
-        onCodeSent: () {
+        onCodeSent: () async {
           Navigator.of(context).pushReplacement(CupertinoPageRoute(
               builder: (BuildContext context) => PhoneAuthVerify()));
         },
