@@ -115,18 +115,23 @@ class _SlotListsState extends State<SlotLists> {
       margin: EdgeInsets.symmetric(horizontal: sixtyDp, vertical: twentyDp),
       child: MaterialButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PhoneAuthGetPhone()),
-          );
-          // _itemSelected.isEmpty
-          //     ? ShowAction().showToast(pleaseSelectSlot, Colors.red)
-          //     : callPaymentMethod(
-          //         amountToPay: widget.astrologer!.fees,
-          //         name: _user!.displayName!,
-          //         description:
-          //             'Payment made from User ( ${_user!.displayName!} ) to Astrologer  ( ${widget.astrologer!.name!} )',
-          //         email: _user!.email!); //proceed to payment
+          _itemSelected.isEmpty
+              ? ShowAction().showToast(pleaseSelectSlot, Colors.red)
+              : (_user!.phoneNumber != null)
+                  ? callPaymentMethod(
+                      amountToPay: widget.astrologer!.fees,
+                      name: _user!.displayName!,
+                      description:
+                          'Payment made from User ( ${_user!.displayName!} ) to Astrologer  ( ${widget.astrologer!.name!} )',
+                      email: _user!.email!,
+                      phoneNumber: _user!.phoneNumber!) //proceed to payment
+                  : Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) => PhoneAuthGetPhone()),
+                    );
+          ;
         },
         child: Text(
           proceedToPay,
@@ -143,8 +148,22 @@ class _SlotListsState extends State<SlotLists> {
       {required int amountToPay,
       required String name,
       required String description,
-      required String email}) {
-    _paymentProvider.savePaymentInfo(amountToPay, name, description, email);
+      required String email,
+      required String phoneNumber}) {
+    _paymentProvider.savePaymentInfo(
+        amountToPay, name, description, email, phoneNumber);
     _paymentProvider.makePayment(context);
+  }
+
+  void moveToPhoneAuth() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+          fullscreenDialog: true, builder: (context) => PhoneAuthGetPhone()),
+    );
+    setState(() {
+      _user = FirebaseAuth.instance.currentUser!;
+      print('Verify no ' + _user!.phoneNumber.toString());
+    });
   }
 }

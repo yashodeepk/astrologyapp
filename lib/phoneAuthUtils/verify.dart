@@ -1,3 +1,4 @@
+import 'package:astrologyapp/main.dart';
 import 'package:flutter/material.dart';
 import 'package:astrologyapp/provider/phone_auth.dart';
 import 'package:astrologyapp/constants/constants.dart';
@@ -27,7 +28,6 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
   FocusNode focusNode5 = FocusNode();
   FocusNode focusNode6 = FocusNode();
   String code = "";
-
   @override
   void initState() {
     super.initState();
@@ -273,9 +273,9 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
     _showSnackBar(
         "${Provider.of<PhoneAuthDataProvider>(context, listen: false).message}");
     await Future.delayed(Duration(seconds: 1));
-    Navigator.of(context).pop();
-    // Navigator.of(context)
-    //     .push(MaterialPageRoute(builder: (BuildContext context) => LetsChat()));
+    //Navigator.pop(context, true);
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (BuildContext context) => PageNavigator()));
   }
 
   onFailed() {

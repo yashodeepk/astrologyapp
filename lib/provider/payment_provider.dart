@@ -10,7 +10,7 @@ class PaymentProvider with ChangeNotifier {
   }
 
   int? _amount;
-  String? _name, _description, _email;
+  String? _name, _description, _email, _phoneNumber;
 
   get getAmount => _amount;
 
@@ -20,17 +20,20 @@ class PaymentProvider with ChangeNotifier {
 
   get getDescription => _description;
 
-  savePaymentInfo(int amount, name, description, email) {
+  get getPhoneNumber => _phoneNumber;
+
+  savePaymentInfo(int amount, name, description, email, phoneNumber) {
     _amount = amount;
     _name = name;
     _description = description;
     _email = email;
-
+    _phoneNumber = phoneNumber;
     notifyListeners();
   }
 
   makePayment(BuildContext context) async {
-    _paymentApi.launchRazorPay(getAmount, getName, getDescription, getEmail);
+    _paymentApi.launchRazorPay(
+        getAmount, getName, getDescription, getEmail, getPhoneNumber);
 
     await checkPayment(context);
   }
