@@ -1,6 +1,7 @@
 import 'package:astrologyapp/actions/actions.dart';
 import 'package:astrologyapp/constants/constants.dart';
 import 'package:astrologyapp/model/users.dart';
+import 'package:astrologyapp/phoneAuthUtils/getphone.dart';
 import 'package:astrologyapp/provider/payment_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -114,14 +115,18 @@ class _SlotListsState extends State<SlotLists> {
       margin: EdgeInsets.symmetric(horizontal: sixtyDp, vertical: twentyDp),
       child: MaterialButton(
         onPressed: () {
-          _itemSelected.isEmpty
-              ? ShowAction().showToast(pleaseSelectSlot, Colors.red)
-              : callPaymentMethod(
-                  amountToPay: widget.astrologer!.fees,
-                  name: _user!.displayName!,
-                  description:
-                      'Payment made from User ( ${_user!.displayName!} ) to Astrologer  ( ${widget.astrologer!.name!} )',
-                  email: _user!.email!); //proceed to payment
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PhoneAuthGetPhone()),
+          );
+          // _itemSelected.isEmpty
+          //     ? ShowAction().showToast(pleaseSelectSlot, Colors.red)
+          //     : callPaymentMethod(
+          //         amountToPay: widget.astrologer!.fees,
+          //         name: _user!.displayName!,
+          //         description:
+          //             'Payment made from User ( ${_user!.displayName!} ) to Astrologer  ( ${widget.astrologer!.name!} )',
+          //         email: _user!.email!); //proceed to payment
         },
         child: Text(
           proceedToPay,
