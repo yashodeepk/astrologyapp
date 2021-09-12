@@ -8,6 +8,8 @@ import 'package:astrologyapp/pages/ConsultPage.dart';
 import 'package:astrologyapp/pages/HomePage.dart';
 import 'package:astrologyapp/provider/payment_provider.dart';
 import 'package:astrologyapp/provider/slot_provider.dart';
+import 'package:astrologyapp/provider/countries.dart';
+import 'package:astrologyapp/provider/phone_auth.dart';
 import 'package:astrologyapp/route_generator.dart';
 import 'package:astrologyapp/service/astrologers_service.dart';
 import 'package:astrologyapp/service/slot_service.dart';
@@ -41,6 +43,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: GoogleSignInProvider()),
         ChangeNotifierProvider.value(value: SlotProvider()),
         ChangeNotifierProvider.value(value: PaymentProvider()),
+        //phone auth
+        ChangeNotifierProvider.value(value: CountryProvider()),
+        ChangeNotifierProvider.value(value: PhoneAuthDataProvider()),
         //astrologers
         StreamProvider<List<Astrologer>>.value(
             value: AstrologerService.instance.getListOfAstrologers(),
