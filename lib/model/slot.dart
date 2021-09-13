@@ -36,7 +36,7 @@ class Slots {
         "day": day,
         "date": date,
         "order": order,
-        "slotList": List<dynamic>.from(slotList!.map((x) => x)),
-        "slotTimes": List<dynamic>.from(slotTimes!.map((x) => x)),
+        "slotList": List<String>.from(slotList!.map((x) => x)),
+        "slotTimes": List<String>.from(slotTimes!.map((x) => x)),
       };
 }
