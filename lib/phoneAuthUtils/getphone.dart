@@ -1,4 +1,5 @@
 import 'package:astrologyapp/Colors.dart';
+import 'package:astrologyapp/model/users.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:astrologyapp/phoneAuthUtils/selectCountry.dart';
@@ -18,6 +19,11 @@ class PhoneAuthGetPhone extends StatefulWidget {
   final Color cardBackgroundColor = Color(0xFF6874C2);
   final String logo = firebase;
   final String appName = "Astrology app";
+  final Astrologer? astrologer;
+  final dynamic callPaymentMethod;
+  PhoneAuthGetPhone(
+      {Key? key, required this.astrologer, required this.callPaymentMethod})
+      : super(key: key);
 
   @override
   _PhoneAuthGetPhoneState createState() => _PhoneAuthGetPhoneState();
@@ -255,7 +261,9 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
         dialCode: countryProvider.selectedCountry.dialCode,
         onCodeSent: () async {
           Navigator.of(context).pushReplacement(CupertinoPageRoute(
-              builder: (BuildContext context) => PhoneAuthVerify()));
+              builder: (BuildContext context) => PhoneAuthVerify(
+                  astrologer: widget.astrologer!,
+                  callPaymentMethod: widget.callPaymentMethod)));
         },
         onFailed: () {
           _showSnackBar(phoneAuthDataProvider.message);
