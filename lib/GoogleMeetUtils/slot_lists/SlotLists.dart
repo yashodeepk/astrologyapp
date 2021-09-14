@@ -129,7 +129,9 @@ class _SlotListsState extends State<SlotLists> {
                       context,
                       MaterialPageRoute(
                           fullscreenDialog: true,
-                          builder: (context) => PhoneAuthGetPhone()),
+                          builder: (context) => PhoneAuthGetPhone(
+                              astrologer: widget.astrologer!,
+                              callPaymentMethod: callPaymentMethod)),
                     );
           ;
         },
@@ -153,17 +155,5 @@ class _SlotListsState extends State<SlotLists> {
     _paymentProvider.savePaymentInfo(
         amountToPay, name, description, email, phoneNumber);
     _paymentProvider.makePayment(context);
-  }
-
-  void moveToPhoneAuth() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-          fullscreenDialog: true, builder: (context) => PhoneAuthGetPhone()),
-    );
-    setState(() {
-      _user = FirebaseAuth.instance.currentUser!;
-      print('Verify no ' + _user!.phoneNumber.toString());
-    });
   }
 }

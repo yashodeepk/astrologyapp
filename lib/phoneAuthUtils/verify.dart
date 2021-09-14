@@ -1,4 +1,6 @@
 import 'package:astrologyapp/main.dart';
+import 'package:astrologyapp/model/users.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:astrologyapp/provider/phone_auth.dart';
 import 'package:astrologyapp/constants/constants.dart';
@@ -12,14 +14,20 @@ class PhoneAuthVerify extends StatefulWidget {
    */
   final Color cardBackgroundColor = Color(0xFFFCA967);
   final String logo = firebase;
-  final String appName = "Awesome app";
-
+  final String appName = "Astrology app";
+  final Astrologer? astrologer;
+  final dynamic callPaymentMethod;
+  PhoneAuthVerify(
+      {Key? key, required this.astrologer, required this.callPaymentMethod})
+      : super(key: key);
   @override
   _PhoneAuthVerifyState createState() => _PhoneAuthVerifyState();
 }
 
 class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
   double? _height, _width, _fixedPadding;
+
+  User? _user;
 
   FocusNode focusNode1 = FocusNode();
   FocusNode focusNode2 = FocusNode();
@@ -273,9 +281,17 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
     _showSnackBar(
         "${Provider.of<PhoneAuthDataProvider>(context, listen: false).message}");
     await Future.delayed(Duration(seconds: 1));
-    //Navigator.pop(context, true);
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (BuildContext context) => PageNavigator()));
+    Navigator.pop(context, true);
+    _user = FirebaseAuth.instance.currentUser!;
+    widget.callPaymentMethod(
+        amountToPay: widget.astrologer!.fees,
+        name: _user!.displayName!,
+        description:
+            'Payment made from User ( ${_user!.displayName!} ) to Astrologer  ( ${widget.astrologer!.name!} )',
+        email: _user!.email!,
+        phoneNumber: _user!.phoneNumber!);
+    // Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(builder: (BuildContext context) => PageNavigator()));
   }
 
   onFailed() {
