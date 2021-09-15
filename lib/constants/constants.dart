@@ -68,3 +68,6 @@ const thursday = 'Thursdays';
 const friday = 'Fridays';
 const saturday = 'Saturdays';
 const sunday = 'Sundays';
+//------------razorpay cred
+const rzp_key = 'rzp_test_cX58kqrp9k4sqV';
+const rzp_secret = 'ce6m4ACeuBkkkmpcypD1WUcM';
