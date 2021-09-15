@@ -38,7 +38,8 @@ class PaymentApi {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    if (response.orderId != null) {
+    //check for paymentId
+    if (response.paymentId != null) {
       paymentState = PaymentState.SUCCESS;
       print(" success");
       print(
