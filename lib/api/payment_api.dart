@@ -1,3 +1,4 @@
+import 'package:astrologyapp/constants/constants.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class PaymentApi {
@@ -23,7 +24,7 @@ class PaymentApi {
     amount = amount * 100;
 
     var options = {
-      'key': 'rzp_test_F4IrIZIbK0GW0Y',
+      'key': rzp_key,
       'amount': "$amount",
       'name': name,
       'description': description,
