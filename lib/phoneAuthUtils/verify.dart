@@ -15,7 +15,9 @@ class PhoneAuthVerify extends StatefulWidget {
   final Color cardBackgroundColor = Color(0xFFFCA967);
   final String logo = firebase;
   final String appName = "Astrology app";
+  //Passing Astrologer data
   final Astrologer? astrologer;
+  //function from slot page
   final dynamic callPaymentMethod;
   PhoneAuthVerify(
       {Key? key, required this.astrologer, required this.callPaymentMethod})
@@ -283,6 +285,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
     await Future.delayed(Duration(seconds: 1));
     Navigator.pop(context, true);
     _user = FirebaseAuth.instance.currentUser!;
+    //Function call from slot page
     widget.callPaymentMethod(
         amountToPay: widget.astrologer!.fees,
         name: _user!.displayName!,
