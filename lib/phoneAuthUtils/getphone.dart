@@ -19,7 +19,9 @@ class PhoneAuthGetPhone extends StatefulWidget {
   final Color cardBackgroundColor = Color(0xFF6874C2);
   final String logo = firebase;
   final String appName = "Astrology app";
+  //Passing astrologer data
   final Astrologer? astrologer;
+  //Passing callPaymentMethod
   final dynamic callPaymentMethod;
   PhoneAuthGetPhone(
       {Key? key, required this.astrologer, required this.callPaymentMethod})
@@ -261,6 +263,7 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
         dialCode: countryProvider.selectedCountry.dialCode,
         onCodeSent: () async {
           Navigator.of(context).pushReplacement(CupertinoPageRoute(
+              //passing astrologer and callPaymentMethod to the verification page
               builder: (BuildContext context) => PhoneAuthVerify(
                   astrologer: widget.astrologer!,
                   callPaymentMethod: widget.callPaymentMethod)));
