@@ -130,6 +130,7 @@ class _SlotListsState extends State<SlotLists> {
                       MaterialPageRoute(
                           fullscreenDialog: true,
                           builder: (context) => PhoneAuthGetPhone(
+                              //Passing astrologer data and callPaymentMethod to phone auth page
                               astrologer: widget.astrologer!,
                               callPaymentMethod: callPaymentMethod)),
                     );
