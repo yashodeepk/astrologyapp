@@ -5,11 +5,10 @@ import 'package:astrologyapp/constants/constants.dart';
 import 'package:astrologyapp/model/PaymentInfo.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/phoneAuthUtils/getphone.dart';
-import 'package:astrologyapp/provider/payment_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class SlotLists extends StatefulWidget {
   final List<String> slotList;
@@ -167,9 +166,6 @@ class _SlotListsState extends State<SlotLists> {
     required String description,
     required String email,
     required String phoneNumber}) async {
-    Dialog
-
-
     launchRazorPay(
         amountToPay, name, description, email, phoneNumber);
   }
