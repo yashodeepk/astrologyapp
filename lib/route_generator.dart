@@ -18,7 +18,7 @@ class RouteGenerator {
       case ConfigurationPage.routeName:
         return MaterialPageRoute(builder: (_) => ConfigurationPage());
 
-      case Home.routeName:
+      case PageNavigator.routeName:
         return MaterialPageRoute(builder: (_) => Home());
 
       case AccountPageWidget.routeName:

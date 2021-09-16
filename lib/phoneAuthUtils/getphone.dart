@@ -123,127 +123,131 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
         ),
       );
 
-  Widget _getColumnBody(CountryProvider countriesProvider) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          //  Logo: scaling to occupy 2 parts of 10 in the whole height of device
-          Padding(
-            padding: EdgeInsets.all(_fixedPadding!),
-            child: PhoneAuthWidgets.getLogo(
-                logoPath: widget.logo, height: _height! * 0.2),
-          ),
+  Widget _getColumnBody(CountryProvider countriesProvider) =>
+      SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            //  Logo: scaling to occupy 2 parts of 10 in the whole height of device
+            Padding(
+              padding: EdgeInsets.all(_fixedPadding!),
+              child: PhoneAuthWidgets.getLogo(
+                  logoPath: widget.logo, height: _height! * 0.2),
+            ),
 
-          // AppName:
-          Text(widget.appName,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w700)),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("Verify, Your mobile number before making payment",
+            // AppName:
+            Text(widget.appName,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14.0,
+                    fontSize: 24.0,
                     fontWeight: FontWeight.w700)),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: _fixedPadding!, left: _fixedPadding!),
-            child: SubTitle(text: 'Select your country'),
-          ),
-
-          /*
-           *  Select your country, this will be a custom DropDown menu, rather than just as a dropDown
-           *  onTap of this, will show a Dialog asking the user to select country they reside,
-           *  according to their selection, prefix will change in the PhoneNumber TextFormField
-           */
-          Padding(
-              padding:
-                  EdgeInsets.only(left: _fixedPadding!, right: _fixedPadding!),
-              child: ShowSelectedCountry(
-                country: countriesProvider.selectedCountry,
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => SelectCountry()),
-                  );
-                },
-              )),
-
-          //  Subtitle for Enter your phone
-          Padding(
-            padding: EdgeInsets.only(top: 10.0, left: _fixedPadding!),
-            child: SubTitle(text: 'Enter your phone'),
-          ),
-          //  PhoneNumber TextFormFields
-          Padding(
-            padding: EdgeInsets.only(
-                left: _fixedPadding!,
-                right: _fixedPadding!,
-                bottom: _fixedPadding!),
-            child: PhoneNumberField(
-              controller:
-                  Provider.of<PhoneAuthDataProvider>(context, listen: false)
-                      .phoneNumberController,
-              prefix: countriesProvider.selectedCountry.dialCode ?? "+91",
-            ),
-          ),
-
-          /*
-           *  Some informative text
-           */
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(width: _fixedPadding),
-              Icon(Icons.info, color: Colors.white, size: 20.0),
-              SizedBox(width: 10.0),
-              Expanded(
-                child: RichText(
-                    text: TextSpan(children: [
-                  TextSpan(
-                      text: 'We will send ',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w400)),
-                  TextSpan(
-                      text: 'One Time Password',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w700)),
-                  TextSpan(
-                      text: ' to this mobile number',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.w400)),
-                ])),
-              ),
-              SizedBox(width: _fixedPadding),
-            ],
-          ),
-
-          /*
-           *  Button: OnTap of this, it appends the dial code and the phone number entered by the user to send OTP,
-           *  knowing once the OTP has been sent to the user - the user will be navigated to a new Screen,
-           *  where is asked to enter the OTP he has received on his mobile (or) wait for the system to automatically detect the OTP
-           */
-          SizedBox(height: _fixedPadding! * 1.5),
-          RaisedButton(
-            elevation: 16.0,
-            onPressed: startPhoneAuth,
-            child: Padding(
+            Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'SEND OTP',
-                style: TextStyle(
-                    color: widget.cardBackgroundColor, fontSize: 18.0),
+              child: Text("Verify, Your mobile number before making payment",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w700)),
+            ),
+            Padding(
+              padding:
+                  EdgeInsets.only(top: _fixedPadding!, left: _fixedPadding!),
+              child: SubTitle(text: 'Select your country'),
+            ),
+
+            /*
+             *  Select your country, this will be a custom DropDown menu, rather than just as a dropDown
+             *  onTap of this, will show a Dialog asking the user to select country they reside,
+             *  according to their selection, prefix will change in the PhoneNumber TextFormField
+             */
+            Padding(
+                padding: EdgeInsets.only(
+                    left: _fixedPadding!, right: _fixedPadding!),
+                child: ShowSelectedCountry(
+                  country: countriesProvider.selectedCountry,
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SelectCountry()),
+                    );
+                  },
+                )),
+
+            //  Subtitle for Enter your phone
+            Padding(
+              padding: EdgeInsets.only(top: 10.0, left: _fixedPadding!),
+              child: SubTitle(text: 'Enter your phone'),
+            ),
+            //  PhoneNumber TextFormFields
+            Padding(
+              padding: EdgeInsets.only(
+                  left: _fixedPadding!,
+                  right: _fixedPadding!,
+                  bottom: _fixedPadding!),
+              child: PhoneNumberField(
+                controller:
+                    Provider.of<PhoneAuthDataProvider>(context, listen: false)
+                        .phoneNumberController,
+                prefix: countriesProvider.selectedCountry.dialCode ?? "+91",
               ),
             ),
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0)),
-          ),
-        ],
+
+            /*
+             *  Some informative text
+             */
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(width: _fixedPadding),
+                Icon(Icons.info, color: Colors.white, size: 20.0),
+                SizedBox(width: 10.0),
+                Expanded(
+                  child: RichText(
+                      text: TextSpan(children: [
+                    TextSpan(
+                        text: 'We will send ',
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w400)),
+                    TextSpan(
+                        text: 'One Time Password',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w700)),
+                    TextSpan(
+                        text: ' to this mobile number',
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w400)),
+                  ])),
+                ),
+                SizedBox(width: _fixedPadding),
+              ],
+            ),
+
+            /*
+             *  Button: OnTap of this, it appends the dial code and the phone number entered by the user to send OTP,
+             *  knowing once the OTP has been sent to the user - the user will be navigated to a new Screen,
+             *  where is asked to enter the OTP he has received on his mobile (or) wait for the system to automatically detect the OTP
+             */
+            SizedBox(height: _fixedPadding! * 1.5),
+            RaisedButton(
+              elevation: 16.0,
+              onPressed: startPhoneAuth,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'SEND OTP',
+                  style: TextStyle(
+                      color: widget.cardBackgroundColor, fontSize: 18.0),
+                ),
+              ),
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0)),
+            ),
+          ],
+        ),
       );
 
   _showSnackBar(String text) {

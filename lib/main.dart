@@ -68,14 +68,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Home extends StatefulWidget {
-  static const String routeName = '/home';
-
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
+//dont change statelessWidget to statefulWidget it will cause application to stuck at welcomepage
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: StreamBuilder(
@@ -100,6 +94,7 @@ class _HomeState extends State<Home> {
 
 class PageNavigator extends StatefulWidget {
   const PageNavigator({Key? key}) : super(key: key);
+  static const String routeName = '/home';
 
   @override
   _PageNavigatorState createState() => _PageNavigatorState();

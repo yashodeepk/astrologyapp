@@ -41,12 +41,22 @@ class _ConsultWidgetState extends State<ConsultWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final user = FirebaseAuth.instance.currentUser!;
   List? astrologersList;
+  String? photoUrl;
 
   @override
   void initState() {
     astrologersList = Provider.of<List<Astrologer>>(context, listen: false);
 
     super.initState();
+  }
+
+  void photoUrlCheck(String? url) {
+    if (url == null || url == "") {
+      photoUrl =
+          'https://anderson-county.com/CircuitCourt/wp-content/uploads/2020/07/photo-not-available-clip-art1-1.png';
+    } else {
+      photoUrl = url;
+    }
   }
 
   @override
@@ -99,6 +109,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
   }
 
   Widget astrologerCard(Astrologer astrologer) {
+    photoUrlCheck(astrologer.photoUrl);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -123,15 +134,15 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                   children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(8, 20, 0, 8),
-                      child:CircleAvatar(
-                              child: ClipOval(
-                                child: FadeInImage.assetNetwork(
-                                  image: '${astrologer.photoUrl}',
-                                  placeholder: 'assets/images/bro.jpg',
-                                ),
-                              ),
-                              radius: 20,
-                            ),
+                      child: CircleAvatar(
+                        child: ClipOval(
+                          child: FadeInImage.assetNetwork(
+                            image: photoUrl!,
+                            placeholder: 'assets/images/bro.jpg',
+                          ),
+                        ),
+                        radius: 20,
+                      ),
                       // child: CircleAvatar(
                       //   backgroundImage: CachedNetworkImageProvider(
                       //       '${astrologer.photoUrl}'),
