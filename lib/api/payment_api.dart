@@ -1,18 +1,28 @@
+import 'dart:convert';
+
 import 'package:astrologyapp/constants/constants.dart';
+import 'package:astrologyapp/model/PaymentInfo.dart';
+import 'package:http/http.dart' as http;
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class PaymentApi {
   PaymentApi._();
 
   static PaymentApi? _instance;
+  static String? paymentId;
   static Razorpay? _razorpay;
-  PaymentState paymentState = PaymentState.INITIAL;
+  PaymentState? paymentState;
+
+  //authorization
+  var basicAuth = 'Basic ' +
+      base64Encode(utf8.encode('$razorPayUserName:$razorPayPassword'));
 
   static PaymentApi get instance {
     return _instance == null ? _instance = PaymentApi._() : _instance!;
   }
 
   void initializeRazorPay() {
+    paymentState = PaymentState.INITIAL;
     _razorpay = Razorpay();
     _razorpay!.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay!.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
@@ -38,17 +48,24 @@ class PaymentApi {
     }
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     //check for paymentId
     if (response.paymentId != null) {
-      paymentState = PaymentState.SUCCESS;
-      print(" success");
+      paymentId = response.paymentId;
+      //  _paymentProvider!.savePaymentId('${response.paymentId}');
       print(
-          "${response.orderId} \n${response.paymentId} \n${response.signature}");
+          " success.....................IST?..............................................................................");
+      //call api and get response
+      await getPaymentInfo(paymentId!);
+      /* print(" success...................................................................................................");
+
+
+      print(
+          "${response.orderId} \n${response.paymentId} \n${response.signature}");*/
     }
   }
 
-  void _handlePaymentError(PaymentFailureResponse response) {
+  void _handlePaymentError(PaymentFailureResponse response) async {
     paymentState = PaymentState.FAILURE;
     print("Payment Failed");
 
@@ -57,6 +74,23 @@ class PaymentApi {
 
   void _handleExternalWallet(ExternalWalletResponse response) {
     print("Payment Failed");
+  }
+
+  Future<PaymentInfo> getPaymentInfo(String pid) async {
+    final getResponse = await http.get(
+      Uri.parse('$razorPayBaseUrl$pid'),
+      headers: {
+        'authorization': basicAuth,
+        'Content-type': 'application/json',
+        "accept": 'application/json'
+      },
+    );
+
+    final response = paymentInfoFromJson(getResponse.body);
+
+    print('re ... ${response.status}');
+
+    return response;
   }
 }
 

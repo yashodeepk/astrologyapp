@@ -10,7 +10,7 @@ class PaymentProvider with ChangeNotifier {
   }
 
   int? _amount;
-  String? _name, _description, _email, _phoneNumber;
+  String? _name, _description, _email, _phoneNumber, _paymentId;
 
   get getAmount => _amount;
 
@@ -21,6 +21,13 @@ class PaymentProvider with ChangeNotifier {
   get getDescription => _description;
 
   get getPhoneNumber => _phoneNumber;
+
+  get getPaymentId => _paymentId;
+
+  savePaymentId(String pid) {
+    _paymentId = pid;
+    notifyListeners();
+  }
 
   savePaymentInfo(int amount, name, description, email, phoneNumber) {
     _amount = amount;
@@ -35,13 +42,6 @@ class PaymentProvider with ChangeNotifier {
     _paymentApi.launchRazorPay(
         getAmount, getName, getDescription, getEmail, getPhoneNumber);
 
-    await checkPayment(context);
   }
 
-  checkPayment(BuildContext context) async {
-    if (_paymentApi.paymentState == PaymentState.SUCCESS) {
-      print('got it');
-    }
-    notifyListeners();
-  }
 }

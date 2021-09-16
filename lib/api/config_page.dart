@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../main.dart';
 
 String? uid;
+final GlobalKey<State> loadingKey = new GlobalKey<State>();
 
 class ConfigurationPage extends StatefulWidget {
   static const routeName = '/';
