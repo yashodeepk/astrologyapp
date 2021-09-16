@@ -1,14 +1,10 @@
-import 'dart:convert';
-
 import 'package:astrologyapp/actions/actions.dart';
 import 'package:astrologyapp/constants/constants.dart';
-import 'package:astrologyapp/model/PaymentInfo.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/phoneAuthUtils/getphone.dart';
+import 'package:astrologyapp/provider/payment_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class SlotLists extends StatefulWidget {
   final List<String> slotList;
@@ -26,23 +22,12 @@ class _SlotListsState extends State<SlotLists> {
   bool isItemSelected = false;
   String _itemSelected = '';
   User? _user;
-  Razorpay? _razorpay;
-
-  //authorization
-  var basicAuth = 'Basic ' +
-      base64Encode(utf8.encode('$razorPayUserName:$razorPayPassword'));
-
-  void initializeRazorPay() {
-    _razorpay = Razorpay();
-    _razorpay!.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _razorpay!.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay!.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-  }
+  PaymentProvider _paymentProvider = PaymentProvider();
 
   @override
   void initState() {
     _user = FirebaseAuth.instance.currentUser!;
-    initializeRazorPay();
+    //  PaymentApi.instance.initializeRazorPay();
 
     super.initState();
   }
@@ -51,75 +36,75 @@ class _SlotListsState extends State<SlotLists> {
   Widget build(BuildContext context) {
     return widget.slotList.isEmpty
         ? Expanded(
-        child: Container(
-          child: Center(
-              child: Text(
-                noSlotsAvailableForThisDay,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: twentyDp),
-              )),
-        ))
+            child: Container(
+            child: Center(
+                child: Text(
+              noSlotsAvailableForThisDay,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: twentyDp),
+            )),
+          ))
         : Expanded(
-        child: Scaffold(
-          bottomSheet: buildPaymentButton(),
-          body: CustomScrollView(
-            slivers: [
-              SliverFillRemaining(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Wrap(
-                        children: widget.slotList.map((f) {
-                          return GestureDetector(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 10.0),
-                              margin: EdgeInsets.only(
-                                  left: 5.0,
-                                  right: 5.0,
-                                  top: 10.0,
-                                  bottom: 10.0),
-                              decoration: BoxDecoration(
-                                color: _slotSelected ==
-                                    widget.slotList.indexOf(f)
-                                    ? Colors.blue[900]
-                                    : Colors.white,
-                                border: Border.all(
-                                    color: Colors.black54, width: 1.3),
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                        32) //                 <--- border radius here
-                                ),
-                              ),
-                              child: Text(
-                                f,
-                                style: TextStyle(
+            child: Scaffold(
+            bottomSheet: buildPaymentButton(),
+            body: CustomScrollView(
+              slivers: [
+                SliverFillRemaining(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Wrap(
+                          children: widget.slotList.map((f) {
+                            return GestureDetector(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                margin: EdgeInsets.only(
+                                    left: 5.0,
+                                    right: 5.0,
+                                    top: 10.0,
+                                    bottom: 10.0),
+                                decoration: BoxDecoration(
                                   color: _slotSelected ==
-                                      widget.slotList.indexOf(f)
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontSize: 14.0,
+                                          widget.slotList.indexOf(f)
+                                      ? Colors.blue[900]
+                                      : Colors.white,
+                                  border: Border.all(
+                                      color: Colors.black54, width: 1.3),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          32) //                 <--- border radius here
+                                      ),
+                                ),
+                                child: Text(
+                                  f,
+                                  style: TextStyle(
+                                    color: _slotSelected ==
+                                            widget.slotList.indexOf(f)
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontSize: 14.0,
+                                  ),
                                 ),
                               ),
-                            ),
-                            onTap: () {
-                              isItemSelected = true;
-                              _slotSelected = widget.slotList.indexOf(f);
-                              _itemSelected = f;
-                              setState(() {});
-                            },
-                          );
-                        }).toList(),
-                      ),
-                      SizedBox(
-                        height: 100,
-                      )
-                    ],
+                              onTap: () {
+                                isItemSelected = true;
+                                _slotSelected = widget.slotList.indexOf(f);
+                                _itemSelected = f;
+                                setState(() {});
+                              },
+                            );
+                          }).toList(),
+                        ),
+                        SizedBox(
+                          height: 100,
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ));
+              ],
+            ),
+          ));
   }
 
   //payment button
@@ -133,22 +118,23 @@ class _SlotListsState extends State<SlotLists> {
           _itemSelected.isEmpty
               ? ShowAction().showToast(pleaseSelectSlot, Colors.red)
               : (_user!.phoneNumber != null)
-              ? callPaymentMethod(
-              amountToPay: widget.astrologer!.fees,
-              name: _user!.displayName!,
-              description:
-              'Payment made from User ( ${_user!.displayName!} ) to Astrologer  ( ${widget.astrologer!.name!} )',
-              email: _user!.email!,
-              phoneNumber: _user!.phoneNumber!) //proceed to payment
-              : Navigator.push(
-            context,
-            MaterialPageRoute(
-                fullscreenDialog: true,
-                builder: (context) => PhoneAuthGetPhone(
-                  //Passing astrologer data and callPaymentMethod to phone auth page
-                    astrologer: widget.astrologer!,
-                    callPaymentMethod: callPaymentMethod)),
-          );
+                  ? callPaymentMethod(
+                      amountToPay: widget.astrologer!.fees,
+                      name: _user!.displayName!,
+                      description:
+                          'Payment made from User ( ${_user!.displayName!} ) to Astrologer  ( ${widget.astrologer!.name!} )',
+                      email: _user!.email!,
+                      phoneNumber: _user!.phoneNumber!) //proceed to payment
+                  : Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) => PhoneAuthGetPhone(
+                              //Passing astrologer data and callPaymentMethod to phone auth page
+                              astrologer: widget.astrologer!,
+                              callPaymentMethod: callPaymentMethod)),
+                    );
+          ;
         },
         child: Text(
           proceedToPay,
@@ -161,73 +147,14 @@ class _SlotListsState extends State<SlotLists> {
     );
   }
 
-  void callPaymentMethod({required int amountToPay,
-    required String name,
-    required String description,
-    required String email,
-    required String phoneNumber}) async {
-    launchRazorPay(
+  void callPaymentMethod(
+      {required int amountToPay,
+      required String name,
+      required String description,
+      required String email,
+      required String phoneNumber}) {
+    _paymentProvider.savePaymentInfo(
         amountToPay, name, description, email, phoneNumber);
+    _paymentProvider.makePayment(context);
   }
-
-
-  void launchRazorPay(int amount, String name, String description, String email,
-      String phoneNumber) {
-    amount = amount * 100;
-
-    var options = {
-      'key': rzp_key,
-      'amount': "$amount",
-      'name': name,
-      'description': description,
-      'prefill': {'contact': phoneNumber, 'email': email}
-    };
-
-    try {
-      _razorpay!.open(options);
-    } catch (e) {
-      print("Error: $e");
-    }
-  }
-
-  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    //check for paymentId
-    if (response.paymentId != null) {
-      await getPaymentInfo('${response.paymentId}');
-    }
-  }
-
-  void _handlePaymentError(PaymentFailureResponse response) async {
-    print("Payment Failed");
-
-    print("${response.code}\n${response.message}");
-  }
-
-  void _handleExternalWallet(ExternalWalletResponse response) {
-    print("Payment Failed");
-  }
-
-  Future<PaymentInfo> getPaymentInfo(String pid) async {
-    final getResponse = await http.get(
-      Uri.parse('$razorPayBaseUrl$pid'),
-      headers: {
-        'authorization': basicAuth,
-        'Content-type': 'application/json',
-        "accept": 'application/json'
-      },
-    );
-
-    final response = paymentInfoFromJson(getResponse.body);
-    if (getResponse.body != null) {
-      print('re ... ${response.status}');
-      Navigator.of(context).pop();
-    }
-
-
-    return response;
-  }
-
-
 }
-
-
