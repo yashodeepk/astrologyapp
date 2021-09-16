@@ -27,9 +27,14 @@ const pleaseSelectDay = 'Please select a day';
 const dayRequired = 'Day required';
 const chooseYourSlot = 'CHOOSE YOUR SLOT';
 const pleaseSelectSlot = 'Please select a slot';
+const pleaseWait = 'Please wait';
+const loading = 'Loading ...';
 const noSlotsAvailableForThisDay = 'No Slots Available For this Day';
 const String _imagesRoot = "assets/images/";
 const String firebase = _imagesRoot + "space.png";
+const razorPayBaseUrl = 'https://api.razorpay.com/v1/payments/';
+const razorPayUserName = 'rzp_test_cX58kqrp9k4sqV';
+const razorPayPassword = 'ce6m4ACeuBkkkmpcypD1WUcM';
 
 const sixteenDp = 16.0;
 const eightDp = 8.0;
