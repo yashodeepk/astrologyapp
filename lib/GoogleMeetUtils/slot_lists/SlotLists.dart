@@ -331,6 +331,7 @@ class _SlotListsState extends State<SlotLists> {
               emails,
               widget.astrologer!.email!,
               widget.astrologer!.name!,
+              widget.astrologer!.photoUrl!,
               widget.astrologer!.id!,
               _user!.displayName,
               _user!.email,

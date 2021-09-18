@@ -263,7 +263,16 @@ class _ChatWidgetState extends State<ChatWidget> {
                                                 borderRadius:
                                                     BorderRadius.circular(20)),
                                             primary: Color(0xff4c3cb0)),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .push(MaterialPageRoute(
+                                            builder: (context) => Chat(
+                                              peerId:
+                                                  'leMkxvEhXpcreAudZrI9O5Cqbe52',
+                                              peerAvatar: '',
+                                            ),
+                                          ));
+                                        },
                                         icon: Icon(
                                           Icons.arrow_forward_ios,
                                           color: Colors.white,

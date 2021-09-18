@@ -14,6 +14,7 @@ class Meetings {
       required this.meetingLink,
       required this.astrologerName,
       required this.astrologerEmail,
+      required this.astrologerPhoto,
       required this.astrologerId,
       required this.userName,
       required this.userEmail,
@@ -37,6 +38,7 @@ class Meetings {
   final String paymentId;
   final String scheduledDate;
   final String scheduledTime;
+  final String astrologerPhoto;
 
   factory Meetings.fromJson(Map<String, dynamic> json) => Meetings(
         meetingId: json["meetingId"],
@@ -47,6 +49,7 @@ class Meetings {
         meetingLink: json["meetingLink"],
         astrologerName: json["astrologerName"],
         astrologerEmail: json["astrologerEmail"],
+        astrologerPhoto: json["astrologerPhoto"],
         astrologerId: json["astrologerId"],
         userName: json["userName"],
         userEmail: json["userEmail"],
@@ -57,8 +60,7 @@ class Meetings {
             List<dynamic>.from(json["attendeeEmails"].map((x) => x)),
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "meetingId": meetingId,
         "scheduledDate": scheduledDate,
         "scheduledTime": scheduledTime,
@@ -67,6 +69,7 @@ class Meetings {
         "meetingLink": meetingLink,
         "astrologerName": astrologerName,
         "astrologerEmail": astrologerEmail,
+        "astrologerPhoto": astrologerPhoto,
         "astrologerId": astrologerId,
         "userName": userName,
         "userEmail": userEmail,

@@ -10,6 +10,7 @@ class MeetingProvider with ChangeNotifier {
   String? _meetingLink;
   String? _astrologerName;
   String? _astrologerEmail;
+  String? _astrologerPhoto;
   String? _astrologerId;
   String? _userName;
   String? _userEmail;
@@ -32,6 +33,7 @@ class MeetingProvider with ChangeNotifier {
       emailList,
       astrologerEmail,
       astrologerName,
+      astrologerPhoto,
       astrologerId,
       userName,
       userEmail,
@@ -47,6 +49,7 @@ class MeetingProvider with ChangeNotifier {
     _emailList = emailList;
     _astrologerEmail = astrologerEmail;
     _astrologerName = astrologerName;
+    _astrologerPhoto = astrologerPhoto;
     _astrologerId = astrologerId;
     _userName = userName;
     _userEmail = userEmail;
@@ -67,6 +70,7 @@ class MeetingProvider with ChangeNotifier {
       meetingLink: meetingLink,
       astrologerName: astrologerName,
       astrologerEmail: astrologerEmail,
+      astrologerPhoto: astrologerPhoto,
       astrologerId: astrologerId,
       userName: userName,
       userEmail: userEmail,
@@ -96,6 +100,8 @@ class MeetingProvider with ChangeNotifier {
   get astrologerName => _astrologerName;
 
   get astrologerEmail => _astrologerEmail;
+
+  get astrologerPhoto => _astrologerPhoto;
 
   get astrologerId => _astrologerId;
 
