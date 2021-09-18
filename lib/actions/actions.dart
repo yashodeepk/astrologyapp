@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:astrologyapp/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ShowAction {
@@ -55,5 +56,11 @@ class ShowAction {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  //this method takes a string and converts it to time
+  static TimeOfDay stringToTimeOfDay(String timeOfDay) {
+    final format = DateFormat.jm();
+    return TimeOfDay.fromDateTime(format.parse(timeOfDay));
   }
 }

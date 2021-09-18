@@ -1,20 +1,34 @@
 import 'dart:convert';
 
+import 'package:astrologyapp/GoogleMeetUtils/AddEvent.dart';
 import 'package:astrologyapp/actions/actions.dart';
+import 'package:astrologyapp/actions/dialog.dart';
 import 'package:astrologyapp/constants/constants.dart';
 import 'package:astrologyapp/model/PaymentInfo.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/phoneAuthUtils/getphone.dart';
+import 'package:astrologyapp/provider/meeting_provider.dart';
+import 'package:astrologyapp/provider/slot_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:googleapis/calendar/v3.dart' as calendar;
 import 'package:http/http.dart' as http;
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+
+import '../calenderevent.dart';
 
 class SlotLists extends StatefulWidget {
   final List<String> slotList;
   final Astrologer? astrologer;
+  final dayOfWeek;
+  final day;
 
-  SlotLists({Key? key, required this.slotList, required this.astrologer})
+  SlotLists(
+      {Key? key,
+      required this.slotList,
+      required this.astrologer,
+      required this.dayOfWeek,
+      required this.day})
       : super(key: key);
 
   @override
@@ -26,7 +40,13 @@ class _SlotListsState extends State<SlotLists> {
   bool isItemSelected = false;
   String _itemSelected = '';
   User? _user;
+  SlotProvider _slotProvider = SlotProvider();
+  MeetingProvider _meetingProvider = MeetingProvider();
   Razorpay? _razorpay;
+  final GlobalKey<State> loadingKey = new GlobalKey<State>();
+  CalendarClient calendarClient = CalendarClient();
+  List<calendar.EventAttendee> attendeeEmails = [];
+  final now = new DateTime.now();
 
   //authorization
   var basicAuth = 'Basic ' +
@@ -43,7 +63,6 @@ class _SlotListsState extends State<SlotLists> {
   void initState() {
     _user = FirebaseAuth.instance.currentUser!;
     initializeRazorPay();
-
     super.initState();
   }
 
@@ -51,75 +70,75 @@ class _SlotListsState extends State<SlotLists> {
   Widget build(BuildContext context) {
     return widget.slotList.isEmpty
         ? Expanded(
-        child: Container(
-          child: Center(
-              child: Text(
-                noSlotsAvailableForThisDay,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: twentyDp),
-              )),
-        ))
+            child: Container(
+            child: Center(
+                child: Text(
+              noSlotsAvailableForThisDay,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: twentyDp),
+            )),
+          ))
         : Expanded(
-        child: Scaffold(
-          bottomSheet: buildPaymentButton(),
-          body: CustomScrollView(
-            slivers: [
-              SliverFillRemaining(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Wrap(
-                        children: widget.slotList.map((f) {
-                          return GestureDetector(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 10.0),
-                              margin: EdgeInsets.only(
-                                  left: 5.0,
-                                  right: 5.0,
-                                  top: 10.0,
-                                  bottom: 10.0),
-                              decoration: BoxDecoration(
-                                color: _slotSelected ==
-                                    widget.slotList.indexOf(f)
-                                    ? Colors.blue[900]
-                                    : Colors.white,
-                                border: Border.all(
-                                    color: Colors.black54, width: 1.3),
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                        32) //                 <--- border radius here
-                                ),
-                              ),
-                              child: Text(
-                                f,
-                                style: TextStyle(
+            child: Scaffold(
+            bottomSheet: buildPaymentButton(),
+            body: CustomScrollView(
+              slivers: [
+                SliverFillRemaining(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Wrap(
+                          children: widget.slotList.map((f) {
+                            return GestureDetector(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                margin: EdgeInsets.only(
+                                    left: 5.0,
+                                    right: 5.0,
+                                    top: 10.0,
+                                    bottom: 10.0),
+                                decoration: BoxDecoration(
                                   color: _slotSelected ==
-                                      widget.slotList.indexOf(f)
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontSize: 14.0,
+                                          widget.slotList.indexOf(f)
+                                      ? Colors.blue[900]
+                                      : Colors.white,
+                                  border: Border.all(
+                                      color: Colors.black54, width: 1.3),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          32) //                 <--- border radius here
+                                      ),
+                                ),
+                                child: Text(
+                                  f,
+                                  style: TextStyle(
+                                    color: _slotSelected ==
+                                            widget.slotList.indexOf(f)
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontSize: 14.0,
+                                  ),
                                 ),
                               ),
-                            ),
-                            onTap: () {
-                              isItemSelected = true;
-                              _slotSelected = widget.slotList.indexOf(f);
-                              _itemSelected = f;
-                              setState(() {});
-                            },
-                          );
-                        }).toList(),
-                      ),
-                      SizedBox(
-                        height: 100,
-                      )
-                    ],
+                              onTap: () {
+                                isItemSelected = true;
+                                _slotSelected = widget.slotList.indexOf(f);
+                                _itemSelected = f;
+                                setState(() {});
+                              },
+                            );
+                          }).toList(),
+                        ),
+                        SizedBox(
+                          height: 100,
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ));
+              ],
+            ),
+          ));
   }
 
   //payment button
@@ -133,22 +152,22 @@ class _SlotListsState extends State<SlotLists> {
           _itemSelected.isEmpty
               ? ShowAction().showToast(pleaseSelectSlot, Colors.red)
               : (_user!.phoneNumber != null)
-              ? callPaymentMethod(
-              amountToPay: widget.astrologer!.fees,
-              name: _user!.displayName!,
-              description:
-              'Payment made from User ( ${_user!.displayName!} ) to Astrologer  ( ${widget.astrologer!.name!} )',
-              email: _user!.email!,
-              phoneNumber: _user!.phoneNumber!) //proceed to payment
-              : Navigator.push(
-            context,
-            MaterialPageRoute(
-                fullscreenDialog: true,
-                builder: (context) => PhoneAuthGetPhone(
-                  //Passing astrologer data and callPaymentMethod to phone auth page
-                    astrologer: widget.astrologer!,
-                    callPaymentMethod: callPaymentMethod)),
-          );
+                  ? callPaymentMethod(
+                      amountToPay: widget.astrologer!.fees,
+                      name: _user!.displayName!,
+                      description:
+                          'Payment made from User ( ${_user!.displayName!} ) to Astrologer  ( ${widget.astrologer!.name!} )',
+                      email: _user!.email!,
+                      phoneNumber: _user!.phoneNumber!) //proceed to payment
+                  : Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) => PhoneAuthGetPhone(
+                              //Passing astrologer data and callPaymentMethod to phone auth page
+                              astrologer: widget.astrologer!,
+                              callPaymentMethod: callPaymentMethod)),
+                    );
         },
         child: Text(
           proceedToPay,
@@ -161,15 +180,21 @@ class _SlotListsState extends State<SlotLists> {
     );
   }
 
-  void callPaymentMethod({required int amountToPay,
-    required String name,
-    required String description,
-    required String email,
-    required String phoneNumber}) async {
-    launchRazorPay(
-        amountToPay, name, description, email, phoneNumber);
-  }
+  void callPaymentMethod(
+      {required int amountToPay,
+      required String name,
+      required String description,
+      required String email,
+      required String phoneNumber}) async {
+    PgDialog.showLoadingDialog(context, loadingKey, loading, Colors.white);
 
+    //update provider
+    _slotProvider.removeBookedSlotFromList(
+        widget.dayOfWeek, widget.astrologer!.email, _itemSelected);
+
+    Future.delayed(Duration(seconds: 3)).then((value) =>
+        {launchRazorPay(amountToPay, name, description, email, phoneNumber)});
+  }
 
   void launchRazorPay(int amount, String name, String description, String email,
       String phoneNumber) {
@@ -207,7 +232,7 @@ class _SlotListsState extends State<SlotLists> {
     print("Payment Failed");
   }
 
-  Future<PaymentInfo> getPaymentInfo(String pid) async {
+  Future<void> getPaymentInfo(String pid) async {
     final getResponse = await http.get(
       Uri.parse('$razorPayBaseUrl$pid'),
       headers: {
@@ -219,15 +244,99 @@ class _SlotListsState extends State<SlotLists> {
 
     final response = paymentInfoFromJson(getResponse.body);
     if (getResponse.body != null) {
-      print('re ... ${response.status}');
-      Navigator.of(context).pop();
+      //get start and end time
+      var splitAndExtractTime =
+          _itemSelected.toString().replaceAll(RegExp("[\s-\s]"), '');
+
+      String startTime =
+          splitAndExtractTime.toString().split('-')[0].toString();
+
+      String endTime = splitAndExtractTime.toString().split('-')[1].toString();
+
+      TimeOfDay startTimeOfDay = ShowAction.stringToTimeOfDay(startTime);
+      TimeOfDay endTimeOfDay =
+          ShowAction.stringToTimeOfDay(endTime.substring(1));
+
+      var startTimeToMilliseconds, endTimeToMilliseconds;
+
+      if (widget.day == 0) {
+        var day = now.day;
+        startTimeToMilliseconds = DateTime(now.year, now.month, day,
+            startTimeOfDay.hour, startTimeOfDay.minute);
+        endTimeToMilliseconds = DateTime(
+            now.year, now.month, day, endTimeOfDay.hour, endTimeOfDay.minute);
+      } else {
+        startTimeToMilliseconds = DateTime(now.year, now.month, now.day,
+            startTimeOfDay.hour, startTimeOfDay.minute);
+        endTimeToMilliseconds = DateTime(now.year, now.month, now.day,
+            endTimeOfDay.hour, endTimeOfDay.minute);
+      }
+
+      print("  --- fff $startTimeToMilliseconds}");
+      print("  --- ffvvvf $endTimeToMilliseconds}");
+
+      //.remove slot ....
+      await _slotProvider.removeSelectedSlot();
+
+      calendar.EventAttendee user = calendar.EventAttendee();
+      user.email = _user!.email!;
+      attendeeEmails.add(user);
+      calendar.EventAttendee astrologer = calendar.EventAttendee();
+      astrologer.email = widget.astrologer!.email!;
+      attendeeEmails.add(astrologer);
+      //create calender event
+      await calendarClient
+          .insert(
+              title:
+                  'Meeting with ${_user!.email} and ${widget.astrologer!.email}',
+              description: response.description,
+              location: 'Online',
+              attendeeEmailList: attendeeEmails,
+              shouldNotifyAttendees: true,
+              hasConferenceSupport: true,
+              startTime: startTimeToMilliseconds,
+              endTime: endTimeToMilliseconds)
+          .then((eventData) async {
+        String eventId = eventData['id']!;
+        String eventLink = eventData['link']!;
+
+        print("  --- id $eventId --- link $eventLink ");
+
+        dynamic emails = [];
+
+        for (int i = 0; i < attendeeEmails.length; i++)
+          emails.add(attendeeEmails[i].email!);
+
+        //2.notify meeting data
+        _meetingProvider.notifyMeetingDetailsListener(
+            response.description,
+            now,
+            eventLink,
+            eventId,
+            emails,
+            widget.astrologer!.email!,
+            widget.astrologer!.name!,
+            widget.astrologer!.id!,
+            _user!.displayName,
+            _user!.email,
+            _user!.uid,
+            _itemSelected,
+            response.id);
+
+        //create meeting
+        _meetingProvider.createMeeting();
+      }).catchError((e) {
+        print(" eerrorrr ${e.toString()}");
+      });
+
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => CreateScreen(),
+      ));
+
+      // Navigator.of(context).pop();
+
     }
 
-
-    return response;
+    // return response;
   }
-
-
 }
-
-
