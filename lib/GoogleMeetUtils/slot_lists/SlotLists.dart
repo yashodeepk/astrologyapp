@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:astrologyapp/GoogleMeetUtils/AddEvent.dart';
 import 'package:astrologyapp/actions/actions.dart';
 import 'package:astrologyapp/actions/dialog.dart';
 import 'package:astrologyapp/constants/constants.dart';
@@ -9,7 +8,9 @@ import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/phoneAuthUtils/getphone.dart';
 import 'package:astrologyapp/provider/meeting_provider.dart';
 import 'package:astrologyapp/provider/slot_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/calendar/v3.dart' as calendar;
 import 'package:http/http.dart' as http;
@@ -244,98 +245,120 @@ class _SlotListsState extends State<SlotLists> {
 
     final response = paymentInfoFromJson(getResponse.body);
     if (getResponse.body != null) {
-      //get start and end time
-      var splitAndExtractTime =
-          _itemSelected.toString().replaceAll(RegExp("[\s-\s]"), '');
+      await FirebaseFirestore.instance
+          .collection('Payments')
+          .doc(_user!.email)
+          .collection(response.id)
+          .add({
+        'paymentId': response.id,
+        'description': response.description,
+        'amount': response.amount,
+        'paidTo': widget.astrologer!.email!,
+        'from': _user!.email!
+      }).then((value) async {
+        //get start and end time
+        var splitAndExtractTime =
+            _itemSelected.toString().replaceAll(RegExp("[\s-\s]"), '');
 
-      String startTime =
-          splitAndExtractTime.toString().split('-')[0].toString();
+        String startTime =
+            splitAndExtractTime.toString().split('-')[0].toString();
 
-      String endTime = splitAndExtractTime.toString().split('-')[1].toString();
+        String endTime =
+            splitAndExtractTime.toString().split('-')[1].toString();
 
-      TimeOfDay startTimeOfDay = ShowAction.stringToTimeOfDay(startTime);
-      TimeOfDay endTimeOfDay =
-          ShowAction.stringToTimeOfDay(endTime.substring(1));
+        TimeOfDay startTimeOfDay = ShowAction.stringToTimeOfDay(startTime);
+        TimeOfDay endTimeOfDay =
+            ShowAction.stringToTimeOfDay(endTime.substring(1));
 
-      var startTimeToMilliseconds, endTimeToMilliseconds;
+        var startTimeToMilliseconds, endTimeToMilliseconds;
 
-      if (widget.day == 0) {
-        var day = now.day;
-        startTimeToMilliseconds = DateTime(now.year, now.month, day,
-            startTimeOfDay.hour, startTimeOfDay.minute);
-        endTimeToMilliseconds = DateTime(
-            now.year, now.month, day, endTimeOfDay.hour, endTimeOfDay.minute);
-      } else {
-        startTimeToMilliseconds = DateTime(now.year, now.month, now.day,
-            startTimeOfDay.hour, startTimeOfDay.minute);
-        endTimeToMilliseconds = DateTime(now.year, now.month, now.day,
-            endTimeOfDay.hour, endTimeOfDay.minute);
-      }
+        if (widget.day == 0) {
+          var day = now.day;
+          startTimeToMilliseconds = DateTime(now.year, now.month, day,
+              startTimeOfDay.hour, startTimeOfDay.minute);
+          endTimeToMilliseconds = DateTime(
+              now.year, now.month, day, endTimeOfDay.hour, endTimeOfDay.minute);
+        } else {
+          startTimeToMilliseconds = DateTime(now.year, now.month, now.day,
+              startTimeOfDay.hour, startTimeOfDay.minute);
+          endTimeToMilliseconds = DateTime(now.year, now.month, now.day,
+              endTimeOfDay.hour, endTimeOfDay.minute);
+        }
 
-      print("  --- fff $startTimeToMilliseconds}");
-      print("  --- ffvvvf $endTimeToMilliseconds}");
+        //.remove slot ....
+        await _slotProvider.removeSelectedSlot();
 
-      //.remove slot ....
-      await _slotProvider.removeSelectedSlot();
+        calendar.EventAttendee user = calendar.EventAttendee();
+        user.email = _user!.email!;
+        attendeeEmails.add(user);
+        calendar.EventAttendee astrologer = calendar.EventAttendee();
+        astrologer.email = widget.astrologer!.email!;
+        attendeeEmails.add(astrologer);
+        //create calender event
+        await calendarClient
+            .insert(
+                title:
+                    'Meeting with ${_user!.email} and ${widget.astrologer!.email}',
+                description: response.description,
+                location: 'Online',
+                attendeeEmailList: attendeeEmails,
+                shouldNotifyAttendees: true,
+                hasConferenceSupport: true,
+                startTime: startTimeToMilliseconds,
+                endTime: endTimeToMilliseconds)
+            .then((eventData) async {
+          String eventId = eventData['id']!;
+          String eventLink = eventData['link']!;
 
-      calendar.EventAttendee user = calendar.EventAttendee();
-      user.email = _user!.email!;
-      attendeeEmails.add(user);
-      calendar.EventAttendee astrologer = calendar.EventAttendee();
-      astrologer.email = widget.astrologer!.email!;
-      attendeeEmails.add(astrologer);
-      //create calender event
-      await calendarClient
-          .insert(
-              title:
-                  'Meeting with ${_user!.email} and ${widget.astrologer!.email}',
-              description: response.description,
-              location: 'Online',
-              attendeeEmailList: attendeeEmails,
-              shouldNotifyAttendees: true,
-              hasConferenceSupport: true,
-              startTime: startTimeToMilliseconds,
-              endTime: endTimeToMilliseconds)
-          .then((eventData) async {
-        String eventId = eventData['id']!;
-        String eventLink = eventData['link']!;
+          dynamic emails = [];
 
-        print("  --- id $eventId --- link $eventLink ");
+          for (int i = 0; i < attendeeEmails.length; i++)
+            emails.add(attendeeEmails[i].email!);
 
-        dynamic emails = [];
+          //2.notify meeting data
+          _meetingProvider.notifyMeetingDetailsListener(
+              response.description,
+              now,
+              eventLink,
+              eventId,
+              emails,
+              widget.astrologer!.email!,
+              widget.astrologer!.name!,
+              widget.astrologer!.id!,
+              _user!.displayName,
+              _user!.email,
+              _user!.uid,
+              _itemSelected,
+              response.id);
 
-        for (int i = 0; i < attendeeEmails.length; i++)
-          emails.add(attendeeEmails[i].email!);
+          //create meeting
+          _meetingProvider.createMeeting();
+        }).catchError((e) {
+          print(" eerrorrr ${e.toString()}");
+        });
 
-        //2.notify meeting data
-        _meetingProvider.notifyMeetingDetailsListener(
-            response.description,
-            now,
-            eventLink,
-            eventId,
-            emails,
-            widget.astrologer!.email!,
-            widget.astrologer!.name!,
-            widget.astrologer!.id!,
-            _user!.displayName,
-            _user!.email,
-            _user!.uid,
-            _itemSelected,
-            response.id);
-
-        //create meeting
-        _meetingProvider.createMeeting();
-      }).catchError((e) {
-        print(" eerrorrr ${e.toString()}");
+        Navigator.of(context).pop();
+      }).catchError((onError) {
+        print(onError);
       });
-
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => CreateScreen(),
-      ));
-
-      // Navigator.of(context).pop();
-
     }
+
+    ShowAction.showAlertDialog(
+        'Payment successful',
+        'Your payment has been captured successfully',
+        context,
+        SizedBox(),
+        ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(Theme.of(context).primaryColor)),
+            onPressed: () {
+              //
+            },
+            child: Text(
+              ok,
+              style: TextStyle(color: CupertinoColors.white),
+            )));
 
     // return response;
   }
