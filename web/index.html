@@ -25,30 +25,31 @@
 
   <title>astrologyapp</title>
   <link rel="manifest" href="manifest.json">
+  <meta name="google-signin-client_id"
+    content="749828102104-c05ce37gb9meu642q90mojdlrgonarmf.apps.googleusercontent.com">
 </head>
 <body>
-  <!-- The core Firebase JS SDK is always required and must be listed first -->
-  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-storage.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-messaging.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-analytics.js"></script>
 
-  <!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-analytics.js"></script>
-  <!-- This script installs service_worker.js to provide PWA functionality to
-       application. For more information, see:
-       https://developers.google.com/web/fundamentals/primers/service-workers -->
-  <script>
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    
+ <script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     var firebaseConfig = {
       apiKey: "AIzaSyDFThhN4NT3bLZQMHcFyCR9DwKKr2XTHd4",
       authDomain: "astrology-app-d5d25.firebaseapp.com",
       projectId: "astrology-app-d5d25",
       storageBucket: "astrology-app-d5d25.appspot.com",
       messagingSenderId: "749828102104",
-      appId: "1:749828102104:web:e156fa885fbe66017c04ad",
-      measurementId: "G-NZ182NW0TY"
-      };
-        // Initialize Firebase
+      appId: "1:749828102104:web:6d6e276dc50bb61e7c04ad",
+      measurementId: "G-N0EQTEV9BX"
+    };
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     firebase.analytics();
   </script>

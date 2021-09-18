@@ -68,7 +68,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//dont change statelessWidget to statefulWidget it will cause application to stuck at welcomepage
 class Home extends StatefulWidget {
   static const String routeName = '/home';
   @override
