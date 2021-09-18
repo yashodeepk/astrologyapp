@@ -45,7 +45,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
   @override
   void initState() {
     astrologersList = Provider.of<List<Astrologer>>(context, listen: false);
-
+    calender();
     super.initState();
   }
 
@@ -123,15 +123,15 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                   children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(8, 20, 0, 8),
-                      child:CircleAvatar(
-                              child: ClipOval(
-                                child: FadeInImage.assetNetwork(
-                                  image: '${astrologer.photoUrl}',
-                                  placeholder: 'assets/images/bro.jpg',
-                                ),
-                              ),
-                              radius: 20,
-                            ),
+                      child: CircleAvatar(
+                        child: ClipOval(
+                          child: FadeInImage.assetNetwork(
+                            image: '${astrologer.photoUrl}',
+                            placeholder: 'assets/images/bro.jpg',
+                          ),
+                        ),
+                        radius: 20,
+                      ),
                       // child: CircleAvatar(
                       //   backgroundImage: CachedNetworkImageProvider(
                       //       '${astrologer.photoUrl}'),
