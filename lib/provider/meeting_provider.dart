@@ -16,6 +16,8 @@ class MeetingProvider with ChangeNotifier {
   String? _userId;
   String? _timeSelected;
   String? _paymentId;
+  String? _scheduledDate;
+  String? _scheduledTime;
   dynamic _emailList;
   var _uuid = Uuid();
 
@@ -23,6 +25,8 @@ class MeetingProvider with ChangeNotifier {
   notifyMeetingDetailsListener(
       paymentDes,
       createdAt,
+      scheduledDate,
+      scheduledTime,
       meetingLink,
       meetingId,
       emailList,
@@ -36,6 +40,8 @@ class MeetingProvider with ChangeNotifier {
       paymentId) {
     _paymentDescription = paymentDes;
     _createdAt = createdAt;
+    _scheduledDate = scheduledDate;
+    _scheduledTime = scheduledTime;
     _meetingLink = meetingLink;
     _meetingId = meetingId;
     _emailList = emailList;
@@ -54,25 +60,32 @@ class MeetingProvider with ChangeNotifier {
   //create new meeting
   createMeeting() async {
     Meetings meetings = Meetings(
-        meetingId: meetingId,
-        attendeeEmails: getEmailList,
-        paymentDescription: paymentDescription,
-        createdAt: createdAt,
-        meetingLink: meetingLink,
-        astrologerName: astrologerName,
-        astrologerEmail: astrologerEmail,
-        astrologerId: astrologerId,
-        userName: userName,
-        userEmail: userEmail,
-        userId: userId,
-        timeSelected: timeSelected,
-        paymentId: paymentId);
+      meetingId: meetingId,
+      attendeeEmails: getEmailList,
+      paymentDescription: paymentDescription,
+      createdAt: createdAt,
+      meetingLink: meetingLink,
+      astrologerName: astrologerName,
+      astrologerEmail: astrologerEmail,
+      astrologerId: astrologerId,
+      userName: userName,
+      userEmail: userEmail,
+      userId: userId,
+      timeSelected: timeSelected,
+      paymentId: paymentId,
+      scheduledDate: scheduledDate,
+      scheduledTime: scheduledTime,
+    );
     await MeetingService.instance.createMeeting(meetings);
   }
 
   get paymentDescription => _paymentDescription;
 
   get createdAt => _createdAt;
+
+  get scheduledDate => _scheduledDate;
+
+  get scheduledTime => _scheduledTime;
 
   get getEmailList => _emailList;
 

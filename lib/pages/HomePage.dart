@@ -8,7 +8,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 // import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -72,8 +71,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     if (preferences.containsKey('type')) {
       userType = preferences.getString('type');
     }
-
-    print('type $userType');
   }
 
   // void handleClick(String value) {
@@ -87,13 +84,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final now = new DateTime.now();
-    final dt = DateTime(now.year, now.month, now.day, 9, 30);
-    final format = DateFormat.yMMMMEEEEd(); //"6:00 AM"
-    print(
-        " hello  ${dt.millisecondsSinceEpoch} --- fff ${DateTime.fromMillisecondsSinceEpoch(dt.millisecondsSinceEpoch)}");
-
-    print(TimeOfDay.now().replacing(hour: 9, minute: 30).format(context));
     return Scaffold(
         key: scaffoldKey,
         appBar: AppBar(

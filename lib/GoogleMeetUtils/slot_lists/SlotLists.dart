@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:astrologyapp/actions/actions.dart';
 import 'package:astrologyapp/actions/dialog.dart';
 import 'package:astrologyapp/constants/constants.dart';
+import 'package:astrologyapp/main.dart';
 import 'package:astrologyapp/model/PaymentInfo.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/phoneAuthUtils/getphone.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/calendar/v3.dart' as calendar;
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../calenderevent.dart';
@@ -279,12 +281,15 @@ class _SlotListsState extends State<SlotLists> {
           endTimeToMilliseconds = DateTime(
               now.year, now.month, day, endTimeOfDay.hour, endTimeOfDay.minute);
         } else {
-          startTimeToMilliseconds = DateTime(now.year, now.month, now.day,
+          startTimeToMilliseconds = DateTime(now.year, now.month, widget.day,
               startTimeOfDay.hour, startTimeOfDay.minute);
-          endTimeToMilliseconds = DateTime(now.year, now.month, now.day,
+          endTimeToMilliseconds = DateTime(now.year, now.month, widget.day,
               endTimeOfDay.hour, endTimeOfDay.minute);
         }
 
+        final format = DateFormat('dd/MM/yyyy');
+
+        print(" --- ${format.format(startTimeToMilliseconds)}  ?? $startTime");
         //.remove slot ....
         await _slotProvider.removeSelectedSlot();
 
@@ -319,6 +324,8 @@ class _SlotListsState extends State<SlotLists> {
           _meetingProvider.notifyMeetingDetailsListener(
               response.description,
               now,
+              format.format(startTimeToMilliseconds),
+              startTime,
               eventLink,
               eventId,
               emails,
@@ -353,6 +360,11 @@ class _SlotListsState extends State<SlotLists> {
                 backgroundColor:
                     MaterialStateProperty.all(Theme.of(context).primaryColor)),
             onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => PageNavigator(
+                  selectedIndex: 2,
+                ),
+              ));
               //
             },
             child: Text(
