@@ -23,7 +23,17 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
   @override
   void initState() {
     var user = Provider.of<User?>(context, listen: false);
-    isLoggedIn = user != null;
+    if (user == true) {
+      setState(() {
+        isLoggedIn = true;
+      });
+    } else {
+      setState(() {
+        isLoggedIn = false;
+      });
+    }
+    // isLoggedIn = user != null;
+    print('isLoggedin = ' + isLoggedIn.toString());
     //uid = user!.uid;
     super.initState();
   }
@@ -36,7 +46,7 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
         child: SafeArea(
             top: false,
             bottom: false,
-            child: Scaffold(body: isLoggedIn! ? Home() : LoginPageWidget())),
+            child: Scaffold(body: isLoggedIn! ? LoginPageWidget() : Home())),
       ),
     );
   }
