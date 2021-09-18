@@ -12,6 +12,7 @@ import 'package:astrologyapp/provider/phone_auth.dart';
 import 'package:astrologyapp/provider/slot_provider.dart';
 import 'package:astrologyapp/route_generator.dart';
 import 'package:astrologyapp/service/astrologers_service.dart';
+import 'package:astrologyapp/service/meeting_service.dart';
 import 'package:astrologyapp/service/slot_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -19,6 +20,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'model/meetings.dart';
 import 'model/slot.dart';
 
 Future<void> main() async {
@@ -55,6 +57,12 @@ class MyApp extends StatelessWidget {
         //slots
         StreamProvider<List<Slots>>.value(
             lazy: false, value: _slotService.getSlots(), initialData: []),
+
+        //get meeting
+        StreamProvider<List<Meetings>>.value(
+            lazy: false,
+            value: MeetingService.instance.getMeetingByTime(),
+            initialData: []),
       ],
       child: MaterialApp(
         title: 'Astrology App',

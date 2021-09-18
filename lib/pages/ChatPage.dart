@@ -4,13 +4,19 @@ import 'package:astrologyapp/ChatUtils/ChatScreen.dart';
 import 'package:astrologyapp/ChatUtils/loading.dart';
 import 'package:astrologyapp/ChatUtils/userchat.dart';
 import 'package:astrologyapp/Colors.dart';
+import 'package:astrologyapp/constants/constants.dart';
+import 'package:astrologyapp/model/meetings.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+
+import 'HomePage.dart';
 
 class ChatWidget extends StatefulWidget {
   @override
@@ -24,6 +30,7 @@ class _ChatWidgetState extends State<ChatWidget> {
       FlutterLocalNotificationsPlugin();
   final ScrollController listScrollController = ScrollController();
   final user = FirebaseAuth.instance.currentUser!;
+  late final meetings;
 
   int _limit = 20;
   int _limitIncrement = 20;
@@ -35,6 +42,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   @override
   void initState() {
     super.initState();
+    meetings = Provider.of<List<Meetings>>(context, listen: false);
     registerNotification();
     configLocalNotification();
     listScrollController.addListener(scrollListener);
@@ -112,6 +120,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   @override
   Widget build(BuildContext context) {
+    print("gggggggggg ${meetings.length}");
     // currentUserId = user.getIdToken() as String?;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -170,283 +179,301 @@ class _ChatWidgetState extends State<ChatWidget> {
         body: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      child: Container(
-                        width: double.infinity,
-                        height: 110,
-                        decoration: BoxDecoration(
-                          color: Colors.lightBlueAccent[400],
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Column(
+            ListView.builder(
+              itemBuilder: (context, index) {
+                Meetings meet = meetings[index];
+
+                return Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          child: Container(
+                            width: double.infinity,
+                            height: 110,
+                            decoration: BoxDecoration(
+                              color: Colors.lightBlueAccent[400],
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                              child: Row(
                                 mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                    child: Text(
-                                      'Scheduled Meeting',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 20,
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                        child: Text(
+                                          'Scheduled Meeting',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(5, 10, 0, 0),
+                                        child: Text(
+                                          'Date - ${meet.scheduledDate}',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(5, 5, 0, 0),
+                                        child: Text(
+                                          'Time - ${meet.scheduledTime}',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      )
+                                    ],
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(5, 10, 0, 0),
-                                    child: Text(
-                                      'Date - 1/6/2021',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(5, 5, 0, 0),
-                                    child: Text(
-                                      'Time - 05:30 PM',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
+                                    padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                CircleAvatar(
+                                                    backgroundImage:
+                                                        CachedNetworkImageProvider(
+                                                            '${meet.astrologerPhoto}'),
+                                                    radius: 20),
+                                                CircleAvatar(
+                                                    backgroundImage:
+                                                        CachedNetworkImageProvider(
+                                                            '${FirebaseAuth.instance.currentUser!.photoURL}'),
+                                                    radius: 20),
+                                              ],
+                                            ),
+                                          ),
+                                          ElevatedButton.icon(
+                                            style: ElevatedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20)),
+                                                primary: Color(0xff4c3cb0)),
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .push(MaterialPageRoute(
+                                                builder: (context) => Chat(
+                                                  peerId: userType == userX
+                                                      ? '${meet.astrologerId}'
+                                                      : '${meet.userId}',
+                                                  peerAvatar: '',
+                                                ),
+                                              ));
+                                            },
+                                            icon: Icon(
+                                              Icons.arrow_forward_ios,
+                                              color: Colors.white,
+                                              size: 16,
+                                            ),
+                                            label: Text('join'),
+                                          )
+                                        ],
                                       ),
                                     ),
                                   )
                                 ],
                               ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            CircleAvatar(
-                                                backgroundImage: AssetImage(
-                                                    'assets/images/3.jpg'),
-                                                radius: 20),
-                                            CircleAvatar(
-                                                backgroundImage: AssetImage(
-                                                    'assets/images/bro.jpg'),
-                                                radius: 20),
-                                          ],
-                                        ),
-                                      ),
-                                      ElevatedButton.icon(
-                                        style: ElevatedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20)),
-                                            primary: Color(0xff4c3cb0)),
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .push(MaterialPageRoute(
-                                            builder: (context) => Chat(
-                                              peerId:
-                                                  'leMkxvEhXpcreAudZrI9O5Cqbe52',
-                                              peerAvatar: '',
-                                            ),
-                                          ));
-                                        },
-                                        icon: Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Colors.white,
-                                          size: 16,
-                                        ),
-                                        label: Text('join'),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    // ChatScreen(currentUserId: prefs!.getString('id') ?? ""),
-                    // ListView(
-                    //   shrinkWrap: true,
-                    //   children: [
-                    //     InkWell(
-                    //       onTap: () async {
-                    //         prefs = await SharedPreferences.getInstance();
-                    //         Navigator.push(
-                    //             context,
-                    //             MaterialPageRoute(
-                    //                 builder: (context) => ChatScreen(
-                    //                     currentUserId:
-                    //                         prefs!.getString('id') ?? "")));
-                    //       },
-                    //       child: Padding(
-                    //         padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                    //         child: Row(
-                    //           mainAxisSize: MainAxisSize.max,
-                    //           children: [
-                    //             Container(
-                    //               width: MediaQuery.of(context).size.width - 20,
-                    //               height: 80,
-                    //               decoration: BoxDecoration(
-                    //                 color: Colors.white,
-                    //                 border: Border(
-                    //                   bottom: BorderSide(
-                    //                     color: Colors.black,
-                    //                     width: 1,
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //               child: Row(
-                    //                 mainAxisSize: MainAxisSize.max,
-                    //                 children: [
-                    //                   Padding(
-                    //                     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    //                     child: Stack(
-                    //                       children: [
-                    //                         Padding(
-                    //                           padding:
-                    //                               EdgeInsets.fromLTRB(8, 0, 8, 0),
-                    //                           child: Column(
-                    //                             mainAxisSize: MainAxisSize.max,
-                    //                             mainAxisAlignment:
-                    //                                 MainAxisAlignment.center,
-                    //                             children: [
-                    //                               Container(
-                    //                                 width: 60,
-                    //                                 height: 60,
-                    //                                 clipBehavior: Clip.antiAlias,
-                    //                                 decoration: BoxDecoration(
-                    //                                   shape: BoxShape.circle,
-                    //                                 ),
-                    //                                 child: Image.asset(
-                    //                                   'assets/bro.jpg',
-                    //                                 ),
-                    //                               )
-                    //                             ],
-                    //                           ),
-                    //                         ),
-                    //                         Padding(
-                    //                           padding: EdgeInsets.fromLTRB(
-                    //                               10, 1, 0, 0),
-                    //                           child: Icon(
-                    //                             Icons.circle,
-                    //                             color: Color(0xFF28FF00),
-                    //                             size: 24,
-                    //                           ),
-                    //                         )
-                    //                       ],
-                    //                     ),
-                    //                   ),
-                    //                   Expanded(
-                    //                     child: Column(
-                    //                       mainAxisSize: MainAxisSize.max,
-                    //                       mainAxisAlignment:
-                    //                           MainAxisAlignment.center,
-                    //                       children: [
-                    //                         Row(
-                    //                           mainAxisSize: MainAxisSize.max,
-                    //                           children: [
-                    //                             Text(
-                    //                               'Kartik',
-                    //                               style: TextStyle(
-                    //                                 color: Colors.black,
-                    //                                 fontSize: 18,
-                    //                               ),
-                    //                             )
-                    //                           ],
-                    //                         ),
-                    //                         Row(
-                    //                           mainAxisSize: MainAxisSize.max,
-                    //                           children: [
-                    //                             Expanded(
-                    //                               child: Padding(
-                    //                                 padding: EdgeInsets.fromLTRB(
-                    //                                     0, 4, 4, 0),
-                    //                                 child: Text(
-                    //                                   'Hey Can i Help you',
-                    //                                   style: TextStyle(
-                    //                                     color: Colors.grey[700],
-                    //                                     fontWeight:
-                    //                                         FontWeight.w500,
-                    //                                     fontSize: 14,
-                    //                                   ),
-                    //                                 ),
-                    //                               ),
-                    //                             )
-                    //                           ],
-                    //                         )
-                    //                       ],
-                    //                     ),
-                    //                   ),
-                    //                 ],
-                    //               ),
-                    //             )
-                    //           ],
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // )
-                    Container(
-                      child: StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('astrologer')
-                            .limit(_limit)
-                            .snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasData) {
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              padding: EdgeInsets.all(10.0),
-                              itemBuilder: (context, index) => buildItem(
-                                  context, snapshot.data?.docs[index]),
-                              itemCount: snapshot.data?.docs.length,
-                              controller: listScrollController,
-                            );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(primaryColor),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
+                        // ChatScreen(currentUserId: prefs!.getString('id') ?? ""),
+                        // ListView(
+                        //   shrinkWrap: true,
+                        //   children: [
+                        //     InkWell(
+                        //       onTap: () async {
+                        //         prefs = await SharedPreferences.getInstance();
+                        //         Navigator.push(
+                        //             context,
+                        //             MaterialPageRoute(
+                        //                 builder: (context) => ChatScreen(
+                        //                     currentUserId:
+                        //                         prefs!.getString('id') ?? "")));
+                        //       },
+                        //       child: Padding(
+                        //         padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        //         child: Row(
+                        //           mainAxisSize: MainAxisSize.max,
+                        //           children: [
+                        //             Container(
+                        //               width: MediaQuery.of(context).size.width - 20,
+                        //               height: 80,
+                        //               decoration: BoxDecoration(
+                        //                 color: Colors.white,
+                        //                 border: Border(
+                        //                   bottom: BorderSide(
+                        //                     color: Colors.black,
+                        //                     width: 1,
+                        //                   ),
+                        //                 ),
+                        //               ),
+                        //               child: Row(
+                        //                 mainAxisSize: MainAxisSize.max,
+                        //                 children: [
+                        //                   Padding(
+                        //                     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        //                     child: Stack(
+                        //                       children: [
+                        //                         Padding(
+                        //                           padding:
+                        //                               EdgeInsets.fromLTRB(8, 0, 8, 0),
+                        //                           child: Column(
+                        //                             mainAxisSize: MainAxisSize.max,
+                        //                             mainAxisAlignment:
+                        //                                 MainAxisAlignment.center,
+                        //                             children: [
+                        //                               Container(
+                        //                                 width: 60,
+                        //                                 height: 60,
+                        //                                 clipBehavior: Clip.antiAlias,
+                        //                                 decoration: BoxDecoration(
+                        //                                   shape: BoxShape.circle,
+                        //                                 ),
+                        //                                 child: Image.asset(
+                        //                                   'assets/bro.jpg',
+                        //                                 ),
+                        //                               )
+                        //                             ],
+                        //                           ),
+                        //                         ),
+                        //                         Padding(
+                        //                           padding: EdgeInsets.fromLTRB(
+                        //                               10, 1, 0, 0),
+                        //                           child: Icon(
+                        //                             Icons.circle,
+                        //                             color: Color(0xFF28FF00),
+                        //                             size: 24,
+                        //                           ),
+                        //                         )
+                        //                       ],
+                        //                     ),
+                        //                   ),
+                        //                   Expanded(
+                        //                     child: Column(
+                        //                       mainAxisSize: MainAxisSize.max,
+                        //                       mainAxisAlignment:
+                        //                           MainAxisAlignment.center,
+                        //                       children: [
+                        //                         Row(
+                        //                           mainAxisSize: MainAxisSize.max,
+                        //                           children: [
+                        //                             Text(
+                        //                               'Kartik',
+                        //                               style: TextStyle(
+                        //                                 color: Colors.black,
+                        //                                 fontSize: 18,
+                        //                               ),
+                        //                             )
+                        //                           ],
+                        //                         ),
+                        //                         Row(
+                        //                           mainAxisSize: MainAxisSize.max,
+                        //                           children: [
+                        //                             Expanded(
+                        //                               child: Padding(
+                        //                                 padding: EdgeInsets.fromLTRB(
+                        //                                     0, 4, 4, 0),
+                        //                                 child: Text(
+                        //                                   'Hey Can i Help you',
+                        //                                   style: TextStyle(
+                        //                                     color: Colors.grey[700],
+                        //                                     fontWeight:
+                        //                                         FontWeight.w500,
+                        //                                     fontSize: 14,
+                        //                                   ),
+                        //                                 ),
+                        //                               ),
+                        //                             )
+                        //                           ],
+                        //                         )
+                        //                       ],
+                        //                     ),
+                        //                   ),
+                        //                 ],
+                        //               ),
+                        //             )
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // )
+                        Container(
+                          child: StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('astrologer')
+                                .limit(_limit)
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasData) {
+                                return ListView.builder(
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.all(10.0),
+                                  itemBuilder: (context, index) => buildItem(
+                                      context, snapshot.data?.docs[index]),
+                                  itemCount: snapshot.data?.docs.length,
+                                  controller: listScrollController,
+                                );
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        primaryColor),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
 
-                    // Loading
-                    Positioned(
-                      child: isLoading ? const Loading() : Container(),
-                    )
-                  ],
-                ),
-              ),
+                        // Loading
+                        Positioned(
+                          child: isLoading ? const Loading() : Container(),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+              itemCount: meetings.length,
+              shrinkWrap: true,
             )
           ],
         ),
