@@ -489,8 +489,9 @@ class _AddScheduleState extends State<AddSchedule> {
 
     slotTimes.add('$startTimer-$endTimer');
 
-    TimeOfDay startTimeOfDay = stringToTimeOfDay(startTimer);
-    TimeOfDay endTimeOfDay = stringToTimeOfDay(endTimer.substring(1));
+    TimeOfDay startTimeOfDay = ShowAction.stringToTimeOfDay(startTimer);
+    TimeOfDay endTimeOfDay =
+        ShowAction.stringToTimeOfDay(endTimer.substring(1));
 
     someMethod(startTimeOfDay.hour, startTimeOfDay.minute, endTimeOfDay.hour,
         endTimeOfDay.minute);
@@ -501,12 +502,12 @@ class _AddScheduleState extends State<AddSchedule> {
     ShowAction().showToast(successful, Colors.green);
   }
 
-  //this method takes a string and converts it to time
+  /* //this method takes a string and converts it to time
   TimeOfDay stringToTimeOfDay(String timeOfDay) {
     final format = DateFormat.jm();
     return TimeOfDay.fromDateTime(format.parse(timeOfDay));
   }
-
+*/
   void someMethod(
       int? startHour, int? startMinute, int? endHour, int? endMinute) {
     final startTime = TimeOfDay(hour: startHour!, minute: startMinute!);

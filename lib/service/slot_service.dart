@@ -74,7 +74,7 @@ class SlotService {
     });
   }
 
-  //delete slot
+  //delete slot , performed by astrologer only
   Future<void> deleteSlot(Slots slot) async {
     return await firestoreService
         .collection(astrologerX)
@@ -84,6 +84,21 @@ class SlotService {
         .update({
       "slotTimes": FieldValue.arrayRemove(slot.slotTimes!),
       'slotList': FieldValue.arrayRemove(slot.slotList!)
+    }).onError((error, stackTrace) {
+      print(error);
+    });
+  }
+
+  //delete selected slot when user successfully pays and book
+  Future<void> deleteSelectedSlot(
+      String email, String day, String slotToRemove) async {
+    return await firestoreService
+        .collection(astrologerX)
+        .doc(email)
+        .collection(slots)
+        .doc(day)
+        .update({
+      'slotList': FieldValue.arrayRemove([slotToRemove])
     }).onError((error, stackTrace) {
       print(error);
     });

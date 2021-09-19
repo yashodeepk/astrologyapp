@@ -1,16 +1,39 @@
 import 'package:astrologyapp/actions/actions.dart';
+import 'package:astrologyapp/actions/dialog.dart';
 import 'package:astrologyapp/constants/constants.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/phoneAuthUtils/getphone.dart';
 import 'package:astrologyapp/provider/payment_provider.dart';
+import 'package:astrologyapp/main.dart';
+import 'package:astrologyapp/model/PaymentInfo.dart';
+import 'package:astrologyapp/model/users.dart';
+import 'package:astrologyapp/phoneAuthUtils/getphone.dart';
+import 'package:astrologyapp/provider/meeting_provider.dart';
+import 'package:astrologyapp/provider/slot_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:googleapis/calendar/v3.dart' as calendar;
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+
+
+import '../calenderevent.dart';
 
 class SlotLists extends StatefulWidget {
   final List<String> slotList;
   final Astrologer? astrologer;
+  final dayOfWeek;
+  final day;
 
-  SlotLists({Key? key, required this.slotList, required this.astrologer})
+  SlotLists(
+      {Key? key,
+      required this.slotList,
+      required this.astrologer,
+      required this.dayOfWeek,
+      required this.day})
       : super(key: key);
 
   @override
@@ -22,13 +45,29 @@ class _SlotListsState extends State<SlotLists> {
   bool isItemSelected = false;
   String _itemSelected = '';
   User? _user;
-  PaymentProvider _paymentProvider = PaymentProvider();
+  SlotProvider _slotProvider = SlotProvider();
+  MeetingProvider _meetingProvider = MeetingProvider();
+  Razorpay? _razorpay;
+  final GlobalKey<State> loadingKey = new GlobalKey<State>();
+  CalendarClient calendarClient = CalendarClient();
+  List<calendar.EventAttendee> attendeeEmails = [];
+  final now = new DateTime.now();
+
+  //authorization
+  var basicAuth = 'Basic ' +
+      base64Encode(utf8.encode('$razorPayUserName:$razorPayPassword'));
+
+  void initializeRazorPay() {
+    _razorpay = Razorpay();
+    _razorpay!.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay!.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay!.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
 
   @override
   void initState() {
     _user = FirebaseAuth.instance.currentUser!;
-    //  PaymentApi.instance.initializeRazorPay();
-
+    initializeRazorPay();
     super.initState();
   }
 
@@ -134,7 +173,6 @@ class _SlotListsState extends State<SlotLists> {
                               astrologer: widget.astrologer!,
                               callPaymentMethod: callPaymentMethod)),
                     );
-          ;
         },
         child: Text(
           proceedToPay,
@@ -152,9 +190,191 @@ class _SlotListsState extends State<SlotLists> {
       required String name,
       required String description,
       required String email,
-      required String phoneNumber}) {
-    _paymentProvider.savePaymentInfo(
-        amountToPay, name, description, email, phoneNumber);
-    _paymentProvider.makePayment(context);
+      required String phoneNumber}) async {
+    PgDialog.showLoadingDialog(context, loadingKey, loading, Colors.white);
+
+    //update provider
+    _slotProvider.removeBookedSlotFromList(
+        widget.dayOfWeek, widget.astrologer!.email, _itemSelected);
+
+    Future.delayed(Duration(seconds: 3)).then((value) =>
+        {launchRazorPay(amountToPay, name, description, email, phoneNumber)});
+  }
+
+  void launchRazorPay(int amount, String name, String description, String email,
+      String phoneNumber) {
+    amount = amount * 100;
+
+    var options = {
+      'key': rzp_key,
+      'amount': "$amount",
+      'name': name,
+      'description': description,
+      'prefill': {'contact': phoneNumber, 'email': email}
+    };
+
+    try {
+      _razorpay!.open(options);
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    //check for paymentId
+    if (response.paymentId != null) {
+      await getPaymentInfo('${response.paymentId}');
+    }
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) async {
+    print("Payment Failed");
+
+    print("${response.code}\n${response.message}");
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    print("Payment Failed");
+  }
+
+  Future<void> getPaymentInfo(String pid) async {
+    final getResponse = await http.get(
+      Uri.parse('$razorPayBaseUrl$pid'),
+      headers: {
+        'authorization': basicAuth,
+        'Content-type': 'application/json',
+        "accept": 'application/json'
+      },
+    );
+
+    final response = paymentInfoFromJson(getResponse.body);
+    if (getResponse.body != null) {
+      await FirebaseFirestore.instance
+          .collection('Payments')
+          .doc(_user!.email)
+          .collection(response.id)
+          .add({
+        'paymentId': response.id,
+        'description': response.description,
+        'amount': response.amount,
+        'paidTo': widget.astrologer!.email!,
+        'from': _user!.email!
+      }).then((value) async {
+        //get start and end time
+        var splitAndExtractTime =
+            _itemSelected.toString().replaceAll(RegExp("[\s-\s]"), '');
+
+        String startTime =
+            splitAndExtractTime.toString().split('-')[0].toString();
+
+        String endTime =
+            splitAndExtractTime.toString().split('-')[1].toString();
+
+        TimeOfDay startTimeOfDay = ShowAction.stringToTimeOfDay(startTime);
+        TimeOfDay endTimeOfDay =
+            ShowAction.stringToTimeOfDay(endTime.substring(1));
+
+        var startTimeToMilliseconds, endTimeToMilliseconds;
+
+        if (widget.day == 0) {
+          var day = now.day;
+          startTimeToMilliseconds = DateTime(now.year, now.month, day,
+              startTimeOfDay.hour, startTimeOfDay.minute);
+          endTimeToMilliseconds = DateTime(
+              now.year, now.month, day, endTimeOfDay.hour, endTimeOfDay.minute);
+        } else {
+          startTimeToMilliseconds = DateTime(now.year, now.month, widget.day,
+              startTimeOfDay.hour, startTimeOfDay.minute);
+          endTimeToMilliseconds = DateTime(now.year, now.month, widget.day,
+              endTimeOfDay.hour, endTimeOfDay.minute);
+        }
+
+        final format = DateFormat('dd/MM/yyyy');
+
+        print(" --- ${format.format(startTimeToMilliseconds)}  ?? $startTime");
+        //.remove slot ....
+        await _slotProvider.removeSelectedSlot();
+
+        calendar.EventAttendee user = calendar.EventAttendee();
+        user.email = _user!.email!;
+        attendeeEmails.add(user);
+        calendar.EventAttendee astrologer = calendar.EventAttendee();
+        astrologer.email = widget.astrologer!.email!;
+        attendeeEmails.add(astrologer);
+        //create calender event
+        await calendarClient
+            .insert(
+                title:
+                    'Meeting with ${_user!.email} and ${widget.astrologer!.email}',
+                description: response.description,
+                location: 'Online',
+                attendeeEmailList: attendeeEmails,
+                shouldNotifyAttendees: true,
+                hasConferenceSupport: true,
+                startTime: startTimeToMilliseconds,
+                endTime: endTimeToMilliseconds)
+            .then((eventData) async {
+          String eventId = eventData['id']!;
+          String eventLink = eventData['link']!;
+
+          dynamic emails = [];
+
+          for (int i = 0; i < attendeeEmails.length; i++)
+            emails.add(attendeeEmails[i].email!);
+
+          //2.notify meeting data
+          _meetingProvider.notifyMeetingDetailsListener(
+              response.description,
+              now,
+              format.format(startTimeToMilliseconds),
+              startTime,
+              eventLink,
+              eventId,
+              emails,
+              widget.astrologer!.email!,
+              widget.astrologer!.name!,
+              widget.astrologer!.photoUrl!,
+              widget.astrologer!.id!,
+              _user!.displayName,
+              _user!.email,
+              _user!.uid,
+              _itemSelected,
+              response.id);
+
+          //create meeting
+          _meetingProvider.createMeeting();
+        }).catchError((e) {
+          print(" eerrorrr ${e.toString()}");
+        });
+
+        Navigator.of(context).pop();
+      }).catchError((onError) {
+        print(onError);
+      });
+    }
+
+    ShowAction.showAlertDialog(
+        'Payment successful',
+        'Your payment has been captured successfully',
+        context,
+        SizedBox(),
+        ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(Theme.of(context).primaryColor)),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => PageNavigator(
+                  selectedIndex: 2,
+                ),
+              ));
+              //
+            },
+            child: Text(
+              ok,
+              style: TextStyle(color: CupertinoColors.white),
+            )));
+
+    // return response;
   }
 }

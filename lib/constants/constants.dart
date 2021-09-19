@@ -7,6 +7,7 @@ const addSchedule = 'Add Schedule';
 const addSlot = 'Add Slot';
 const ok = 'OK';
 const no = 'NO';
+const event = 'event';
 const yes = 'YES';
 const proceedToPay = 'Proceed To Pay';
 const successful = 'Successful';

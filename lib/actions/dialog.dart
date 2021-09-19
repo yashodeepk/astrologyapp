@@ -1,7 +1,7 @@
 import 'package:astrologyapp/constants/constants.dart';
 import 'package:flutter/material.dart';
 
-class Dialogs {
+class PgDialog {
   static Future<void> showLoadingDialog(
       BuildContext context, GlobalKey key, String title, Color bgColor) async {
     return showDialog<void>(

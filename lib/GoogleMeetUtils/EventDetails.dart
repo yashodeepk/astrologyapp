@@ -26,10 +26,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Astrologer? _astrologer;
   List<String> slotsLists = [];
   int? _getDay = DateTime.now().weekday;
-  String? _day;
+  String? _dayOfWeek;
   bool isItemSelected = false;
   int _itemSelected = 0;
-  int? _slotSelected;
 
   @override
   void initState() {
@@ -45,25 +44,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
   getDayFromDateNow() {
     switch (_getDay) {
       case 1:
-        _day = monday;
+        _dayOfWeek = monday;
         break;
       case 2:
-        _day = tuesday;
+        _dayOfWeek = tuesday;
         break;
       case 3:
-        _day = wednesday;
+        _dayOfWeek = wednesday;
         break;
       case 4:
-        _day = thursday;
+        _dayOfWeek = thursday;
         break;
       case 5:
-        _day = friday;
+        _dayOfWeek = friday;
         break;
       case 6:
-        _day = saturday;
+        _dayOfWeek = saturday;
         break;
       case 7:
-        _day = sunday;
+        _dayOfWeek = sunday;
         break;
     }
   }
@@ -181,7 +180,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         StreamBuilder<List<Slots>>(
                             stream: SlotService.instance
                                 .getSelectedAstrologerSlots(
-                                    widget.astrologerEmail, _day!),
+                                    widget.astrologerEmail, _dayOfWeek!),
                             builder: (context, snapshot) {
                               slotsLists.clear();
                               if (snapshot.connectionState ==
@@ -209,6 +208,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     return SlotLists(
                                       slotList: slotsLists,
                                       astrologer: _astrologer,
+                                      day: _itemSelected,
+                                      dayOfWeek: _dayOfWeek,
                                     );
                                   },
                                 );
@@ -459,8 +460,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 border: Border.all(
                                     color: Colors.black54, width: 0.9),
                                 color:
-                                    _day!.contains(ss) || _itemSelected == day
-                                        ? Colors.blue[900]
+                                _dayOfWeek!.contains(ss) ||
+                                        _itemSelected == day
+                                    ? Colors.blue[900]
                                         : Colors.grey.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(sixDp)),
                             child: Text(
@@ -471,8 +473,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 style: TextStyle(
                                   fontSize: twentyDp,
                                   color:
-                                      _day!.contains(ss) || _itemSelected == day
-                                          ? Colors.white
+                                  _dayOfWeek!.contains(ss) ||
+                                          _itemSelected == day
+                                      ? Colors.white
                                           : Colors.black87,
                                 ))),
                       ],
@@ -480,25 +483,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     onTap: () {
                       switch (ss) {
                         case 'Mon':
-                          _day = monday;
+                          _dayOfWeek = monday;
                           break;
                         case 'Tue':
-                          _day = tuesday;
+                          _dayOfWeek = tuesday;
                           break;
                         case 'Wed':
-                          _day = wednesday;
+                          _dayOfWeek = wednesday;
                           break;
                         case 'Thu':
-                          _day = thursday;
+                          _dayOfWeek = thursday;
                           break;
                         case 'Fri':
-                          _day = friday;
+                          _dayOfWeek = friday;
                           break;
                         case 'Sat':
-                          _day = saturday;
+                          _dayOfWeek = saturday;
                           break;
                         case 'Sun':
-                          _day = sunday;
+                          _dayOfWeek = sunday;
                           break;
                       }
 

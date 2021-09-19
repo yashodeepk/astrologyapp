@@ -46,7 +46,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
   @override
   void initState() {
     astrologersList = Provider.of<List<Astrologer>>(context, listen: false);
-
+    calender();
     super.initState();
   }
 
@@ -137,7 +137,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                       child: CircleAvatar(
                         child: ClipOval(
                           child: FadeInImage.assetNetwork(
-                            image: photoUrl!,
+                            image: '${astrologer.photoUrl}',
                             placeholder: 'assets/images/bro.jpg',
                           ),
                         ),
