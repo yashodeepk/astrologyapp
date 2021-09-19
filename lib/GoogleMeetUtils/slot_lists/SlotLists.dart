@@ -1,9 +1,8 @@
+import 'dart:convert';
+
 import 'package:astrologyapp/actions/actions.dart';
 import 'package:astrologyapp/actions/dialog.dart';
 import 'package:astrologyapp/constants/constants.dart';
-import 'package:astrologyapp/model/users.dart';
-import 'package:astrologyapp/phoneAuthUtils/getphone.dart';
-import 'package:astrologyapp/provider/payment_provider.dart';
 import 'package:astrologyapp/main.dart';
 import 'package:astrologyapp/model/PaymentInfo.dart';
 import 'package:astrologyapp/model/users.dart';
@@ -18,7 +17,6 @@ import 'package:googleapis/calendar/v3.dart' as calendar;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-
 
 import '../calenderevent.dart';
 
@@ -228,13 +226,29 @@ class _SlotListsState extends State<SlotLists> {
   }
 
   void _handlePaymentError(PaymentFailureResponse response) async {
-    print("Payment Failed");
-
-    print("${response.code}\n${response.message}");
+    ShowAction.showDetails(
+        "Payment failed",
+        "Error occurred during the payment.Please try again",
+        context,
+        ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+            child: Text("OK")));
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    print("Payment Failed");
+    ShowAction.showDetails(
+        "Payment failed",
+        "Error occurred during the payment.Please try again",
+        context,
+        ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+            child: Text("OK")));
   }
 
   Future<void> getPaymentInfo(String pid) async {
