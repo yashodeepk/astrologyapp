@@ -1,13 +1,12 @@
+import 'dart:convert';
+
 import 'package:astrologyapp/actions/actions.dart';
 import 'package:astrologyapp/actions/dialog.dart';
 import 'package:astrologyapp/constants/constants.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/phoneAuthUtils/getphone.dart';
-import 'package:astrologyapp/provider/payment_provider.dart';
 import 'package:astrologyapp/main.dart';
 import 'package:astrologyapp/model/PaymentInfo.dart';
-import 'package:astrologyapp/model/users.dart';
-import 'package:astrologyapp/phoneAuthUtils/getphone.dart';
 import 'package:astrologyapp/provider/meeting_provider.dart';
 import 'package:astrologyapp/provider/slot_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,7 +17,6 @@ import 'package:googleapis/calendar/v3.dart' as calendar;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-
 
 import '../calenderevent.dart';
 
