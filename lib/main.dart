@@ -78,7 +78,6 @@ class MyApp extends StatelessWidget {
 
 class Home extends StatefulWidget {
   static const String routeName = '/home';
-
   @override
   _HomeState createState() => _HomeState();
 }

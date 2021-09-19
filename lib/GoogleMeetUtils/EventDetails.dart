@@ -4,6 +4,7 @@ import 'package:astrologyapp/constants/constants.dart';
 import 'package:astrologyapp/model/slot.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/service/slot_service.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -439,13 +440,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          ss,
+                        AutoSizeText(
+                          ss, //AutoSizeText will automaticaly chage text size to maxmimun fit inside coloum it will solve RenderFlex overflowed error
                           style: TextStyle(
-                              color: _itemSelected == day
-                                  ? Colors.black
-                                  : Colors.grey[700],
-                              fontSize: sixteenDp),
+                            color: _itemSelected == day
+                                ? Colors.black
+                                : Colors.grey[700],
+                          ),
                         ),
                         SizedBox(
                           height: 4,
@@ -512,6 +513,4 @@ class _DashboardScreenState extends State<DashboardScreen> {
               })),
     );
   }
-
-
 }
