@@ -12,7 +12,9 @@ class MeetingService {
   MeetingService._();
 
   static MeetingService get instance {
-    _email = FirebaseAuth.instance.currentUser!.email;
+    if (FirebaseAuth.instance.currentUser != null) {
+      _email = FirebaseAuth.instance.currentUser!.email;
+    }
     return _instance == null ? _instance = MeetingService._() : _instance!;
   }
 
