@@ -263,12 +263,7 @@ class _SlotListsState extends State<SlotLists> {
 
     final response = paymentInfoFromJson(getResponse.body);
     if (getResponse.body != null) {
-      await FirebaseFirestore.instance
-          .collection('Payments')
-          .doc(_user!.email)
-          .collection('DonePayments')
-          .doc(response.id)
-          .set({
+      Map<String, dynamic> data = <String, dynamic>{
         'paymentId': response.id,
         'description': response.description,
         'amount': response.amount,
@@ -276,7 +271,21 @@ class _SlotListsState extends State<SlotLists> {
         'from': _user!.email!,
         'paymentDateTime':
             DateFormat.yMMMMd('en_US').add_jm().format(DateTime.now())
-      }).then((value) async {
+      };
+
+      FirebaseFirestore
+          .instance //Don't remove this code this will help to read data in admin app otherwise it will give null error
+          .collection('Payments')
+          .doc(FirebaseAuth.instance.currentUser!.email)
+          .set({"email": true}); //Don't remove this code
+
+      await FirebaseFirestore.instance
+          .collection('Payments')
+          .doc(FirebaseAuth.instance.currentUser!.email)
+          .collection('DonePayments')
+          .doc(response.id)
+          .set(data)
+          .then((value) async {
         //get start and end time
         var splitAndExtractTime =
             _itemSelected.toString().replaceAll(RegExp("[\s-\s]"), '');
@@ -363,6 +372,10 @@ class _SlotListsState extends State<SlotLists> {
         }).catchError((e) {
           print(" eerrorrr ${e.toString()}");
         });
+        FirebaseFirestore.instance //Don't remove this code
+            .collection('Payments')
+            .doc(FirebaseAuth.instance.currentUser!.email)
+            .update({"email": FieldValue.delete()}); //Don't remove this code
 
         Navigator.of(context).pop();
       }).catchError((onError) {
