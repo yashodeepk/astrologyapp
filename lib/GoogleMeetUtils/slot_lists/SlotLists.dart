@@ -266,13 +266,16 @@ class _SlotListsState extends State<SlotLists> {
       await FirebaseFirestore.instance
           .collection('Payments')
           .doc(_user!.email)
-          .collection(response.id)
-          .add({
+          .collection('DonePayments')
+          .doc(response.id)
+          .set({
         'paymentId': response.id,
         'description': response.description,
         'amount': response.amount,
         'paidTo': widget.astrologer!.email!,
-        'from': _user!.email!
+        'from': _user!.email!,
+        'paymentDateTime':
+            DateFormat.yMMMMd('en_US').add_jm().format(DateTime.now())
       }).then((value) async {
         //get start and end time
         var splitAndExtractTime =

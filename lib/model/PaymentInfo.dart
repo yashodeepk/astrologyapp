@@ -87,7 +87,7 @@ class PaymentInfo {
         captured: json["captured"],
         description: json["description"],
         cardId: json["card_id"],
-        bank: json["bank"],
+        bank: json["bank"], //Error for Debit card null is not subtype of string
         wallet: json["wallet"],
         vpa: json["vpa"],
         email: json["email"],

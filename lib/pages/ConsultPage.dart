@@ -46,7 +46,6 @@ class _ConsultWidgetState extends State<ConsultWidget> {
   @override
   void initState() {
     astrologersList = Provider.of<List<Astrologer>>(context, listen: false);
-    calender();
     super.initState();
   }
 
@@ -234,6 +233,8 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                 ),
                 TextButton.icon(
                   onPressed: () {
+                    // calender();
+
                     Navigator.of(context).pushNamed(DashboardScreen.routeName,
                         arguments: astrologer.email);
                   },
