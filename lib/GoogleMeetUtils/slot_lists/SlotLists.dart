@@ -77,7 +77,11 @@ class _SlotListsState extends State<SlotLists> {
             child: Center(
                 child: Text(
               noSlotsAvailableForThisDay,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: twentyDp),
+              style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 18,
+                  color: Colors.grey[700],
+                  fontStyle: FontStyle.italic),
             )),
           ))
         : Expanded(

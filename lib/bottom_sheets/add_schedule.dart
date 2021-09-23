@@ -250,7 +250,7 @@ class _AddScheduleState extends State<AddSchedule> {
       width: MediaQuery.of(context).size.width * 0.385,
       child: TextFormField(
         validator: (value) => value!.isNotEmpty ? null : 'time can\'t be empty',
-        cursorColor: Colors.blueAccent,
+        cursorColor: Colors.blue.shade900,
         controller: controller,
         onTap: () => controller == startTimeController
             ? _selectStartTime(context, controller)
@@ -264,11 +264,11 @@ class _AddScheduleState extends State<AddSchedule> {
         decoration: new InputDecoration(
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            borderSide: BorderSide(color: Colors.blueAccent, width: 1),
+            borderSide: BorderSide(color: Colors.blue.shade900, width: 1),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            borderSide: BorderSide(color: Colors.blueAccent, width: 1),
+            borderSide: BorderSide(color: Colors.blue.shade900, width: 1),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -313,7 +313,7 @@ class _AddScheduleState extends State<AddSchedule> {
           elevation: 0,
           focusElevation: 0,
           highlightElevation: 0,
-          color: Colors.blueAccent,
+          color: Colors.blue.shade900,
           onPressed: () => triggerAction(),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),

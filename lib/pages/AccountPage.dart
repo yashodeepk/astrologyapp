@@ -75,6 +75,11 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                   //check if user type is astrologer and add slot
                   userType == astrologerX
                       ? ListTile(
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.black,
+                            size: 18,
+                          ),
                           title: Text(
                             addSchedule,
                             style: TextStyle(
