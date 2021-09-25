@@ -270,12 +270,28 @@ class _SlotListsState extends State<SlotLists> {
       Map<String, dynamic> data = <String, dynamic>{
         'paymentId': response.id,
         'description': response.description,
-        'amount': response.amount,
+        'amount': response.amount / 100,
         'paidTo': widget.astrologer!.email!,
         'from': _user!.email!,
         'paymentDateTime':
             DateFormat.yMMMMd('en_US').add_jm().format(DateTime.now())
       };
+      FirebaseFirestore
+          .instance //Don't remove this code this will help to read data in admin app otherwise it will give null error
+          .collection('Payments')
+          .doc(widget.astrologer!.email!.toString())
+          .set({"email": true}); //Don't remove this code
+
+      FirebaseFirestore.instance
+          .collection('Payments')
+          .doc(widget.astrologer!.email!.toString())
+          .collection('DonePayments')
+          .doc(response.id)
+          .set(data);
+      FirebaseFirestore.instance //Don't remove this code
+          .collection('Payments')
+          .doc(widget.astrologer!.email!.toString())
+          .update({"email": FieldValue.delete()});
 
       FirebaseFirestore
           .instance //Don't remove this code this will help to read data in admin app otherwise it will give null error
