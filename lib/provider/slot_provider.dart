@@ -5,10 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 class SlotProvider with ChangeNotifier {
-  String? _day, _date;
-
-/*  String? _startTime;
-  String? _endTime;*/
+  String? _day, _date, _astrologerEmail, _slotToRemove;
   List? _slotTimes;
   List? _slotLists;
   int? _order;
@@ -17,9 +14,9 @@ class SlotProvider with ChangeNotifier {
 
   get getDate => _date;
 
-  /* get getStartTime => _startTime;
+  get getSlotToRemove => _slotToRemove;
 
-  get getEndTime => _endTime;*/
+  get getAstrologerEmail => _astrologerEmail;
 
   get getSlotTimes => _slotTimes;
 
@@ -37,6 +34,15 @@ class SlotProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  //removed booked slot
+  removeBookedSlotFromList(day, astrologerEmail, slot) {
+    _day = day;
+    _astrologerEmail = astrologerEmail;
+    _slotToRemove = slot;
+
+    notifyListeners();
+  }
+
   //notify listener
   updateSlotListener(day, slotTimes, slotLists) {
     _day = day;
@@ -45,12 +51,6 @@ class SlotProvider with ChangeNotifier {
 
     notifyListeners();
   }
-
-  /* //list of slots to delete
-  slotsList(slots) {
-    _slotLists = slots;
-    notifyListeners();
-  }*/
 
   //create new slot record in database
   createSlot() {
@@ -100,12 +100,20 @@ class SlotProvider with ChangeNotifier {
     SlotService.instance.updateSlot(newSlots);
   }
 
-  //delete slot list
+  //delete whole slot list
   deleteSlotTimeList() {
     //delete slot object
     Slots deleteSlot =
         Slots(day: getDay, slotTimes: getSlotTimes, slotList: getSlotList);
 
     SlotService.instance.deleteSlot(deleteSlot);
+  }
+
+  //remove or delete slot selected by user to book
+  removeSelectedSlot() async {
+    print('... $getDay ...$getAstrologerEmail /// $getSlotToRemove');
+    //delete selected slot object
+    SlotService.instance
+        .deleteSelectedSlot(getAstrologerEmail, getDay, getSlotToRemove);
   }
 }

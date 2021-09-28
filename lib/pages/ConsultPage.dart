@@ -41,17 +41,26 @@ class _ConsultWidgetState extends State<ConsultWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final user = FirebaseAuth.instance.currentUser!;
   List? astrologersList;
+  String? photoUrl;
 
   @override
   void initState() {
     astrologersList = Provider.of<List<Astrologer>>(context, listen: false);
-
+    calender();
     super.initState();
+  }
+
+  void photoUrlCheck(String? url) {
+    if (url == null || url == "") {
+      photoUrl =
+          'https://anderson-county.com/CircuitCourt/wp-content/uploads/2020/07/photo-not-available-clip-art1-1.png';
+    } else {
+      photoUrl = url;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("lenght ${astrologersList!.length}");
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -100,6 +109,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
   }
 
   Widget astrologerCard(Astrologer astrologer) {
+    photoUrlCheck(astrologer.photoUrl);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -125,10 +135,19 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                     Padding(
                       padding: EdgeInsets.fromLTRB(8, 20, 0, 8),
                       child: CircleAvatar(
-                        backgroundImage: CachedNetworkImageProvider(
-                            '${astrologer.photoUrl}'),
-                        radius: 30,
+                        child: ClipOval(
+                          child: FadeInImage.assetNetwork(
+                            image: '${astrologer.photoUrl}',
+                            placeholder: 'assets/images/bro.jpg',
+                          ),
+                        ),
+                        radius: 20,
                       ),
+                      // child: CircleAvatar(
+                      //   backgroundImage: CachedNetworkImageProvider(
+                      //       '${astrologer.photoUrl}'),
+                      //   radius: 30,
+                      // ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -215,11 +234,8 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                 ),
                 TextButton.icon(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DashboardScreen()));
-                    print('Button pressed ...');
+                    Navigator.of(context).pushNamed(DashboardScreen.routeName,
+                        arguments: astrologer.email);
                   },
                   label: Text('Book Meeting'),
                   icon: Icon(

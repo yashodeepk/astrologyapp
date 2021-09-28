@@ -6,6 +6,8 @@ import 'package:googleapis/calendar/v3.dart' as calendar;
 import 'package:intl/intl.dart';
 
 class CreateScreen extends StatefulWidget {
+  static const routeName = '/addEvent';
+
   @override
   _CreateScreenState createState() => _CreateScreenState();
 }

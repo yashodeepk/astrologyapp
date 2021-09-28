@@ -8,7 +8,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 // import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,6 +46,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      email = user.email;
+    });
 
     getUserType();
     firestoreInstance
@@ -69,8 +71,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     if (preferences.containsKey('type')) {
       userType = preferences.getString('type');
     }
-
-    print('type $userType');
   }
 
   // void handleClick(String value) {
@@ -129,8 +129,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                 // barrierColor: Colors.black,
                 context: context,
                 builder: (context) => SingleChildScrollView(
-                      child: HorescopeWidget(),
-                    ));
+                  child: HorescopeWidget(),
+                ));
             print('FloatingActionButton pressed ...');
           },
           backgroundColor: Colors.blue[900],
@@ -218,56 +218,56 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                 ),
                                 checkdata
                                     ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [CircularProgressIndicator()],
-                                      )
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                                  children: [CircularProgressIndicator()],
+                                )
                                     : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              AutoSizeText(
-                                                love!,
-                                                style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                              AutoSizeText(
-                                                '% Love',
-                                                style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                            ],
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        AutoSizeText(
+                                          love!,
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
                                           ),
-                                          Row(
-                                            children: [
-                                              AutoSizeText(
-                                                health!,
-                                                style: TextStyle(
-                                                  color: Colors.blue[900],
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                              AutoSizeText(
-                                                '% Health',
-                                                style: TextStyle(
-                                                  color: Colors.blue[900],
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                            ],
+                                        ),
+                                        AutoSizeText(
+                                          '% Love',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        AutoSizeText(
+                                          health!,
+                                          style: TextStyle(
+                                            color: Colors.blue[900],
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        AutoSizeText(
+                                          '% Health',
+                                          style: TextStyle(
+                                            color: Colors.blue[900],
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(0, 30, 0, 8),
                                   child: AutoSizeText(

@@ -1,13 +1,18 @@
 // import 'package:astrologyapp/LoginPageUtils/LoginPage.dart';
 import 'package:astrologyapp/WelcomePageUtils/WelcomePage.dart';
+import 'package:astrologyapp/api/config_page.dart';
 import 'package:astrologyapp/api/signinapi.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/pages/ChatPage.dart';
 import 'package:astrologyapp/pages/ConsultPage.dart';
 import 'package:astrologyapp/pages/HomePage.dart';
+import 'package:astrologyapp/provider/countries.dart';
+import 'package:astrologyapp/provider/payment_provider.dart';
+import 'package:astrologyapp/provider/phone_auth.dart';
 import 'package:astrologyapp/provider/slot_provider.dart';
 import 'package:astrologyapp/route_generator.dart';
 import 'package:astrologyapp/service/astrologers_service.dart';
+import 'package:astrologyapp/service/meeting_service.dart';
 import 'package:astrologyapp/service/slot_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,6 +20,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'model/meetings.dart';
 import 'model/slot.dart';
 
 Future<void> main() async {
@@ -25,12 +31,23 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  SlotService _slotService = SlotService.instance;
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        StreamProvider<User?>.value(
+          value: FirebaseAuth.instance.authStateChanges(),
+          initialData: FirebaseAuth.instance.currentUser,
+        ),
+
         ChangeNotifierProvider.value(value: GoogleSignInProvider()),
         ChangeNotifierProvider.value(value: SlotProvider()),
+        ChangeNotifierProvider.value(value: PaymentProvider()),
+        //phone auth
+        ChangeNotifierProvider.value(value: CountryProvider()),
+        ChangeNotifierProvider.value(value: PhoneAuthDataProvider()),
         //astrologers
         StreamProvider<List<Astrologer>>.value(
             value: AstrologerService.instance.getListOfAstrologers(),
@@ -39,13 +56,18 @@ class MyApp extends StatelessWidget {
 
         //slots
         StreamProvider<List<Slots>>.value(
-            value: SlotService.instance.getSlots(),
+            lazy: false, value: _slotService.getSlots(), initialData: []),
+
+        //get meeting
+        StreamProvider<List<Meetings>>.value(
             lazy: false,
+            value: MeetingService.instance.getMeetingByTime(),
             initialData: []),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
-        initialRoute: Home.routeName,
+        title: 'Astrology App',
+        // home: Home(),
+        initialRoute: ConfigurationPage.routeName,
         onGenerateRoute: RouteGenerator.generateRoute,
         theme: ThemeData.light(),
         debugShowCheckedModeBanner: false,
@@ -56,7 +78,6 @@ class MyApp extends StatelessWidget {
 
 class Home extends StatefulWidget {
   static const String routeName = '/home';
-
   @override
   _HomeState createState() => _HomeState();
 }
@@ -72,7 +93,9 @@ class _HomeState extends State<Home> {
                   child: CircularProgressIndicator(),
                 );
               } else if (snapshot.hasData) {
-                return PageNavigator();
+                return PageNavigator(
+                  selectedIndex: 0,
+                );
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text("Oops!!, Something went wrong"),
@@ -85,22 +108,28 @@ class _HomeState extends State<Home> {
 }
 
 class PageNavigator extends StatefulWidget {
-  const PageNavigator({Key? key}) : super(key: key);
+  int? selectedIndex;
+
+  PageNavigator({Key? key, this.selectedIndex}) : super(key: key);
 
   @override
   _PageNavigatorState createState() => _PageNavigatorState();
 }
 
 class _PageNavigatorState extends State<PageNavigator> {
-  int selectedPage = 0;
-
   final _pageOptions = [HomePageWidget(), ConsultWidget(), ChatWidget()];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      widget.selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: _pageOptions[selectedPage],
+        child: _pageOptions.elementAt(widget.selectedIndex!),
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
@@ -122,12 +151,8 @@ class _PageNavigatorState extends State<PageNavigator> {
               label: 'Chat',
               backgroundColor: Colors.white),
         ],
-        currentIndex: selectedPage,
-        onTap: (index) {
-          setState(() {
-            selectedPage = index;
-          });
-        },
+        onTap: _onItemTapped,
+        currentIndex: widget.selectedIndex!,
       ),
     );
   }

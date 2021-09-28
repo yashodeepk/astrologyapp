@@ -42,7 +42,7 @@ class SlotService {
     });
   }
 
-  //fetch slots
+  //fetch slots for astrologer
   Stream<List<Slots>> getSlots() {
     return firestoreService
         .collection(astrologerX)
@@ -58,7 +58,23 @@ class SlotService {
     });
   }
 
-  //delete slot
+  //fetch slots for selected astrologer
+  Stream<List<Slots>> getSelectedAstrologerSlots(String email, String day) {
+    return firestoreService
+        .collection(astrologerX)
+        .doc(email)
+        .collection(slots)
+        .where('day', isEqualTo: day)
+        .snapshots()
+        .map((snapshots) => snapshots.docs
+            .map((document) => Slots.fromJson(document.data()))
+            .toList(growable: true))
+        .handleError((error) {
+      print("error --- $error");
+    });
+  }
+
+  //delete slot , performed by astrologer only
   Future<void> deleteSlot(Slots slot) async {
     return await firestoreService
         .collection(astrologerX)
@@ -68,6 +84,21 @@ class SlotService {
         .update({
       "slotTimes": FieldValue.arrayRemove(slot.slotTimes!),
       'slotList': FieldValue.arrayRemove(slot.slotList!)
+    }).onError((error, stackTrace) {
+      print(error);
+    });
+  }
+
+  //delete selected slot when user successfully pays and book
+  Future<void> deleteSelectedSlot(
+      String email, String day, String slotToRemove) async {
+    return await firestoreService
+        .collection(astrologerX)
+        .doc(email)
+        .collection(slots)
+        .doc(day)
+        .update({
+      'slotList': FieldValue.arrayRemove([slotToRemove])
     }).onError((error, stackTrace) {
       print(error);
     });

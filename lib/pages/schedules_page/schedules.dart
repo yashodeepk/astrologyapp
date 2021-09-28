@@ -21,8 +21,6 @@ class _SchedulesPageState extends State<SchedulesPage> {
     super.initState();
   }
 
-  //TODO --- 1.MULTIPLE SLOTS 2.DELETE .OVERLAP .MAX 4 SLOTS
-
   @override
   Widget build(BuildContext context) {
     final slotsList = Provider.of<List<Slots>>(context);
