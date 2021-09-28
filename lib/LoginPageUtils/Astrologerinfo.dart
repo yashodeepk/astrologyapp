@@ -411,7 +411,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
                     controller: feesController,
                     obscureText: false,
                     decoration: InputDecoration(
-                      hintText: 'Fees for 1 Hr Meeting in \u{20B9}',
+                      hintText: 'Fees for 30 Min Meeting in \u{20B9}',
                       hintStyle: TextStyle(
                         color: Colors.black,
                         fontSize: 18,

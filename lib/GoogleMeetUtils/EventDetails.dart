@@ -103,14 +103,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         //displays astrologers details
                         Container(
                           height: oneTwentyDp,
-                          padding: EdgeInsets.symmetric(horizontal: thirtyDp),
+                          // padding: EdgeInsets.symmetric(horizontal: thirtyDp),
                           decoration: BoxDecoration(
                               color: Colors.blue[900],
                               borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(twentyDp),
                                   bottomRight: Radius.circular(twentyDp))),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               //image
@@ -122,41 +122,55 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                               //details
                               Container(
-                                margin:
-                                    EdgeInsets.only(left: twelveDp, top: tenDp),
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                // margin:
+                                //     EdgeInsets.only(left: twelveDp, top: tenDp),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      "${_astrologer!.name}",
+                                    AutoSizeText(
+                                      "${_astrologer!.name}", maxLines: 1,
+                                      // textAlign: TextAlign.start,
+                                      // overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                           fontSize: twentyDp,
                                           color: Colors.white),
                                     ),
-                                    SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width / 2,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: eightDp),
-                                        child: Text(
-                                          "${_astrologer!.email}",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: sixteenDp,
-                                              color: Colors.white),
-                                        ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: AutoSizeText(
+                                              "${_astrologer!.email}",
+                                              // overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontSize: sixteenDp,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width / 2,
-                                      child: Text(
-                                        "${_astrologer!.expertise}",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontSize: sixteenDp,
-                                            color: Colors.white),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: AutoSizeText(
+                                              "${_astrologer!.expertise}",
+                                              // overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontSize: sixteenDp,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
@@ -166,7 +180,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 16, top: 8),
+                          padding: const EdgeInsets.only(left: 10, top: 8),
                           child: Text(
                             chooseYourSlot,
                             style: TextStyle(fontSize: sixteenDp),
@@ -438,15 +452,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                 return GestureDetector(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         AutoSizeText(
                           ss, //AutoSizeText will automaticaly chage text size to maxmimun fit inside coloum it will solve RenderFlex overflowed error
                           style: TextStyle(
-                            color: _itemSelected == day
-                                ? Colors.black
-                                : Colors.grey[700],
-                          ),
+                              color: _itemSelected == day
+                                  ? Colors.blue
+                                  : Colors.black),
                         ),
                         SizedBox(
                           height: 4,
@@ -454,16 +468,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Container(
                             height: 50,
                             width: 40,
-                            margin: EdgeInsets.only(right: tenDp),
+                            margin: EdgeInsets.only(left: 5, right: 5),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Colors.black54, width: 0.9),
-                                color:
-                                _dayOfWeek!.contains(ss) ||
+                                border:
+                                    Border.all(color: Colors.black, width: 0.9),
+                                color: _dayOfWeek!.contains(ss) ||
                                         _itemSelected == day
                                     ? Colors.blue[900]
-                                        : Colors.grey.withOpacity(0.1),
+                                    : Colors.white,
                                 borderRadius: BorderRadius.circular(sixDp)),
                             child: Text(
                                 DateTime.now()
@@ -472,11 +485,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     .toString(),
                                 style: TextStyle(
                                   fontSize: twentyDp,
-                                  color:
-                                  _dayOfWeek!.contains(ss) ||
+                                  color: _dayOfWeek!.contains(ss) ||
                                           _itemSelected == day
                                       ? Colors.white
-                                          : Colors.black87,
+                                      : Colors.black87,
                                 ))),
                       ],
                     ),

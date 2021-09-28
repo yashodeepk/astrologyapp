@@ -270,12 +270,12 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
   }
 
   onCodeSent() {
-    _showSnackBar("OPT sent");
+    _showSnackBar("OTP sent");
 //    _showSnackBar(phoneAuthDataProvider.message);
   }
 
   onCodeResent() {
-    _showSnackBar("OPT resent");
+    _showSnackBar("OTP resent");
 //    _showSnackBar(phoneAuthDataProvider.message);
   }
 

@@ -27,12 +27,16 @@ class _SchedulesPageState extends State<SchedulesPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(),
+        backgroundColor: Colors.blue.shade900,
+        centerTitle: true,
         title: Text(
           schedules,
           style: TextStyle(color: Colors.white),
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue.shade900,
         onPressed: () async {
           await showModalBottomSheet(
               context: context,
@@ -47,11 +51,12 @@ class _SchedulesPageState extends State<SchedulesPage> {
       body: Container(
         child: Builder(
             builder: (context) => ListView.builder(
-              itemBuilder: (context, index) {
-                Slots slots = slotsList[index];
+                  itemBuilder: (context, index) {
+                    Slots slots = slotsList[index];
                     day.add(slots.day);
                     return Center(
                       child: Card(
+                        color: Colors.blue.withOpacity(0.19),
                         elevation: 0,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,13 +112,13 @@ class _SchedulesPageState extends State<SchedulesPage> {
                               ],
                             ),
                           ],
-                    ),
-                  ),
-                );
-              },
-              itemCount: slotsList.length,
-              shrinkWrap: true,
-            )),
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: slotsList.length,
+                  shrinkWrap: true,
+                )),
       ),
     );
   }

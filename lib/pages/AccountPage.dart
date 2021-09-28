@@ -1,5 +1,6 @@
 import 'package:astrologyapp/api/signinapi.dart';
 import 'package:astrologyapp/constants/constants.dart';
+import 'package:astrologyapp/model/PaymentHistory.dart';
 import 'package:astrologyapp/pages/schedules_page/schedules.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -75,6 +76,11 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                   //check if user type is astrologer and add slot
                   userType == astrologerX
                       ? ListTile(
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.black,
+                            size: 18,
+                          ),
                           title: Text(
                             addSchedule,
                             style: TextStyle(
@@ -109,7 +115,9 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                       color: Colors.black,
                       size: 18,
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      PaymentHistory.checkPayment(context);
+                    },
                   ),
                   ListTile(
                     title: Text(
