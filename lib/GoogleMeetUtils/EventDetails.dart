@@ -81,7 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           color: Colors.white, //change your color here
         ),
         title: Text(
-          'EVENT',
+          'Book Meeting',
           style: TextStyle(
             color: Colors.white,
             fontSize: 19,
@@ -109,6 +109,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           // height: oneTwentyDp,
                           padding: EdgeInsets.only(top: 90, bottom: 30),
                           decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: GradientTemplate
+                                      .gradientTemplate[0].colors.last
+                                      .withOpacity(0.5),
+                                  blurRadius: 8,
+                                  spreadRadius: 2.5,
+                                  offset: Offset(3, 3),
+                                ),
+                              ],
                               gradient: LinearGradient(
                                 colors:
                                     GradientTemplate.gradientTemplate[0].colors,

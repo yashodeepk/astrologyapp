@@ -162,8 +162,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             ],
             gradient: gradiantss.LinearGradient(
               colors: GradientTemplate.gradientTemplate[0].colors,
-              begin: Alignment.topLeft,
-              end: Alignment.centerRight,
+              begin: Alignment.bottomCenter,
+              end: Alignment.topRight,
             ),
           ),
           child: Column(
@@ -171,7 +171,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(0, 80, 0, 10),
+                padding: EdgeInsets.fromLTRB(
+                    0, MediaQuery.of(context).size.height * 0.16, 0, 10),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -184,6 +185,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         height: MediaQuery.of(context).size.width / 2.6,
                         child: RiveAnimation.asset(
                           zodiacsign,
+                          placeHolder: CircularProgressIndicator(
+                            color: Colors.black,
+                          ),
                           fit: BoxFit.cover,
                         ),
                       ),

@@ -65,7 +65,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
   }
 
   void photoUrlCheck(String? url) {
-    if (url == null || url == "") {
+    if (url == null || url == "no_image") {
       photoUrl =
           'https://anderson-county.com/CircuitCourt/wp-content/uploads/2020/07/photo-not-available-clip-art1-1.png';
     } else {
@@ -177,6 +177,10 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                             child: FadeInImage.assetNetwork(
                               image: '${astrologer.photoUrl}',
                               placeholder: 'assets/images/bro.jpg',
+                              imageErrorBuilder: (context, error, stackTrace) {
+                                return Image.asset('assets/images/bro.jpg',
+                                    fit: BoxFit.fitWidth);
+                              },
                             ),
                           ),
                           radius: 34,
@@ -302,7 +306,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                   ),
                   TextButton.icon(
                     onPressed: () {
-                      // calender();
+                      calender();
 
                       Navigator.of(context).pushNamed(DashboardScreen.routeName,
                           arguments: astrologer.email);

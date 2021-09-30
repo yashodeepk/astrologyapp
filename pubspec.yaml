@@ -88,6 +88,9 @@ flutter:
   - assets/Rive/moonsign/Scorpio.riv
   - assets/Rive/moonsign/taurus.riv
   - assets/Rive/moonsign/virgo.riv
+
+  - assets/Rive/otp.riv
+  
   - data/country_phone_codes.json
   #   - images/a_dot_ham.jpeg
   # example:
