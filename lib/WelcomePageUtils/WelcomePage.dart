@@ -10,7 +10,7 @@ class LoginPageWidget extends StatefulWidget {
 class _LoginPageWidgetState extends State<LoginPageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String RiveFileName = 'assets/Rive/astro.riv';
+  // String RiveFileName = 'assets/Rive/astro.riv';
 
   @override
   void initState() {
@@ -88,7 +88,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height * 0.65,
                     child: RiveAnimation.asset(
-                      RiveFileName,
+                      'assets/Rive/astro.riv',
                       fit: BoxFit.fitWidth,
                     ),
                   ),

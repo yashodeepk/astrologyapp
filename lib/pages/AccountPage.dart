@@ -1,6 +1,7 @@
 import 'package:astrologyapp/Colors.dart';
 import 'package:astrologyapp/api/signinapi.dart';
 import 'package:astrologyapp/constants/constants.dart';
+import 'package:astrologyapp/model/MeetingHistory.dart';
 import 'package:astrologyapp/model/PaymentHistory.dart';
 import 'package:astrologyapp/pages/schedules_page/schedules.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -154,7 +155,9 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                     color: Colors.black,
                     size: 18,
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    MeetingHistory.checkMeetings(context);
+                  },
                 ),
                 ListTile(
                   title: Text(

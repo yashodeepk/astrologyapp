@@ -135,8 +135,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             children: [
                               //image
                               CircleAvatar(
-                                backgroundImage: CachedNetworkImageProvider(
-                                    '${_astrologer!.photoUrl}'),
+                                backgroundColor: Colors.orange,
+                                child: ClipOval(
+                                  child: FadeInImage.assetNetwork(
+                                    image: '${_astrologer!.photoUrl}',
+                                    placeholder: 'assets/images/bro.jpg',
+                                    imageErrorBuilder:
+                                        (context, error, stackTrace) {
+                                      return Image.asset(
+                                          'assets/images/bro.jpg',
+                                          fit: BoxFit.fitWidth);
+                                    },
+                                  ),
+                                ),
                                 radius: 40,
                               ),
 

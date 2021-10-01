@@ -44,33 +44,22 @@ class _ConsultWidgetState extends State<ConsultWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final user = FirebaseAuth.instance.currentUser!;
   var _controller = ScrollController();
-  RandomColor _randomColor = RandomColor();
-  List colors = [
-    Colors.blue.shade900,
-    Colors.blue.shade800,
-    Colors.blueGrey.shade900,
-    Colors.blueGrey.shade800,
-    Colors.indigo.shade900,
-    Colors.indigo.shade800,
-  ];
+  // RandomColor _randomColor = RandomColor();
+  // List colors = [
+  //   Colors.blue.shade900,
+  //   Colors.blue.shade800,
+  //   Colors.blueGrey.shade900,
+  //   Colors.blueGrey.shade800,
+  //   Colors.indigo.shade900,
+  //   Colors.indigo.shade800,
+  // ];
   Random random = new Random();
   List? astrologersList;
-  String? photoUrl;
-  int count = 0;
 
   @override
   void initState() {
     astrologersList = Provider.of<List<Astrologer>>(context, listen: false);
     super.initState();
-  }
-
-  void photoUrlCheck(String? url) {
-    if (url == null || url == "no_image") {
-      photoUrl =
-          'https://anderson-county.com/CircuitCourt/wp-content/uploads/2020/07/photo-not-available-clip-art1-1.png';
-    } else {
-      photoUrl = url;
-    }
   }
 
   @override
@@ -135,7 +124,6 @@ class _ConsultWidgetState extends State<ConsultWidget> {
   }
 
   Widget astrologerCard(Astrologer astrologer, int i) {
-    photoUrlCheck(astrologer.photoUrl);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
