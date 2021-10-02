@@ -1,3 +1,4 @@
+import 'package:astrologyapp/Colors.dart';
 import 'package:astrologyapp/main.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +7,7 @@ import 'package:astrologyapp/provider/phone_auth.dart';
 import 'package:astrologyapp/constants/constants.dart';
 import 'package:astrologyapp/phoneAuthUtils/widget.dart';
 import 'package:provider/provider.dart';
+import 'package:rive/rive.dart' as rv;
 
 class PhoneAuthVerify extends StatefulWidget {
   /*
@@ -74,13 +76,12 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
      *  SingleChildScrollView: There can be chances arising where
      */
     return Scaffold(
+      extendBodyBehindAppBar: true,
       key: scaffoldKey,
       backgroundColor: Colors.white.withOpacity(0.95),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: _getBody(),
-          ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: _getBody(),
         ),
       ),
     );
@@ -91,14 +92,33 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
    *    Scaffold -> SafeArea -> Center -> SingleChildScrollView -> Card()
    *    Card -> FutureBuilder -> Column()
    */
-  Widget _getBody() => Card(
-        color: widget.cardBackgroundColor,
-        elevation: 2.0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        child: SizedBox(
-          height: _height! * 8 / 10,
-          width: _width! * 8 / 10,
-          child: _getColumnBody(),
+  Widget _getBody() => Container(
+        decoration: BoxDecoration(
+          // color: Colors.blue[900],
+          boxShadow: [
+            BoxShadow(
+              color: GradientTemplate.gradientTemplate[0].colors.last
+                  .withOpacity(0.5),
+              blurRadius: 8,
+              spreadRadius: 2.5,
+              offset: Offset(3, 3),
+            ),
+          ],
+          gradient: LinearGradient(
+            colors: GradientTemplate.gradientTemplate[0].colors,
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+          ),
+        ),
+        // color: widget.cardBackgroundColor,
+        // elevation: 2.0,
+        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        child: Center(
+          child: SizedBox(
+            height: _height!,
+            width: _width!,
+            child: _getColumnBody(),
+          ),
         ),
       );
 
@@ -106,10 +126,21 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
         children: <Widget>[
           //  Logo: scaling to occupy 2 parts of 10 in the whole height of device
           Padding(
-            padding: EdgeInsets.all(_fixedPadding!),
-            child: PhoneAuthWidgets.getLogo(
-                logoPath: widget.logo, height: _height! * 0.2),
-          ),
+              padding: EdgeInsets.all(_fixedPadding!),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                height: MediaQuery.of(context).size.width * 0.7,
+                child: rv.RiveAnimation.asset(
+                  'assets/Rive/otp.riv',
+                  placeHolder: Padding(
+                    padding: const EdgeInsets.all(48.0),
+                    child: CircularProgressIndicator(
+                      color: Colors.black,
+                    ),
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              )),
 
           // AppName:
           Text(widget.appName,
@@ -182,8 +213,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 'VERIFY',
-                style: TextStyle(
-                    color: widget.cardBackgroundColor, fontSize: 18.0),
+                style: TextStyle(color: Colors.blue.shade900, fontSize: 18.0),
               ),
             ),
             color: Colors.white,

@@ -94,6 +94,7 @@ class _SlotListsState extends State<SlotLists> {
                     child: Column(
                       children: [
                         Wrap(
+                          // direction: Axis.vertical,
                           children: widget.slotList.map((f) {
                             return GestureDetector(
                               child: Container(

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:astrologyapp/Colors.dart';
 import 'package:astrologyapp/GoogleMeetUtils/EventDetails.dart';
 import 'package:astrologyapp/GoogleMeetUtils/calenderevent.dart';
@@ -5,7 +7,6 @@ import 'package:astrologyapp/GoogleMeetUtils/secrate.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/calendar/v3.dart' as cal;
@@ -13,6 +14,7 @@ import 'package:googleapis_auth/auth_io.dart';
 import 'package:googleapis_auth/googleapis_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:random_color/random_color.dart';
 
 Future<void> calender() async {
   var _clientID = new ClientId(Secret.getId(), "");
@@ -41,23 +43,23 @@ class ConsultWidget extends StatefulWidget {
 class _ConsultWidgetState extends State<ConsultWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final user = FirebaseAuth.instance.currentUser!;
+  var _controller = ScrollController();
+  // RandomColor _randomColor = RandomColor();
+  // List colors = [
+  //   Colors.blue.shade900,
+  //   Colors.blue.shade800,
+  //   Colors.blueGrey.shade900,
+  //   Colors.blueGrey.shade800,
+  //   Colors.indigo.shade900,
+  //   Colors.indigo.shade800,
+  // ];
+  Random random = new Random();
   List? astrologersList;
-  String? photoUrl;
-  int? count;
 
   @override
   void initState() {
     astrologersList = Provider.of<List<Astrologer>>(context, listen: false);
     super.initState();
-  }
-
-  void photoUrlCheck(String? url) {
-    if (url == null || url == "") {
-      photoUrl =
-          'https://anderson-county.com/CircuitCourt/wp-content/uploads/2020/07/photo-not-available-clip-art1-1.png';
-    } else {
-      photoUrl = url;
-    }
   }
 
   @override
@@ -99,38 +101,50 @@ class _ConsultWidgetState extends State<ConsultWidget> {
       ),
       backgroundColor: Colors.white,
       body: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        controller: _controller,
         itemCount: astrologersList!.length,
         itemBuilder: (BuildContext context, int index) {
+          // changeIndex();
           Astrologer astrologer = astrologersList![index];
+          // Color _color = _randomColor.randomColor(
+          //     colorHue: ColorHue.multiple(colorHues: [ColorHue.blue]),
+          //     colorBrightness: ColorBrightness.multiple(colorBrightnessList: [
+          //       ColorBrightness.dark,
+          //       ColorBrightness.veryDark
+          //     ]),
+          //     colorSaturation: ColorSaturation.highSaturation);
+          // setState(() => count = random.nextInt(3));
 
-          return astrologerCard(astrologer);
+          return astrologerCard(astrologer,
+              random.nextInt(GradientTemplate.gradientTemplate.length));
         },
       ),
     );
   }
 
-  Widget astrologerCard(Astrologer astrologer) {
-    photoUrlCheck(astrologer.photoUrl);
+  Widget astrologerCard(Astrologer astrologer, int i) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
         width: MediaQuery.of(context).size.width - 40,
         height: 160,
         decoration: BoxDecoration(
-          color: Colors.blue[900],
+          // color: colors[i],
           boxShadow: [
             BoxShadow(
-              color: Colors.blue.shade900.withOpacity(0.5),
+              color: GradientTemplate.gradientTemplate[i].colors.last
+                  .withOpacity(0.5),
               blurRadius: 8,
               spreadRadius: 2.5,
               offset: Offset(3, 3),
             ),
           ],
-          // gradient: LinearGradient(
-          //   colors: gradientColor,
-          //   begin: Alignment.centerLeft,
-          //   end: Alignment.centerRight,
-          // ),
+          gradient: LinearGradient(
+            colors: GradientTemplate.gradientTemplate[i].colors,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(26),
         ),
         child: SingleChildScrollView(
@@ -151,6 +165,10 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                             child: FadeInImage.assetNetwork(
                               image: '${astrologer.photoUrl}',
                               placeholder: 'assets/images/bro.jpg',
+                              imageErrorBuilder: (context, error, stackTrace) {
+                                return Image.asset('assets/images/bro.jpg',
+                                    fit: BoxFit.fitWidth);
+                              },
                             ),
                           ),
                           radius: 34,
@@ -215,7 +233,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                                     textAlign: TextAlign.center,
                                     maxLines: 2,
                                     style: TextStyle(
-                                        color: Colors.grey.shade300,
+                                        color: Colors.white70,
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400),
                                   ),
@@ -236,7 +254,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                                     textAlign: TextAlign.center,
                                     maxLines: 2,
                                     style: TextStyle(
-                                        color: Colors.grey.shade300,
+                                        color: Colors.white70,
                                         fontSize: 13,
                                         fontStyle: FontStyle.italic),
                                   ),
@@ -276,7 +294,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                   ),
                   TextButton.icon(
                     onPressed: () {
-                      // calender();
+                      calender();
 
                       Navigator.of(context).pushNamed(DashboardScreen.routeName,
                           arguments: astrologer.email);

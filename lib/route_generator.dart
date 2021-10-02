@@ -1,5 +1,6 @@
 import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:astrologyapp/pages/HomePage.dart';
+import 'package:astrologyapp/pages/MeetingHistory_page/MeetingHistory.dart';
 import 'package:astrologyapp/pages/PaymentHistory_page/PaymentHistoryPage.dart';
 import 'package:astrologyapp/pages/schedules_page/schedules.dart';
 import 'package:astrologyapp/paymentMethodUtils/RazorpayPayment.dart';
@@ -36,6 +37,9 @@ class RouteGenerator {
 
       case PaymentHistoryPage.routeName:
         return MaterialPageRoute(builder: (_) => PaymentHistoryPage());
+
+      case MeetingHistoryPage.routeName:
+        return MaterialPageRoute(builder: (_) => MeetingHistoryPage());
 
       case CreateScreen.routeName:
         return MaterialPageRoute(builder: (_) => CreateScreen());

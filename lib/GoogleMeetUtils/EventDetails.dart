@@ -1,3 +1,4 @@
+import 'package:astrologyapp/Colors.dart';
 import 'package:astrologyapp/GoogleMeetUtils/StoreData.dart';
 import 'package:astrologyapp/GoogleMeetUtils/slot_lists/SlotLists.dart';
 import 'package:astrologyapp/constants/constants.dart';
@@ -70,22 +71,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.blue[900],
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(
           color: Colors.white, //change your color here
         ),
         title: Text(
-          'EVENT',
+          'Book Meeting',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 22,
+            fontSize: 19,
           ),
         ),
       ),
       body: Container(
+        // padding: EdgeInsets.only(top: 40),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: CustomScrollView(
@@ -102,21 +106,48 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: [
                         //displays astrologers details
                         Container(
-                          height: oneTwentyDp,
-                          // padding: EdgeInsets.symmetric(horizontal: thirtyDp),
+                          // height: oneTwentyDp,
+                          padding: EdgeInsets.only(top: 90, bottom: 30),
                           decoration: BoxDecoration(
-                              color: Colors.blue[900],
+                              boxShadow: [
+                                BoxShadow(
+                                  color: GradientTemplate
+                                      .gradientTemplate[0].colors.last
+                                      .withOpacity(0.5),
+                                  blurRadius: 8,
+                                  spreadRadius: 2.5,
+                                  offset: Offset(3, 3),
+                                ),
+                              ],
+                              gradient: LinearGradient(
+                                colors:
+                                    GradientTemplate.gradientTemplate[0].colors,
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              // color: Colors.blue[900],
                               borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(twentyDp),
-                                  bottomRight: Radius.circular(twentyDp))),
+                                  bottomLeft: Radius.circular(32),
+                                  bottomRight: Radius.circular(32))),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               //image
                               CircleAvatar(
-                                backgroundImage: CachedNetworkImageProvider(
-                                    '${_astrologer!.photoUrl}'),
+                                backgroundColor: Colors.orange,
+                                child: ClipOval(
+                                  child: FadeInImage.assetNetwork(
+                                    image: '${_astrologer!.photoUrl}',
+                                    placeholder: 'assets/images/bro.jpg',
+                                    imageErrorBuilder:
+                                        (context, error, stackTrace) {
+                                      return Image.asset(
+                                          'assets/images/bro.jpg',
+                                          fit: BoxFit.fitWidth);
+                                    },
+                                  ),
+                                ),
                                 radius: 40,
                               ),
 
@@ -129,13 +160,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    AutoSizeText(
-                                      "${_astrologer!.name}", maxLines: 1,
-                                      // textAlign: TextAlign.start,
-                                      // overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontSize: twentyDp,
-                                          color: Colors.white),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          child: AutoSizeText(
+                                            "${_astrologer!.name}"
+                                                .toUpperCase(),
+                                            maxLines: 1,
+                                            // textAlign: TextAlign.start,
+                                            // overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: twentyDp,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 8.0),
@@ -149,7 +191,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               // overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                   fontSize: sixteenDp,
-                                                  color: Colors.white),
+                                                  color: Colors.white70),
                                             ),
                                           ),
                                         ],
@@ -167,7 +209,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               // overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                   fontSize: sixteenDp,
-                                                  color: Colors.white),
+                                                  color: Colors.white70),
                                             ),
                                           ),
                                         ],
@@ -459,7 +501,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ss, //AutoSizeText will automaticaly chage text size to maxmimun fit inside coloum it will solve RenderFlex overflowed error
                           style: TextStyle(
                               color: _itemSelected == day
-                                  ? Colors.blue
+                                  ? Colors.blue.shade800
                                   : Colors.black),
                         ),
                         SizedBox(

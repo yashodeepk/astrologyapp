@@ -1,41 +1,92 @@
 {
   "project_info": {
-    "project_number": "749828102104",
-    "project_id": "astrology-app-d5d25",
-    "storage_bucket": "astrology-app-d5d25.appspot.com"
+    "project_number": "121239416780",
+    "project_id": "atrology-c4a85",
+    "storage_bucket": "atrology-c4a85.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:749828102104:android:ec25877574187e707c04ad",
+        "mobilesdk_app_id": "1:121239416780:android:67e9be46aeee54f94df769",
         "android_client_info": {
-          "package_name": "com.yashodeepKacholiya.astrologyapp"
+          "package_name": "com.admin.astrology"
         }
       },
       "oauth_client": [
         {
-          "client_id": "749828102104-c05ce37gb9meu642q90mojdlrgonarmf.apps.googleusercontent.com",
+          "client_id": "121239416780-vnqo56bbp8qv5tmsinpjvhr9k3n955tr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDNQ6uqqxzC0QQrt5lyXOYFq1SbLUX-I0k"
+          "current_key": "AIzaSyClL_ABrpvLne0lMc7sW0KdaxWU-K89ZdE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "749828102104-c05ce37gb9meu642q90mojdlrgonarmf.apps.googleusercontent.com",
+              "client_id": "121239416780-vnqo56bbp8qv5tmsinpjvhr9k3n955tr.apps.googleusercontent.com",
               "client_type": 3
-            },
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121239416780:android:892b64dd1c8af1d94df769",
+        "android_client_info": {
+          "package_name": "com.astrology.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "121239416780-vnqo56bbp8qv5tmsinpjvhr9k3n955tr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClL_ABrpvLne0lMc7sW0KdaxWU-K89ZdE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
             {
-              "client_id": "749828102104-nhfnfcbali49d2k7gb8tdsne85h1fjiv.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.astrologyapp"
-              }
+              "client_id": "121239416780-vnqo56bbp8qv5tmsinpjvhr9k3n955tr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121239416780:android:474f79196a77e2ae4df769",
+        "android_client_info": {
+          "package_name": "com.astrologyapp.yashodeepKacholiya"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "121239416780-vnqo56bbp8qv5tmsinpjvhr9k3n955tr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClL_ABrpvLne0lMc7sW0KdaxWU-K89ZdE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "121239416780-vnqo56bbp8qv5tmsinpjvhr9k3n955tr.apps.googleusercontent.com",
+              "client_type": 3
             }
           ]
         }
