@@ -1,10 +1,12 @@
+import 'dart:math';
+
+import 'package:astrologyapp/Colors.dart';
 import 'package:astrologyapp/GoogleMeetUtils/EventDetails.dart';
 import 'package:astrologyapp/GoogleMeetUtils/calenderevent.dart';
 import 'package:astrologyapp/GoogleMeetUtils/secrate.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:googleapis/calendar/v3.dart' as cal;
@@ -12,6 +14,7 @@ import 'package:googleapis_auth/auth_io.dart';
 import 'package:googleapis_auth/googleapis_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:random_color/random_color.dart';
 
 Future<void> calender() async {
   var _clientID = new ClientId(Secret.getId(), "");
@@ -40,23 +43,23 @@ class ConsultWidget extends StatefulWidget {
 class _ConsultWidgetState extends State<ConsultWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final user = FirebaseAuth.instance.currentUser!;
+  var _controller = ScrollController();
+  // RandomColor _randomColor = RandomColor();
+  // List colors = [
+  //   Colors.blue.shade900,
+  //   Colors.blue.shade800,
+  //   Colors.blueGrey.shade900,
+  //   Colors.blueGrey.shade800,
+  //   Colors.indigo.shade900,
+  //   Colors.indigo.shade800,
+  // ];
+  Random random = new Random();
   List? astrologersList;
-  String? photoUrl;
 
   @override
   void initState() {
     astrologersList = Provider.of<List<Astrologer>>(context, listen: false);
-    calender();
     super.initState();
-  }
-
-  void photoUrlCheck(String? url) {
-    if (url == null || url == "") {
-      photoUrl =
-          'https://anderson-county.com/CircuitCourt/wp-content/uploads/2020/07/photo-not-available-clip-art1-1.png';
-    } else {
-      photoUrl = url;
-    }
   }
 
   @override
@@ -98,166 +101,226 @@ class _ConsultWidgetState extends State<ConsultWidget> {
       ),
       backgroundColor: Colors.white,
       body: ListView.builder(
-        itemBuilder: (BuildContext context, int index) {
-          Astrologer astrologer = astrologersList![index];
-
-          return astrologerCard(astrologer);
-        },
+        physics: BouncingScrollPhysics(),
+        controller: _controller,
         itemCount: astrologersList!.length,
+        itemBuilder: (BuildContext context, int index) {
+          // changeIndex();
+          Astrologer astrologer = astrologersList![index];
+          // Color _color = _randomColor.randomColor(
+          //     colorHue: ColorHue.multiple(colorHues: [ColorHue.blue]),
+          //     colorBrightness: ColorBrightness.multiple(colorBrightnessList: [
+          //       ColorBrightness.dark,
+          //       ColorBrightness.veryDark
+          //     ]),
+          //     colorSaturation: ColorSaturation.highSaturation);
+          // setState(() => count = random.nextInt(3));
+
+          return astrologerCard(astrologer,
+              random.nextInt(GradientTemplate.gradientTemplate.length));
+        },
       ),
     );
   }
 
-  Widget astrologerCard(Astrologer astrologer) {
-    photoUrlCheck(astrologer.photoUrl);
+  Widget astrologerCard(Astrologer astrologer, int i) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
         width: MediaQuery.of(context).size.width - 40,
         height: 160,
         decoration: BoxDecoration(
-          color: Colors.blue[900],
-          // gradient: LinearGradient(
-          //     begin: Alignment.centerLeft,
-          //     end: Alignment.centerRight,
-          //     colors: [Color(0xfffe8c00), Color(0xfff83600)]),
+          // color: colors[i],
+          boxShadow: [
+            BoxShadow(
+              color: GradientTemplate.gradientTemplate[i].colors.last
+                  .withOpacity(0.5),
+              blurRadius: 8,
+              spreadRadius: 2.5,
+              offset: Offset(3, 3),
+            ),
+          ],
+          gradient: LinearGradient(
+            colors: GradientTemplate.gradientTemplate[i].colors,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(26),
         ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(8, 20, 0, 8),
-                      child: CircleAvatar(
-                        child: ClipOval(
-                          child: FadeInImage.assetNetwork(
-                            image: '${astrologer.photoUrl}',
-                            placeholder: 'assets/images/bro.jpg',
-                          ),
-                        ),
-                        radius: 20,
-                      ),
-                      // child: CircleAvatar(
-                      //   backgroundImage: CachedNetworkImageProvider(
-                      //       '${astrologer.photoUrl}'),
-                      //   radius: 30,
-                      // ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        for (int i = 0; i < 5; i++)
-                          Container(
-                            padding: EdgeInsets.fromLTRB(10, 0, 2, 0),
-                            // padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                            child: Icon(
-                              Icons.star_rate,
-                              color: astrologer.rating > i
-                                  ? Color(0xFFFFD700)
-                                  : Colors.grey,
-                              size: 18,
+        child: SingleChildScrollView(
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(8, 10, 0, 8),
+                        child: CircleAvatar(
+                          child: ClipOval(
+                            child: FadeInImage.assetNetwork(
+                              image: '${astrologer.photoUrl}',
+                              placeholder: 'assets/images/bro.jpg',
+                              imageErrorBuilder: (context, error, stackTrace) {
+                                return Image.asset('assets/images/bro.jpg',
+                                    fit: BoxFit.fitWidth);
+                              },
                             ),
                           ),
-                      ],
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(10, 1, 0, 5),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        AutoSizeText(
-                          astrologer.name,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
+                          radius: 34,
                         ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: AutoSizeText(
-                                astrologer.expertise,
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
+                        // child: CircleAvatar(
+                        //   backgroundImage: CachedNetworkImageProvider(
+                        //       '${astrologer.photoUrl}'),
+                        //   radius: 30,
+                        // ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          SizedBox(
+                            width: 10,
+                          ),
+                          for (int i = 0; i < 5; i++)
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(7, 0, 0, 0),
+                              child: Container(
+                                // padding: EdgeInsets.fromLTRB(7.2, 0, 2, 0),
+                                // padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                child: Icon(
+                                  Icons.star_rate,
+                                  color: astrologer.rating > i
+                                      ? Color(0xFFFFD700)
+                                      : Colors.grey,
+                                  size: 18,
                                 ),
                               ),
-                            )
-                          ],
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(10, 1, 0, 5),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AutoSizeText(
+                            astrologer.name,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: AutoSizeText(
+                                    astrologer.expertise,
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: AutoSizeText(
+                                    "Exp: " +
+                                        astrologer.experience.toString() +
+                                        ' Years',
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 13,
+                                        fontStyle: FontStyle.italic),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Fess  - ${astrologer.fees}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
-                      ],
-                    ),
+                      ),
+                      Text(
+                        ' ₹',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      'Fess  - ${astrologer.fees}',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                  TextButton.icon(
+                    onPressed: () {
+                      calender();
+
+                      Navigator.of(context).pushNamed(DashboardScreen.routeName,
+                          arguments: astrologer.email);
+                    },
+                    label: Text('Book Meeting'),
+                    icon: Icon(
+                      Icons.call_rounded,
+                      size: 15,
+                    ),
+                    style: TextButton.styleFrom(
+                      // padding: EdgeInsets.all(8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      primary: Colors.white,
+                      backgroundColor: Colors.orange,
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.normal,
                         fontSize: 16,
                       ),
                     ),
-                    Text(
-                      ' ₹',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-                TextButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(DashboardScreen.routeName,
-                        arguments: astrologer.email);
-                  },
-                  label: Text('Book Meeting'),
-                  icon: Icon(
-                    Icons.call_rounded,
-                    size: 15,
-                  ),
-                  style: TextButton.styleFrom(
-                    // padding: EdgeInsets.all(8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    primary: Colors.white,
-                    backgroundColor: Colors.orange,
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 16,
-                    ),
-                  ),
-                )
-              ],
-            )
-          ],
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -111,77 +111,65 @@ class GoogleSignInProvider extends ChangeNotifier {
         if (onValue.exists) {
           try {
             //  SharedPreferences? prefs;
-            final googleUser = await googleSignIn.signIn();
-            if (googleUser == null)
-              return print("google user null");
-            else {
-              // _user = googleUser;
+            // _user = googleUser;
 
-              final googleAuth = await googleUser.authentication;
+            final googleAuth = await googleUser.authentication;
 
-              final credential = GoogleAuthProvider.credential(
-                accessToken: googleAuth.accessToken,
-                idToken: googleAuth.idToken,
-              );
-              await FirebaseAuth.instance.signInWithCredential(credential);
-              //  prefs = await SharedPreferences.getInstance();
+            final credential = GoogleAuthProvider.credential(
+              accessToken: googleAuth.accessToken,
+              idToken: googleAuth.idToken,
+            );
+            await FirebaseAuth.instance.signInWithCredential(credential);
+            //  prefs = await SharedPreferences.getInstance();
 
-              isLoading = true;
-              final currentUser = FirebaseAuth.instance.currentUser;
+            final currentUser = FirebaseAuth.instance.currentUser;
 
-              if (currentUser != null) {
-                print('astrologer');
-                // Check is already sign up
-                final QuerySnapshot result = await FirebaseFirestore.instance
+            if (currentUser != null) {
+              print('astrologer');
+              // Check is already sign up
+              final QuerySnapshot result = await FirebaseFirestore.instance
+                  .collection('Astrologer')
+                  .where('id', isEqualTo: currentUser.email)
+                  .get();
+              final List<DocumentSnapshot> documents = result.docs;
+              if (documents.length == 0) {
+                print('user created');
+                // Update data to server if new user
+                FirebaseFirestore.instance
                     .collection('Astrologer')
-                    .where('id', isEqualTo: currentUser.email)
-                    .get();
-                final List<DocumentSnapshot> documents = result.docs;
-                if (documents.length == 0) {
-                  print('user created');
-                  // Update data to server if new user
-                  FirebaseFirestore.instance
-                      .collection('Astrologer')
-                      .doc(currentUser.email)
-                      .update({
-                    'name': currentUser.displayName,
-                    'email': currentUser.email,
-                    'photoUrl': currentUser.photoURL,
-                    'id': currentUser.uid,
-                    'createdAt':
-                        DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
-                    // 'chattingWith': null
-                  });
+                    .doc(currentUser.email)
+                    .update({
+                  'photoUrl': currentUser.photoURL,
+                  'id': currentUser.uid,
+                  'chattingWith': null
+                });
 
-                  // // Write data to local
-                  await prefs!.setString('id', currentUser.uid);
-                  await prefs!.setString('name', currentUser.displayName!);
-                  await prefs!.setString('photoUrl', currentUser.photoURL!);
-                  await prefs!.setString('type', astrologerX);
-                } else {
-                  DocumentSnapshot documentSnapshot = documents[0];
-                  UserChat userChat = UserChat.fromDocument(documentSnapshot);
-                  // Write data to local
-                  await prefs!.setString('id', userChat.id);
-                  await prefs!.setString('name', userChat.name);
-                  await prefs!.setString('photoUrl', userChat.photoUrl);
-                  await prefs!.setString('aboutMe', userChat.aboutMe);
-                  await prefs!.setString('type', astrologerX);
-                }
-                print('user data storage on cloudstore success');
-                isLoading = false;
-                notifyListeners();
-                Fluttertoast.showToast(msg: "Sign in success");
+                // // Write data to local
+                await prefs!.setString('id', currentUser.uid);
+                await prefs!.setString('name', currentUser.displayName!);
+                await prefs!.setString('photoUrl', currentUser.photoURL!);
+                await prefs!.setString('type', astrologerX);
               } else {
-                print('user data storage on cloudstore failed');
-                await googleSignIn.disconnect();
-                FirebaseAuth.instance.signOut();
-                Fluttertoast.showToast(msg: "Sign in fail");
-                isLoading = false;
+                DocumentSnapshot documentSnapshot = documents[0];
+                UserChat userChat = UserChat.fromDocument(documentSnapshot);
+                // Write data to local
+                await prefs!.setString('id', userChat.id);
+                await prefs!.setString('name', userChat.name);
+                await prefs!.setString('photoUrl', userChat.photoUrl);
+                await prefs!.setString('aboutMe', userChat.aboutMe);
+                await prefs!.setString('type', astrologerX);
               }
-              // Fluttertoast.showToast(msg: "Sign in success");
-
+              print('user data storage on cloudstore success');
+              notifyListeners();
+              Fluttertoast.showToast(msg: "Sign in success");
+            } else {
+              print('user data storage on cloudstore failed');
+              await googleSignIn.disconnect();
+              FirebaseAuth.instance.signOut();
+              Fluttertoast.showToast(msg: "Sign in fail");
             }
+            // Fluttertoast.showToast(msg: "Sign in success");
+
           } catch (e) {
             Fluttertoast.showToast(msg: "Sign in fail");
             await googleSignIn.disconnect();

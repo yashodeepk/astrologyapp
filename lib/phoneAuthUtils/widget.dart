@@ -6,7 +6,12 @@ class PhoneAuthWidgets {
   static Widget getLogo({String? logoPath, double? height}) => Material(
         type: MaterialType.transparency,
         elevation: 10.0,
-        child: Image.asset(logoPath!, height: height),
+        child: Image.asset(
+          logoPath!,
+          height: height! + 20,
+          fit: BoxFit.cover,
+          // scale: 1500,
+        ),
       );
 }
 

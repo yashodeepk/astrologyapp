@@ -104,6 +104,9 @@ class _HorescopeWidgetState extends State<HorescopeWidget> {
               height: MediaQuery.of(context).size.width / 3.7,
               child: RiveAnimation.asset(
                 zodiacsign1,
+                placeHolder: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
                 fit: BoxFit.cover,
               ),
             ),

@@ -20,8 +20,15 @@ class MeetingService {
 
   //create meeting
   Future<void> createMeeting(Meetings meetings) async {
+    firestoreService.collection('event').doc(_email).set({"email": true});
+    firestoreService
+        .collection('event')
+        .doc(_email)
+        .set({"email": FieldValue.delete()});
     return await firestoreService
         .collection('event')
+        .doc(_email)
+        .collection('Meetings')
         .doc(meetings.meetingId)
         .set(meetings.toJson());
   }

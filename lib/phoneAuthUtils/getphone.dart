@@ -76,24 +76,24 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Colors.white,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: BackButton(
-          color: Colors.black,
+          color: Colors.white,
         ),
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
       ),
-      body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            Center(
-              child: SingleChildScrollView(
-                child: _getBody(countriesProvider),
-              ),
-            ),
-            loader ? CircularProgressIndicator() : SizedBox()
-          ],
-        ),
+      body: Stack(
+        children: <Widget>[
+          loader
+              ? CircularProgressIndicator()
+              : Center(
+                  child: SingleChildScrollView(
+                    child: _getBody(countriesProvider),
+                  ),
+                ),
+        ],
       ),
     );
   }
@@ -103,20 +103,37 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
    *    Scaffold -> SafeArea -> Center -> SingleChildScrollView -> Card()
    *    Card -> FutureBuilder -> Column()
    */
-  Widget _getBody(CountryProvider countriesProvider) => Card(
-        color: widget.cardBackgroundColor,
-        elevation: 2.0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+  Widget _getBody(CountryProvider countriesProvider) => Container(
+        decoration: BoxDecoration(
+          // color: Colors.blue[900],
+          boxShadow: [
+            BoxShadow(
+              color: GradientTemplate.gradientTemplate[0].colors.last
+                  .withOpacity(0.5),
+              blurRadius: 8,
+              spreadRadius: 2.5,
+              offset: Offset(3, 3),
+            ),
+          ],
+          gradient: LinearGradient(
+            colors: GradientTemplate.gradientTemplate[0].colors,
+            begin: Alignment.bottomCenter,
+            end: Alignment.topRight,
+          ),
+        ),
+        // color: widget.cardBackgroundColor,
+        // elevation: 2.0,
+        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         child: SizedBox(
-          height: _height! * 8 / 10,
-          width: _width! * 8 / 10,
+          height: _height!,
+          width: _width!,
 
           /*
-           * Fetching countries data from JSON file and storing them in a List of Country model:
-           * ref:- List<Country> countries
-           * Until the data is fetched, there will be CircularProgressIndicator showing, describing something is on it's way
-           * (Previously there was a FutureBuilder rather that the below thing, which created unexpected exceptions and had to be removed)
-           */
+       * Fetching countries data from JSON file and storing them in a List of Country model:
+       * ref:- List<Country> countries
+       * Until the data is fetched, there will be CircularProgressIndicator showing, describing something is on it's way
+       * (Previously there was a FutureBuilder rather that the below thing, which created unexpected exceptions and had to be removed)
+       */
           child: countriesProvider.countries.length > 0
               ? _getColumnBody(countriesProvider)
               : Center(child: CircularProgressIndicator()),
@@ -130,7 +147,8 @@ class _PhoneAuthGetPhoneState extends State<PhoneAuthGetPhone> {
           children: <Widget>[
             //  Logo: scaling to occupy 2 parts of 10 in the whole height of device
             Padding(
-              padding: EdgeInsets.all(_fixedPadding!),
+              padding: EdgeInsets.fromLTRB(_fixedPadding!, _fixedPadding! + 20,
+                  _fixedPadding!, _fixedPadding!),
               child: PhoneAuthWidgets.getLogo(
                   logoPath: widget.logo, height: _height! * 0.2),
             ),

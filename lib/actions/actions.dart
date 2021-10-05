@@ -50,7 +50,7 @@ class ShowAction {
     );
   }
 
-  static Future<void> makePhoneCall(String? url) async {
+  static Future<void> launchUrl(String? url) async {
     if (await canLaunch(url!)) {
       await launch(url);
     } else {

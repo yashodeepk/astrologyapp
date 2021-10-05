@@ -10,8 +10,10 @@ class SelectCountry extends StatelessWidget {
   Widget build(BuildContext context) {
     final countriesProvider = Provider.of<CountryProvider>(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.white54,
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.blue.shade900,
         title: Text('Search your country'),
         bottom: PreferredSize(
           preferredSize: Size(double.infinity, 50.0),

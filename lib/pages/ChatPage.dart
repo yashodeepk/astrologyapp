@@ -4,7 +4,7 @@ import 'package:astrologyapp/ChatUtils/ChatScreen.dart';
 import 'package:astrologyapp/ChatUtils/loading.dart';
 import 'package:astrologyapp/ChatUtils/userchat.dart';
 import 'package:astrologyapp/Colors.dart';
-import 'package:astrologyapp/constants/constants.dart';
+import 'package:astrologyapp/actions/actions.dart';
 import 'package:astrologyapp/model/meetings.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -15,8 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-
-import 'HomePage.dart';
 
 class ChatWidget extends StatefulWidget {
   @override
@@ -285,8 +283,13 @@ class _ChatWidgetState extends State<ChatWidget> {
                                                         BorderRadius.circular(
                                                             20)),
                                                 primary: Color(0xff4c3cb0)),
-                                            onPressed: () {
-                                              Navigator.of(context)
+                                            onPressed: () async {
+                                              //open google meet link
+                                              await ShowAction.launchUrl(
+                                                      meet.meetingLink)
+                                                  .then((value) {});
+
+                                              /*    Navigator.of(context)
                                                   .push(MaterialPageRoute(
                                                 builder: (context) => Chat(
                                                   peerId: userType == userX
@@ -294,7 +297,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                                       : '${meet.userId}',
                                                   peerAvatar: '',
                                                 ),
-                                              ));
+                                              ));*/
                                             },
                                             icon: Icon(
                                               Icons.arrow_forward_ios,
