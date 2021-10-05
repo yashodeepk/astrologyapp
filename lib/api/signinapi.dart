@@ -1,5 +1,4 @@
 import 'package:astrologyapp/ChatUtils/userchat.dart';
-import 'package:astrologyapp/api/config_page.dart';
 import 'package:astrologyapp/constants/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
+  bool isLoading = false;
   SharedPreferences? prefs;
 
   // GoogleSignInAccount? _user;
@@ -36,6 +36,7 @@ class GoogleSignInProvider extends ChangeNotifier {
           await prefs!.setString('type', userX);
           // prefs = await SharedPreferences.getInstance();
 
+          isLoading = true;
           final currentUser = FirebaseAuth.instance.currentUser;
 
           if (currentUser != null) {
@@ -78,6 +79,7 @@ class GoogleSignInProvider extends ChangeNotifier {
               await prefs!.setString('type', userX);
             }
             print('user data storage on cloudstore success');
+            isLoading = false;
             notifyListeners();
             Fluttertoast.showToast(msg: "Sign in success");
           } else {
@@ -85,6 +87,7 @@ class GoogleSignInProvider extends ChangeNotifier {
             Fluttertoast.showToast(msg: "Sign in fail");
             googleSignIn.disconnect();
             FirebaseAuth.instance.signOut();
+            isLoading = false;
           }
           // Fluttertoast.showToast(msg: "Sign in success");
 

@@ -45,6 +45,8 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
       "experience": experience,
       "expertise": expertise,
       "fees": fees,
+      "rating": 5,
+      "photoUrl": '',
     };
 
     await documentReferencer
