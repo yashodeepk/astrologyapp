@@ -41,7 +41,5 @@ class PaymentProvider with ChangeNotifier {
   makePayment(BuildContext context) async {
     _paymentApi.launchRazorPay(
         getAmount, getName, getDescription, getEmail, getPhoneNumber);
-
   }
-
 }
