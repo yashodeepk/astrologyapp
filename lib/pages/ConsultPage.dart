@@ -1,11 +1,13 @@
 import 'dart:math';
 
+import 'package:astrologyapp/ChatUtils/ChatScreen.dart';
 import 'package:astrologyapp/Colors.dart';
 import 'package:astrologyapp/GoogleMeetUtils/EventDetails.dart';
 import 'package:astrologyapp/GoogleMeetUtils/calenderevent.dart';
 import 'package:astrologyapp/GoogleMeetUtils/secrate.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
+import 'package:astrologyapp/pages/ChatPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -295,7 +297,6 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                   TextButton.icon(
                     onPressed: () {
                       calender();
-
                       Navigator.of(context).pushNamed(DashboardScreen.routeName,
                           arguments: astrologer.email);
                     },
@@ -316,7 +317,22 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                         fontSize: 16,
                       ),
                     ),
-                  )
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Chat(
+                                      name: astrologer.name!,
+                                      peerId: astrologer.id!,
+                                      image: astrologer.photoUrl,
+                                    )));
+                      },
+                      icon: Icon(
+                        Icons.message_outlined,
+                        color: Colors.white,
+                      )),
                 ],
               )
             ],

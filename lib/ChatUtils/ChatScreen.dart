@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:astrologyapp/ChatUtils/fullphoto.dart';
 import 'package:astrologyapp/ChatUtils/loading.dart';
 import 'package:astrologyapp/Colors.dart';
+import 'package:astrologyapp/model/users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,10 +15,11 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Chat extends StatelessWidget {
-  final String peerId;
-  final String peerAvatar;
-
-  Chat({Key? key, required this.peerId, required this.peerAvatar})
+  String peerId;
+  String name;
+  String image;
+  Chat(
+      {Key? key, required this.image, required this.peerId, required this.name})
       : super(key: key);
 
   @override
@@ -25,14 +28,18 @@ class Chat extends StatelessWidget {
       appBar: AppBar(
         leading: BackButton(),
         title: Text(
-          'CHAT',
-          style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+          name,
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
         centerTitle: true,
       ),
       body: ChatScreen(
+        image: image,
         peerId: peerId,
-        peerAvatar: peerAvatar,
+        name: name,
       ),
     );
   }
@@ -40,21 +47,26 @@ class Chat extends StatelessWidget {
 
 class ChatScreen extends StatefulWidget {
   final String peerId;
-  final String peerAvatar;
+  String name;
+  String image;
 
-  ChatScreen({Key? key, required this.peerId, required this.peerAvatar})
+  ChatScreen(
+      {Key? key, required this.peerId, required this.image, required this.name})
       : super(key: key);
 
   @override
-  State createState() =>
-      ChatScreenState(peerId: peerId, peerAvatar: peerAvatar);
+  State createState() => ChatScreenState(
+        peerId: peerId,
+      );
 }
 
 class ChatScreenState extends State<ChatScreen> {
-  ChatScreenState({Key? key, required this.peerId, required this.peerAvatar});
+  ChatScreenState({
+    Key? key,
+    required this.peerId,
+  });
 
   String peerId;
-  String peerAvatar;
   String? id;
 
   List<QueryDocumentSnapshot> listMessage = new List.from([]);
@@ -71,7 +83,21 @@ class ChatScreenState extends State<ChatScreen> {
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController listScrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
-
+  String amountSelected = "";
+  List<String> amountList = [
+    "100₹",
+    "200₹",
+    "300₹",
+    "400₹",
+    "500₹",
+    "600₹",
+    "700₹",
+    "800₹",
+    "900₹",
+    "1000₹"
+  ];
+  User? user;
+  int selectedIndex = 0;
   _scrollListener() {
     if (listScrollController.offset >=
             listScrollController.position.maxScrollExtent &&
@@ -85,6 +111,7 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    user = FirebaseAuth.instance.currentUser!;
     focusNode.addListener(onFocusChange);
     listScrollController.addListener(_scrollListener);
     readLocal();
@@ -100,8 +127,10 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   readLocal() async {
+    print("object");
     prefs = await SharedPreferences.getInstance();
     id = prefs?.getString('id') ?? '';
+    print("peerId => $peerId");
     if (id.hashCode <= peerId.hashCode) {
       groupChatId = '$id-$peerId';
     } else {
@@ -160,17 +189,25 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void onSendMessage(String content, int type) {
+  void onSendMessage(String content, int type) async {
     // type: 0 = text, 1 = image, 2 = sticker
     if (content.trim() != '') {
       textEditingController.clear();
-
+      prefs = await SharedPreferences.getInstance();
+      id = prefs?.getString('id') ?? '';
       var documentReference = FirebaseFirestore.instance
           .collection('messages')
           .doc(groupChatId)
           .collection(groupChatId)
           .doc(DateTime.now().millisecondsSinceEpoch.toString());
-
+      FirebaseFirestore.instance.collection('messages').doc(groupChatId).set({
+        'idFrom': id,
+        'nameFrom': user!.displayName,
+        'imageFrom': user!.photoURL,
+        'idTo': peerId,
+        'nameTo': widget.name,
+        'imageTo': widget.image,
+      });
       FirebaseFirestore.instance.runTransaction((transaction) async {
         transaction.set(
           documentReference,
@@ -179,7 +216,10 @@ class ChatScreenState extends State<ChatScreen> {
             'idTo': peerId,
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             'content': content,
-            'type': type
+            'type': type,
+            'lockMessage': type == 3 ? true : false,
+            'amount': type == 3 ? amountSelected : 0,
+            'isPaymentDone': false,
           },
         );
       });
@@ -294,17 +334,41 @@ class ChatScreenState extends State<ChatScreen> {
                             right: 10.0),
                       )
                     // Sticker
-                    : Container(
-                        child: Image.asset(
-                          'assets/images/${document.get('content')}.gif',
-                          width: 100.0,
-                          height: 100.0,
-                          fit: BoxFit.cover,
-                        ),
-                        margin: EdgeInsets.only(
-                            bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                            right: 10.0),
-                      ),
+                    : document.get('type') == 3
+                        ? Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  document.get('content'),
+                                  style: TextStyle(color: primaryColor),
+                                ),
+                                Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Icon(Icons.lock_outline_rounded)),
+                              ],
+                            ),
+                            padding:
+                                EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                            width: 200.0,
+                            decoration: BoxDecoration(
+                                color: greyColor2,
+                                borderRadius: BorderRadius.circular(8.0)),
+                            margin: EdgeInsets.only(
+                                bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                                right: 10.0),
+                          )
+                        : Container(
+                            child: Image.asset(
+                              'assets/images/${document.get('content')}.gif',
+                              width: 100.0,
+                              height: 100.0,
+                              fit: BoxFit.cover,
+                            ),
+                            margin: EdgeInsets.only(
+                                bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                                right: 10.0),
+                          ),
           ],
           mainAxisAlignment: MainAxisAlignment.end,
         );
@@ -317,35 +381,43 @@ class ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   isLastMessageLeft(index)
                       ? Material(
-                          child: Image.network(
-                            peerAvatar,
-                            loadingBuilder: (BuildContext context, Widget child,
-                                ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  color: primaryColor,
-                                  value: loadingProgress.expectedTotalBytes !=
-                                              null &&
-                                          loadingProgress.expectedTotalBytes !=
-                                              null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
+                          child: widget.image == "no_image"
+                              ? Image.asset('assets/images/bro.jpg',
+                                  fit: BoxFit.fitWidth)
+                              : Image.network(
+                                  widget.image,
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        color: primaryColor,
+                                        value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null &&
+                                                loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes!
+                                            : null,
+                                      ),
+                                    );
+                                  },
+                                  errorBuilder: (context, object, stackTrace) {
+                                    return Icon(
+                                      Icons.account_circle,
+                                      size: 35,
+                                      color: greyColor,
+                                    );
+                                  },
+                                  width: 35,
+                                  height: 35,
+                                  fit: BoxFit.cover,
                                 ),
-                              );
-                            },
-                            errorBuilder: (context, object, stackTrace) {
-                              return Icon(
-                                Icons.account_circle,
-                                size: 35,
-                                color: greyColor,
-                              );
-                            },
-                            width: 35,
-                            height: 35,
-                            fit: BoxFit.cover,
-                          ),
                           borderRadius: BorderRadius.all(
                             Radius.circular(18.0),
                           ),
@@ -438,18 +510,35 @@ class ChatScreenState extends State<ChatScreen> {
                               ),
                               margin: EdgeInsets.only(left: 10.0),
                             )
-                          : Container(
-                              child: Image.asset(
-                                'assets/images/${document.get('content')}.gif',
-                                width: 100.0,
-                                height: 100.0,
-                                fit: BoxFit.cover,
-                              ),
-                              margin: EdgeInsets.only(
-                                  bottom:
-                                      isLastMessageRight(index) ? 20.0 : 10.0,
-                                  right: 10.0),
-                            ),
+                          : document.get('type') == 3 &&
+                                  document.get('lockMessage') == true &&
+                                  document.get('isPaymentDone') == false
+                              ? Container(
+                                  width: 200,
+                                  child: Text(
+                                    "You can not see this message because this message is locked by sender!\n\nFor watching this message please do payment first!",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(
+                                      15.0, 10.0, 15.0, 10.0),
+                                  decoration: BoxDecoration(
+                                      color: primaryColor,
+                                      borderRadius: BorderRadius.circular(8.0)),
+                                  margin: EdgeInsets.only(left: 10.0),
+                                )
+                              : Container(
+                                  child: Image.asset(
+                                    'assets/images/${document.get('content')}.gif',
+                                    width: 100.0,
+                                    height: 100.0,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  margin: EdgeInsets.only(
+                                      bottom: isLastMessageRight(index)
+                                          ? 20.0
+                                          : 10.0,
+                                      right: 10.0),
+                                ),
                 ],
               ),
 
@@ -704,7 +793,70 @@ class ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
-
+          Material(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 8.0),
+              child: IconButton(
+                icon: Icon(Icons.lock_outline_rounded),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return StatefulBuilder(builder: (context, setState) {
+                          return AlertDialog(
+                            title: Text("Select Amount"),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    onSendMessage(
+                                        textEditingController.text, 3);
+                                  },
+                                  child: Text("Ok")),
+                              TextButton(
+                                  onPressed: () {
+                                    amountSelected = "";
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("Cancel"))
+                            ],
+                            content: Container(
+                              height: 300.0, // Change as per your requirement
+                              width: 300.0, // Change as per your requirement
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: amountList.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ListTile(
+                                    trailing: selectedIndex == index
+                                        ? Icon(
+                                            Icons.check,
+                                            color: Colors.green,
+                                          )
+                                        : Container(
+                                            width: 1,
+                                            height: 1,
+                                          ),
+                                    onTap: () {
+                                      setState(() {
+                                        selectedIndex = index;
+                                        amountSelected = amountList[index];
+                                      });
+                                    },
+                                    title: Text(amountList[index]),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        });
+                      });
+                },
+                color: primaryColor,
+              ),
+            ),
+            color: Colors.white,
+          ),
           // Button send message
           Material(
             child: Container(
