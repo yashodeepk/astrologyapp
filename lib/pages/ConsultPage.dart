@@ -318,21 +318,35 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                       ),
                     ),
                   ),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Chat(
-                                      name: astrologer.name!,
-                                      peerId: astrologer.id!,
-                                      image: astrologer.photoUrl,
-                                    )));
-                      },
-                      icon: Icon(
-                        Icons.message_outlined,
-                        color: Colors.white,
-                      )),
+                  TextButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Chat(
+                                    name: astrologer.name!,
+                                    peerId: astrologer.id!,
+                                    image: astrologer.photoUrl,
+                                  )));
+                    },
+                    label: Text('Message'),
+                    icon: Icon(
+                      Icons.message_rounded,
+                      size: 15,
+                    ),
+                    style: TextButton.styleFrom(
+                      // padding: EdgeInsets.all(8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      primary: Colors.white,
+                      backgroundColor: Colors.orange,
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
                 ],
               )
             ],

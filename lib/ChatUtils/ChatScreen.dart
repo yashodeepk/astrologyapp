@@ -3,16 +3,25 @@ import 'dart:io';
 
 import 'package:astrologyapp/ChatUtils/fullphoto.dart';
 import 'package:astrologyapp/ChatUtils/loading.dart';
+import 'package:astrologyapp/ChatUtils/pdfViewer.dart';
 import 'package:astrologyapp/Colors.dart';
+import 'package:astrologyapp/actions/actions.dart';
+import 'package:astrologyapp/actions/dialog.dart';
+import 'package:astrologyapp/constants/constants.dart';
 import 'package:astrologyapp/model/users.dart';
+import 'package:astrologyapp/phoneAuthUtils/getphone.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Chat extends StatelessWidget {
   String peerId;
@@ -76,6 +85,7 @@ class ChatScreenState extends State<ChatScreen> {
   SharedPreferences? prefs;
 
   File? imageFile;
+  File? fileUpload;
   bool isLoading = false;
   bool isShowSticker = false;
   String imageUrl = "";
@@ -96,8 +106,11 @@ class ChatScreenState extends State<ChatScreen> {
     "900₹",
     "1000₹"
   ];
+
   User? user;
   int selectedIndex = 0;
+  Razorpay? _razorpay;
+
   _scrollListener() {
     if (listScrollController.offset >=
             listScrollController.position.maxScrollExtent &&
@@ -108,6 +121,12 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  void initializeRazorPay() {
+    _razorpay = Razorpay();
+    _razorpay!.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay!.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -115,6 +134,7 @@ class ChatScreenState extends State<ChatScreen> {
     focusNode.addListener(onFocusChange);
     listScrollController.addListener(_scrollListener);
     readLocal();
+    initializeRazorPay();
   }
 
   void onFocusChange() {
@@ -156,7 +176,24 @@ class ChatScreenState extends State<ChatScreen> {
         setState(() {
           isLoading = true;
         });
-        uploadFile();
+        uploadFile(false);
+      }
+    }
+  }
+
+  Future getFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'doc'],
+    );
+
+    if (result != null) {
+      fileUpload = File(result.files.single.path!);
+      if (fileUpload != null) {
+        setState(() {
+          isLoading = true;
+        });
+        uploadFile(true);
       }
     }
   }
@@ -169,17 +206,18 @@ class ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  Future uploadFile() async {
+  Future uploadFile(bool isFile) async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref().child(fileName);
-    UploadTask uploadTask = reference.putFile(imageFile!);
+    UploadTask uploadTask =
+        isFile ? reference.putFile(fileUpload!) : reference.putFile(imageFile!);
 
     try {
       TaskSnapshot snapshot = await uploadTask;
       imageUrl = await snapshot.ref.getDownloadURL();
       setState(() {
         isLoading = false;
-        onSendMessage(imageUrl, 1);
+        isFile ? onSendMessage(imageUrl, 5) : onSendMessage(imageUrl, 1);
       });
     } on FirebaseException catch (e) {
       setState(() {
@@ -190,7 +228,7 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   void onSendMessage(String content, int type) async {
-    // type: 0 = text, 1 = image, 2 = sticker
+    // type: 0 = text, 1 = image, 2 = sticker, 5 = file
     if (content.trim() != '') {
       textEditingController.clear();
       prefs = await SharedPreferences.getInstance();
@@ -333,42 +371,96 @@ class ChatScreenState extends State<ChatScreen> {
                             bottom: isLastMessageRight(index) ? 20.0 : 10.0,
                             right: 10.0),
                       )
-                    // Sticker
-                    : document.get('type') == 3
-                        ? Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  document.get('content'),
-                                  style: TextStyle(color: primaryColor),
+                    :
+                    // File
+                    document.get('type') == 5
+                        ? InkWell(
+                            onTap: () async {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PdfViewerPage(
+                                            url: document.get('content'),
+                                          )));
+                            },
+                            child: Container(
+                              padding:
+                                  EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                              width: 200.0,
+                              decoration: BoxDecoration(
+                                  color: greyColor2,
+                                  borderRadius: BorderRadius.circular(8.0)),
+                              margin: EdgeInsets.only(
+                                  bottom:
+                                      isLastMessageRight(index) ? 20.0 : 10.0,
+                                  right: 10.0),
+                              child: TextButton.icon(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => PdfViewerPage(
+                                                url: document.get('content'),
+                                              )));
+                                },
+                                label: Text('See File'),
+                                icon: Icon(
+                                  Icons.file_present_outlined,
+                                  size: 15,
                                 ),
-                                Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Icon(Icons.lock_outline_rounded)),
-                              ],
+                                style: TextButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  primary: Colors.white,
+                                  backgroundColor: Colors.grey[600],
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
                             ),
-                            padding:
-                                EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                            width: 200.0,
-                            decoration: BoxDecoration(
-                                color: greyColor2,
-                                borderRadius: BorderRadius.circular(8.0)),
-                            margin: EdgeInsets.only(
-                                bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                                right: 10.0),
                           )
-                        : Container(
-                            child: Image.asset(
-                              'assets/images/${document.get('content')}.gif',
-                              width: 100.0,
-                              height: 100.0,
-                              fit: BoxFit.cover,
-                            ),
-                            margin: EdgeInsets.only(
-                                bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                                right: 10.0),
-                          ),
+                        // Sticker
+                        : document.get('type') == 3
+                            ? Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      document.get('content'),
+                                      style: TextStyle(color: primaryColor),
+                                    ),
+                                    Align(
+                                        alignment: Alignment.centerRight,
+                                        child:
+                                            Icon(Icons.lock_outline_rounded)),
+                                  ],
+                                ),
+                                padding:
+                                    EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                                width: 200.0,
+                                decoration: BoxDecoration(
+                                    color: greyColor2,
+                                    borderRadius: BorderRadius.circular(8.0)),
+                                margin: EdgeInsets.only(
+                                    bottom:
+                                        isLastMessageRight(index) ? 20.0 : 10.0,
+                                    right: 10.0),
+                              )
+                            : Container(
+                                child: Image.asset(
+                                  'assets/images/${document.get('content')}.gif',
+                                  width: 100.0,
+                                  height: 100.0,
+                                  fit: BoxFit.cover,
+                                ),
+                                margin: EdgeInsets.only(
+                                    bottom:
+                                        isLastMessageRight(index) ? 20.0 : 10.0,
+                                    right: 10.0),
+                              ),
           ],
           mainAxisAlignment: MainAxisAlignment.end,
         );
@@ -510,35 +602,105 @@ class ChatScreenState extends State<ChatScreen> {
                               ),
                               margin: EdgeInsets.only(left: 10.0),
                             )
-                          : document.get('type') == 3 &&
-                                  document.get('lockMessage') == true &&
-                                  document.get('isPaymentDone') == false
-                              ? Container(
-                                  width: 200,
-                                  child: Text(
-                                    "You can not see this message because this message is locked by sender!\n\nFor watching this message please do payment first!",
-                                    style: TextStyle(color: Colors.white),
+                          : document.get('type') == 5
+                              ? InkWell(
+                                  onTap: () async {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => PdfViewerPage(
+                                                  url: document.get('content'),
+                                                )));
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.fromLTRB(
+                                        15.0, 10.0, 15.0, 10.0),
+                                    width: 200.0,
+                                    decoration: BoxDecoration(
+                                        color: primaryColor,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0)),
+                                    margin: EdgeInsets.only(left: 10.0),
+                                    child: TextButton.icon(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PdfViewerPage(
+                                                      url: document
+                                                          .get('content'),
+                                                    )));
+                                      },
+                                      label: Text('See File'),
+                                      icon: Icon(
+                                        Icons.file_present_outlined,
+                                        size: 15,
+                                      ),
+                                      style: TextButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        primary: Colors.white,
+                                        backgroundColor: Colors.blueGrey[700],
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  padding: EdgeInsets.fromLTRB(
-                                      15.0, 10.0, 15.0, 10.0),
-                                  decoration: BoxDecoration(
-                                      color: primaryColor,
-                                      borderRadius: BorderRadius.circular(8.0)),
-                                  margin: EdgeInsets.only(left: 10.0),
                                 )
-                              : Container(
-                                  child: Image.asset(
-                                    'assets/images/${document.get('content')}.gif',
-                                    width: 100.0,
-                                    height: 100.0,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  margin: EdgeInsets.only(
-                                      bottom: isLastMessageRight(index)
-                                          ? 20.0
-                                          : 10.0,
-                                      right: 10.0),
-                                ),
+                              : document.get('type') == 3 &&
+                                      document.get('lockMessage') == true &&
+                                      document.get('isPaymentDone') == false
+                                  ? Container(
+                                      width: 200,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            "You can not see this message, For unlock this message pay ${document.get('amount')}!",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          unlockMessageButton(
+                                              amountToPay:
+                                                  document.get('amount'),
+                                              email: user!.email,
+                                              astrologerName: widget.name,
+                                              name: user!.displayName,
+                                              phoneNumber: user!.phoneNumber,
+                                              descreption: "Descreption"),
+                                        ],
+                                      ),
+                                      padding: EdgeInsets.fromLTRB(
+                                          15.0, 10.0, 15.0, 10.0),
+                                      decoration: BoxDecoration(
+                                          color: primaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0)),
+                                      margin: EdgeInsets.only(left: 10.0),
+                                    )
+                                  : Container(
+                                      child: Image.asset(
+                                        'assets/images/${document.get('content')}.gif',
+                                        width: 100.0,
+                                        height: 100.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      margin: EdgeInsets.only(
+                                          bottom: isLastMessageRight(index)
+                                              ? 20.0
+                                              : 10.0,
+                                          right: 10.0),
+                                    ),
                 ],
               ),
 
@@ -566,6 +728,86 @@ class ChatScreenState extends State<ChatScreen> {
       }
     } else {
       return SizedBox.shrink();
+    }
+  }
+
+  void _launchURL(_url) async => await canLaunch(_url)
+      ? await launch(_url)
+      : throw 'Could not launch $_url';
+
+  unlockMessageButton(
+      {var amountToPay,
+      var name,
+      var descreption,
+      var email,
+      var phoneNumber,
+      var astrologerName}) {
+    return TextButton.icon(
+      onPressed: () {
+        String amount = amountToPay.toString().replaceAll("₹", "");
+        callPaymentMethod(
+          amountToPay: int.parse(amount),
+          name: name,
+          description:
+              'Payment made from User ( $name ) to Astrologer  ( $astrologerName ) )',
+          email: email,
+        );
+      },
+      label: Text('Unlock Message'),
+      icon: Icon(
+        Icons.lock_open_outlined,
+        size: 15,
+      ),
+      style: TextButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        primary: Colors.white,
+        backgroundColor: Colors.blueGrey[700],
+        textStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+    );
+  }
+
+  void callPaymentMethod({
+    required int amountToPay,
+    required String name,
+    required String description,
+    required String email,
+  }) async {
+    Future.delayed(Duration(seconds: 3)).then((value) => {
+          launchRazorPay(
+            amountToPay,
+            name,
+            description,
+            email,
+          )
+        });
+  }
+
+  void launchRazorPay(
+    int amount,
+    String name,
+    String description,
+    String email,
+  ) {
+    amount = amount * 100;
+
+    var options = {
+      'key': rzp_key,
+      'amount': "$amount",
+      'name': name,
+      'description': description,
+      'prefill': {'email': email}
+    };
+
+    try {
+      Razorpay().open(options);
+    } catch (e) {
+      print("Error: $e");
     }
   }
 
@@ -768,6 +1010,17 @@ class ChatScreenState extends State<ChatScreen> {
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 1.0),
               child: IconButton(
+                icon: Icon(Icons.file_upload_outlined),
+                onPressed: getFile,
+                color: primaryColor,
+              ),
+            ),
+            color: Colors.white,
+          ),
+          Material(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 1.0),
+              child: IconButton(
                 icon: Icon(Icons.face),
                 onPressed: getSticker,
                 color: primaryColor,
@@ -879,6 +1132,27 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    //check for paymentId
+    if (response.paymentId != null) {
+      print("PaymentId");
+      // await getPaymentInfo('${response.paymentId}');
+    }
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) async {
+    ShowAction.showDetails(
+        "Payment failed",
+        "Error occurred during the payment.Please try again",
+        context,
+        ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+            child: Text("OK")));
+  }
+
   Widget buildListMessage() {
     return Flexible(
       child: groupChatId.isNotEmpty
@@ -919,55 +1193,3 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 }
-// import 'package:astrologyapp/ChatUtils/Message.dart';
-// import 'package:astrologyapp/ChatUtils/newmsg.dart';
-// import 'package:flutter/material.dart';
-
-// class ChatScreen extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         automaticallyImplyLeading: false,
-//         // leading: BackButton(),
-//         title: Row(
-//           mainAxisAlignment: MainAxisAlignment.start,
-//           mainAxisSize: MainAxisSize.max,
-//           children: [
-//             BackButton(),
-//             CircleAvatar(
-//               backgroundImage: AssetImage('assets/bro.jpg'),
-//               radius: 20,
-//             ),
-//             SizedBox(
-//               width: 10,
-//             ),
-//             Column(
-//               children: [
-//                 Text(
-//                   'Kartik',
-//                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-//                 ),
-//                 Text('online',
-//                     style:
-//                         TextStyle(fontSize: 12, fontWeight: FontWeight.normal))
-//               ],
-//             )
-//           ],
-//         ),
-//       ),
-//       body: SafeArea(
-//         child: Container(
-//           child: Column(
-//             children: [
-//               Expanded(
-//                 child: Messages(),
-//               ),
-//               NewMessage(),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
