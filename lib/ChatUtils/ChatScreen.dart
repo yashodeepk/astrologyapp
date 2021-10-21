@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -34,17 +35,6 @@ class Chat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(),
-        title: Text(
-          name,
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        centerTitle: true,
-      ),
       body: ChatScreen(
         image: image,
         peerId: peerId,
@@ -83,7 +73,7 @@ class ChatScreenState extends State<ChatScreen> {
   int _limitIncrement = 20;
   String groupChatId = "";
   SharedPreferences? prefs;
-
+  bool isUserAstrologer = false;
   File? imageFile;
   File? fileUpload;
   bool isLoading = false;
@@ -110,7 +100,8 @@ class ChatScreenState extends State<ChatScreen> {
   User? user;
   int selectedIndex = 0;
   Razorpay? _razorpay;
-
+  List<Astrologer>? astrologersList;
+  bool? isOnline;
   _scrollListener() {
     if (listScrollController.offset >=
             listScrollController.position.maxScrollExtent &&
@@ -127,11 +118,53 @@ class ChatScreenState extends State<ChatScreen> {
     _razorpay!.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
   }
 
+  void checkForUserAstrologer() {
+    astrologersList = Provider.of<List<Astrologer>>(context, listen: false);
+    User? user = FirebaseAuth.instance.currentUser;
+    for (var i = 0; i < astrologersList!.length; i++) {
+      if (astrologersList![i].id == user!.uid) {
+        isUserAstrologer = true;
+      }
+    }
+    setState(() {});
+  }
+
+  void getData() async {
+    var isMatched = false;
+    List<Astrologer>? astrologersList2 =
+        Provider.of<List<Astrologer>>(context, listen: false);
+    User? user = FirebaseAuth.instance.currentUser;
+    for (var i = 0; i < astrologersList!.length; i++) {
+      if (astrologersList2[i].id == peerId) {
+        isMatched = true;
+      }
+    }
+    if (isMatched == true) {
+      QuerySnapshot<Map<String, dynamic>> result = await FirebaseFirestore
+          .instance
+          .collection("Astrologer")
+          .where("id", isEqualTo: peerId)
+          .get();
+      isOnline = result.docs[0]['isOnline'];
+      print("isOnlien : : $isOnline");
+    } else {
+      QuerySnapshot<Map<String, dynamic>> result = await FirebaseFirestore
+          .instance
+          .collection("users")
+          .where("id", isEqualTo: peerId)
+          .get();
+      isOnline = result.docs[0]['isOnline'];
+      print("isOnlien : : $isOnline");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     user = FirebaseAuth.instance.currentUser!;
     focusNode.addListener(onFocusChange);
+    checkForUserAstrologer();
+    getData();
     listScrollController.addListener(_scrollListener);
     readLocal();
     initializeRazorPay();
@@ -847,27 +880,59 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      child: Stack(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              // List of messages
-              buildListMessage(),
-
-              // Sticker
-              isShowSticker ? buildSticker() : Container(),
-
-              // Input content
-              buildInput(),
-            ],
-          ),
-
-          // Loading
-          buildLoading()
+    return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(),
+        title: Text(
+          widget.name,
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          isOnline == true
+              ? Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "Online",
+                    style: TextStyle(
+                        color: Colors.green, fontWeight: FontWeight.w500),
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "Offline",
+                    style: TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.w500),
+                  ),
+                )
         ],
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        centerTitle: true,
       ),
-      onWillPop: onBackPress,
+      body: WillPopScope(
+        child: Stack(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                // List of messages
+                buildListMessage(),
+
+                // Sticker
+                isShowSticker ? buildSticker() : Container(),
+
+                // Input content
+                buildInput(),
+              ],
+            ),
+
+            // Loading
+            buildLoading()
+          ],
+        ),
+        onWillPop: onBackPress,
+      ),
     );
   }
 
@@ -1046,70 +1111,77 @@ class ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
-          Material(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 8.0),
-              child: IconButton(
-                icon: Icon(Icons.lock_outline_rounded),
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return StatefulBuilder(builder: (context, setState) {
-                          return AlertDialog(
-                            title: Text("Select Amount"),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    onSendMessage(
-                                        textEditingController.text, 3);
-                                  },
-                                  child: Text("Ok")),
-                              TextButton(
-                                  onPressed: () {
-                                    amountSelected = "";
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("Cancel"))
-                            ],
-                            content: Container(
-                              height: 300.0, // Change as per your requirement
-                              width: 300.0, // Change as per your requirement
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: amountList.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ListTile(
-                                    trailing: selectedIndex == index
-                                        ? Icon(
-                                            Icons.check,
-                                            color: Colors.green,
-                                          )
-                                        : Container(
-                                            width: 1,
-                                            height: 1,
-                                          ),
-                                    onTap: () {
-                                      setState(() {
-                                        selectedIndex = index;
-                                        amountSelected = amountList[index];
-                                      });
-                                    },
-                                    title: Text(amountList[index]),
-                                  );
-                                },
-                              ),
-                            ),
-                          );
-                        });
-                      });
-                },
-                color: primaryColor,
-              ),
-            ),
-            color: Colors.white,
-          ),
+          isUserAstrologer
+              ? Material(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: IconButton(
+                      icon: Icon(Icons.lock_outline_rounded),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return StatefulBuilder(
+                                  builder: (context, setState) {
+                                return AlertDialog(
+                                  title: Text("Select Amount"),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          onSendMessage(
+                                              textEditingController.text, 3);
+                                        },
+                                        child: Text("Ok")),
+                                    TextButton(
+                                        onPressed: () {
+                                          amountSelected = "";
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("Cancel"))
+                                  ],
+                                  content: Container(
+                                    height:
+                                        300.0, // Change as per your requirement
+                                    width:
+                                        300.0, // Change as per your requirement
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: amountList.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return ListTile(
+                                          trailing: selectedIndex == index
+                                              ? Icon(
+                                                  Icons.check,
+                                                  color: Colors.green,
+                                                )
+                                              : Container(
+                                                  width: 1,
+                                                  height: 1,
+                                                ),
+                                          onTap: () {
+                                            setState(() {
+                                              selectedIndex = index;
+                                              amountSelected =
+                                                  amountList[index];
+                                            });
+                                          },
+                                          title: Text(amountList[index]),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                );
+                              });
+                            });
+                      },
+                      color: primaryColor,
+                    ),
+                  ),
+                  color: Colors.white,
+                )
+              : Container(),
           // Button send message
           Material(
             child: Container(

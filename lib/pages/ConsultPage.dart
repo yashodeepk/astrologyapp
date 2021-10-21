@@ -130,7 +130,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         width: MediaQuery.of(context).size.width - 40,
-        height: 160,
+        height: 180,
         decoration: BoxDecoration(
           // color: colors[i],
           boxShadow: [
@@ -270,80 +270,79 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                   ),
                 ],
               ),
+              Text(
+                'Fess  - ${astrologer.fees} ₹',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                mainAxisSize: MainAxisSize.max,
+                // mainAxisSize: MainAxisSize.max,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Fess  - ${astrologer.fees}',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: TextButton.icon(
+                        onPressed: () {
+                          calender();
+                          Navigator.of(context).pushNamed(
+                              DashboardScreen.routeName,
+                              arguments: astrologer.email);
+                        },
+                        label: Text('Book Meeting'),
+                        icon: Icon(
+                          Icons.call_rounded,
+                          size: 15,
                         ),
-                      ),
-                      Text(
-                        ' ₹',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                        style: TextButton.styleFrom(
+                          // padding: EdgeInsets.all(8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          primary: Colors.white,
+                          backgroundColor: Colors.orange,
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  TextButton.icon(
-                    onPressed: () {
-                      calender();
-                      Navigator.of(context).pushNamed(DashboardScreen.routeName,
-                          arguments: astrologer.email);
-                    },
-                    label: Text('Book Meeting'),
-                    icon: Icon(
-                      Icons.call_rounded,
-                      size: 15,
-                    ),
-                    style: TextButton.styleFrom(
-                      // padding: EdgeInsets.all(8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      primary: Colors.white,
-                      backgroundColor: Colors.orange,
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 16,
                       ),
                     ),
                   ),
-                  TextButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Chat(
-                                    name: astrologer.name!,
-                                    peerId: astrologer.id!,
-                                    image: astrologer.photoUrl,
-                                  )));
-                    },
-                    label: Text('Message'),
-                    icon: Icon(
-                      Icons.message_rounded,
-                      size: 15,
-                    ),
-                    style: TextButton.styleFrom(
-                      // padding: EdgeInsets.all(8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      primary: Colors.white,
-                      backgroundColor: Colors.orange,
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 16,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: TextButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Chat(
+                                        name: astrologer.name!,
+                                        peerId: astrologer.id!,
+                                        image: astrologer.photoUrl,
+                                      )));
+                        },
+                        label: Text('Message'),
+                        icon: Icon(
+                          Icons.message_rounded,
+                          size: 15,
+                        ),
+                        style: TextButton.styleFrom(
+                          // padding: EdgeInsets.all(8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          primary: Colors.white,
+                          backgroundColor: Colors.orange,
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
                     ),
                   ),

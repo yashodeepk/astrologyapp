@@ -3,12 +3,14 @@ import 'dart:ui';
 // import 'package:astrologyapp/api/signinapi.dart';
 import 'package:astrologyapp/Colors.dart';
 import 'package:astrologyapp/homepageutils/horoscopeselectutils.dart';
+import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 // import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +29,8 @@ class HomePageWidget extends StatefulWidget {
   _HomePageWidgetState createState() => _HomePageWidgetState();
 }
 
-class _HomePageWidgetState extends State<HomePageWidget> {
+class _HomePageWidgetState extends State<HomePageWidget>
+    with WidgetsBindingObserver {
   final user = FirebaseAuth.instance.currentUser!;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final firestoreInstance = FirebaseFirestore.instance;
@@ -36,7 +39,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   String? health;
   String? horoscope;
   bool checkdata = true;
-
+  List<Astrologer>? astrologersList;
+  bool isUserAstrologer = false;
   // Future<void> storeage() async {
   //   await _firestore.collection('users').doc(_auth.currentUser!.uid).set({
   //     "name": user.displayName,
@@ -52,7 +56,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     setState(() {
       email = user.email;
     });
-
+    WidgetsBinding.instance!.addObserver(this);
+    checkForUserAstrologer();
     getUserType();
     firestoreInstance
         .collection("horoscope")
@@ -66,6 +71,48 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         checkdata = false;
       });
     });
+  }
+
+  void checkForUserAstrologer() {
+    astrologersList = Provider.of<List<Astrologer>>(context, listen: false);
+    User? user = FirebaseAuth.instance.currentUser;
+    for (var i = 0; i < astrologersList!.length; i++) {
+      if (astrologersList![i].id == user!.uid) {
+        isUserAstrologer = true;
+      }
+    }
+    setState(() {});
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed ||
+        state == AppLifecycleState.detached ||
+        state == AppLifecycleState.paused) {
+      if (user != null) {
+        if (isUserAstrologer == true) {
+          firestoreInstance.collection("Astrologer").doc(user.email).update(
+            {"isOnline": true},
+          );
+        } else {
+          firestoreInstance.collection("users").doc(user.email).update(
+            {"isOnline": true},
+          );
+        }
+      }
+    } else {
+      if (user != null) {
+        if (isUserAstrologer == true) {
+          firestoreInstance.collection("Astrologer").doc(user.email).update(
+            {"isOnline": false},
+          );
+        } else {
+          firestoreInstance.collection("users").doc(user.email).update(
+            {"isOnline": false},
+          );
+        }
+      }
+    }
   }
 
   //get user type from shared prefs

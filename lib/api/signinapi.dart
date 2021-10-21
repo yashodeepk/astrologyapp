@@ -1,11 +1,13 @@
 import 'package:astrologyapp/ChatUtils/userchat.dart';
 import 'package:astrologyapp/constants/constants.dart';
+import 'package:astrologyapp/model/users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
@@ -141,7 +143,7 @@ class GoogleSignInProvider extends ChangeNotifier {
                     .update({
                   'photoUrl': currentUser.photoURL,
                   'id': currentUser.uid,
-                  'chattingWith': null
+                  // 'chattingWith': null
                 });
 
                 // // Write data to local
@@ -186,7 +188,18 @@ class GoogleSignInProvider extends ChangeNotifier {
   }
 
   Future logout() async {
+    final user = FirebaseAuth.instance.currentUser!;
+    final firestoreInstance = FirebaseFirestore.instance;
+    firestoreInstance
+        .collection("Astrologer")
+        .doc(user.email)
+        .update({"isOnline": false});
+    firestoreInstance
+        .collection("users")
+        .doc(user.email)
+        .update({"isOnline": false});
     final googleSignIn = GoogleSignIn();
+
     await googleSignIn.disconnect();
     FirebaseAuth.instance.signOut();
     notifyListeners();

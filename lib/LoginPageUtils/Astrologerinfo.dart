@@ -47,6 +47,7 @@ class _AstrologerinfoWidgetState extends State<AstrologerinfoWidget> {
       "fees": fees,
       "rating": 5,
       "photoUrl": '',
+      "isOnline": false,
     };
 
     await documentReferencer
