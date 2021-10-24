@@ -14,6 +14,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -266,11 +267,13 @@ class ChatScreenState extends State<ChatScreen> {
       textEditingController.clear();
       prefs = await SharedPreferences.getInstance();
       id = prefs?.getString('id') ?? '';
+      // var dateTime = DateTime.now().millisecondsSinceEpoch.toString();
+      var dateTime = Timestamp.now().toDate().toString();
       var documentReference = FirebaseFirestore.instance
           .collection('messages')
           .doc(groupChatId)
           .collection(groupChatId)
-          .doc(DateTime.now().millisecondsSinceEpoch.toString());
+          .doc(dateTime);
       FirebaseFirestore.instance.collection('messages').doc(groupChatId).set({
         'idFrom': id,
         'nameFrom': user!.displayName,
@@ -285,7 +288,7 @@ class ChatScreenState extends State<ChatScreen> {
           {
             'idFrom': id,
             'idTo': peerId,
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+            'timestamp': dateTime,
             'content': content,
             'type': type,
             'lockMessage': type == 3 ? true : false,
@@ -306,103 +309,148 @@ class ChatScreenState extends State<ChatScreen> {
 
   Widget buildItem(int index, DocumentSnapshot? document) {
     if (document != null) {
+      var datea = DateTime.parse(document.get('timestamp'));
+      var date = DateFormat('dd/MM').add_jm().format(datea);
+
       if (document.get('idFrom') == id) {
         // Right (my message)
         return Row(
           children: <Widget>[
             document.get('type') == 0
                 // Text
-                ? Container(
-                    child: Text(
-                      document.get('content'),
-                      style: TextStyle(color: primaryColor),
+                ? InkWell(
+                    onLongPress: () {
+                      _showDialog(
+                          "Are you sure you want to delete this message?",
+                          document.get('timestamp'));
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          child: Text(
+                            document.get('content'),
+                            style: TextStyle(color: primaryColor),
+                          ),
+                          padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                          width: 200.0,
+                          decoration: BoxDecoration(
+                              color: greyColor2,
+                              borderRadius: BorderRadius.circular(8.0)),
+                          margin: EdgeInsets.only(
+                              bottom: isLastMessageRight(index) ? 0.0 : 0.0,
+                              right: 10.0),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(right: 15.0, bottom: 10),
+                          child: Text(
+                            date.toString(),
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                      ],
                     ),
-                    padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                    width: 200.0,
-                    decoration: BoxDecoration(
-                        color: greyColor2,
-                        borderRadius: BorderRadius.circular(8.0)),
-                    margin: EdgeInsets.only(
-                        bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                        right: 10.0),
                   )
                 : document.get('type') == 1
                     // Image
-                    ? Container(
-                        child: OutlinedButton(
-                          child: Material(
-                            child: Image.network(
-                              document.get("content"),
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    color: greyColor2,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                  ),
-                                  width: 200.0,
-                                  height: 200.0,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: primaryColor,
-                                      value:
-                                          loadingProgress.expectedTotalBytes !=
-                                                      null &&
-                                                  loadingProgress
-                                                          .expectedTotalBytes !=
-                                                      null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                    ),
-                                  ),
-                                );
-                              },
-                              errorBuilder: (context, object, stackTrace) {
-                                return Material(
-                                  child: Image.asset(
-                                    'assets/noimage.png',
+                    ? InkWell(
+                        onLongPress: () {
+                          _showDialog(
+                              "Are you sure you want to delete this Image?",
+                              document.get('timestamp'));
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Container(
+                              child: OutlinedButton(
+                                child: Material(
+                                  child: Image.network(
+                                    document.get("content"),
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          color: greyColor2,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(8.0),
+                                          ),
+                                        ),
+                                        width: 200.0,
+                                        height: 200.0,
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            color: primaryColor,
+                                            value: loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null &&
+                                                    loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                                : null,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    errorBuilder:
+                                        (context, object, stackTrace) {
+                                      return Material(
+                                        child: Image.asset(
+                                          'assets/noimage.png',
+                                          width: 200.0,
+                                          height: 200.0,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0),
+                                        ),
+                                        clipBehavior: Clip.hardEdge,
+                                      );
+                                    },
                                     width: 200.0,
                                     height: 200.0,
                                     fit: BoxFit.cover,
                                   ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8.0),
-                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8.0)),
                                   clipBehavior: Clip.hardEdge,
-                                );
-                              },
-                              width: 200.0,
-                              height: 200.0,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(8.0)),
-                            clipBehavior: Clip.hardEdge,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FullPhoto(
-                                  url: document.get('content'),
                                 ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FullPhoto(
+                                        url: document.get('content'),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                style: ButtonStyle(
+                                    padding:
+                                        MaterialStateProperty.all<EdgeInsets>(
+                                            EdgeInsets.all(0))),
                               ),
-                            );
-                          },
-                          style: ButtonStyle(
-                              padding: MaterialStateProperty.all<EdgeInsets>(
-                                  EdgeInsets.all(0))),
+                              margin: EdgeInsets.only(
+                                  bottom: isLastMessageRight(index) ? 0.0 : 0.0,
+                                  right: 10.0),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  right: 15.0, bottom: 10.0, top: 2.0),
+                              child: Text(
+                                date.toString(),
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          ],
                         ),
-                        margin: EdgeInsets.only(
-                            bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                            right: 10.0),
                       )
                     :
                     // File
@@ -416,83 +464,127 @@ class ChatScreenState extends State<ChatScreen> {
                                             url: document.get('content'),
                                           )));
                             },
-                            child: Container(
-                              padding:
-                                  EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                              width: 200.0,
-                              decoration: BoxDecoration(
-                                  color: greyColor2,
-                                  borderRadius: BorderRadius.circular(8.0)),
-                              margin: EdgeInsets.only(
-                                  bottom:
-                                      isLastMessageRight(index) ? 20.0 : 10.0,
-                                  right: 10.0),
-                              child: TextButton.icon(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => PdfViewerPage(
-                                                url: document.get('content'),
-                                              )));
-                                },
-                                label: Text('See File'),
-                                icon: Icon(
-                                  Icons.file_present_outlined,
-                                  size: 15,
-                                ),
-                                style: TextButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
+                            onLongPress: () {
+                              _showDialog(
+                                  "Are you sure you want to delete this File?",
+                                  document.get('timestamp'));
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(
+                                      15.0, 10.0, 15.0, 10.0),
+                                  width: 200.0,
+                                  decoration: BoxDecoration(
+                                      color: greyColor2,
+                                      borderRadius: BorderRadius.circular(8.0)),
+                                  margin: EdgeInsets.only(right: 10.0),
+                                  child: TextButton.icon(
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PdfViewerPage(
+                                                    url:
+                                                        document.get('content'),
+                                                  )));
+                                    },
+                                    label: Text('See File'),
+                                    icon: Icon(
+                                      Icons.file_present_outlined,
+                                      size: 15,
+                                    ),
+                                    style: TextButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      primary: Colors.white,
+                                      backgroundColor: Colors.grey[600],
+                                      textStyle: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
                                   ),
-                                  primary: Colors.white,
-                                  backgroundColor: Colors.grey[600],
-                                  textStyle: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 15.0, bottom: 10.0, top: 2.0),
+                                  child: Text(
+                                    date.toString(),
+                                    style: TextStyle(color: Colors.grey),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
                           )
                         // Sticker
                         : document.get('type') == 3
-                            ? Container(
+                            ? InkWell(
+                                onLongPress: () {
+                                  _showDialog(
+                                      "Are you sure you want to delete this Sticker?",
+                                      document.get('timestamp'));
+                                },
+                                child: Container(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        document.get('content'),
+                                        style: TextStyle(color: primaryColor),
+                                      ),
+                                      Align(
+                                          alignment: Alignment.centerRight,
+                                          child:
+                                              Icon(Icons.lock_outline_rounded)),
+                                    ],
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(
+                                      15.0, 10.0, 15.0, 10.0),
+                                  width: 200.0,
+                                  decoration: BoxDecoration(
+                                      color: greyColor2,
+                                      borderRadius: BorderRadius.circular(8.0)),
+                                  margin: EdgeInsets.only(
+                                      bottom: isLastMessageRight(index)
+                                          ? 20.0
+                                          : 10.0,
+                                      right: 10.0),
+                                ),
+                              )
+                            : InkWell(
+                                onLongPress: () {
+                                  _showDialog(
+                                      "Are you sure you want to delete this GIF?",
+                                      document.get('timestamp'));
+                                },
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Text(
-                                      document.get('content'),
-                                      style: TextStyle(color: primaryColor),
+                                    Container(
+                                      child: Image.asset(
+                                        'assets/images/${document.get('content')}.gif',
+                                        width: 100.0,
+                                        height: 100.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      margin: EdgeInsets.only(right: 10.0),
                                     ),
-                                    Align(
-                                        alignment: Alignment.centerRight,
-                                        child:
-                                            Icon(Icons.lock_outline_rounded)),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 15.0, bottom: 10.0, top: 2.0),
+                                      child: Text(
+                                        date.toString(),
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                    ),
                                   ],
                                 ),
-                                padding:
-                                    EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                                width: 200.0,
-                                decoration: BoxDecoration(
-                                    color: greyColor2,
-                                    borderRadius: BorderRadius.circular(8.0)),
-                                margin: EdgeInsets.only(
-                                    bottom:
-                                        isLastMessageRight(index) ? 20.0 : 10.0,
-                                    right: 10.0),
-                              )
-                            : Container(
-                                child: Image.asset(
-                                  'assets/images/${document.get('content')}.gif',
-                                  width: 100.0,
-                                  height: 100.0,
-                                  fit: BoxFit.cover,
-                                ),
-                                margin: EdgeInsets.only(
-                                    bottom:
-                                        isLastMessageRight(index) ? 20.0 : 10.0,
-                                    right: 10.0),
                               ),
           ],
           mainAxisAlignment: MainAxisAlignment.end,
@@ -550,90 +642,118 @@ class ChatScreenState extends State<ChatScreen> {
                         )
                       : Container(width: 35.0),
                   document.get('type') == 0
-                      ? Container(
-                          child: Text(
-                            document.get('content'),
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                          width: 200.0,
-                          decoration: BoxDecoration(
-                              color: primaryColor,
-                              borderRadius: BorderRadius.circular(8.0)),
-                          margin: EdgeInsets.only(left: 10.0),
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              child: Text(
+                                document.get('content'),
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              padding:
+                                  EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                              width: 200.0,
+                              decoration: BoxDecoration(
+                                  color: primaryColor,
+                                  borderRadius: BorderRadius.circular(8.0)),
+                              margin: EdgeInsets.only(left: 10.0),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 10.0, top: 2.0),
+                              child: Text(
+                                date.toString(),
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          ],
                         )
                       : document.get('type') == 1
-                          ? Container(
-                              child: TextButton(
-                                child: Material(
-                                  child: Image.network(
-                                    document.get('content'),
-                                    loadingBuilder: (BuildContext context,
-                                        Widget child,
-                                        ImageChunkEvent? loadingProgress) {
-                                      if (loadingProgress == null) return child;
-                                      return Container(
-                                        decoration: BoxDecoration(
-                                          color: greyColor2,
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  child: TextButton(
+                                    child: Material(
+                                      child: Image.network(
+                                        document.get('content'),
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
+                                            ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null)
+                                            return child;
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              color: greyColor2,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(8.0),
+                                              ),
+                                            ),
+                                            width: 200.0,
+                                            height: 200.0,
+                                            child: Center(
+                                              child: CircularProgressIndicator(
+                                                color: primaryColor,
+                                                value: loadingProgress
+                                                                .expectedTotalBytes !=
+                                                            null &&
+                                                        loadingProgress
+                                                                .expectedTotalBytes !=
+                                                            null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes!
+                                                    : null,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        errorBuilder:
+                                            (context, object, stackTrace) =>
+                                                Material(
+                                          child: Image.asset(
+                                            'assets/noimage.pngs',
+                                            width: 200.0,
+                                            height: 200.0,
+                                            fit: BoxFit.cover,
+                                          ),
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(8.0),
                                           ),
+                                          clipBehavior: Clip.hardEdge,
                                         ),
-                                        width: 200.0,
-                                        height: 200.0,
-                                        child: Center(
-                                          child: CircularProgressIndicator(
-                                            color: primaryColor,
-                                            value: loadingProgress
-                                                            .expectedTotalBytes !=
-                                                        null &&
-                                                    loadingProgress
-                                                            .expectedTotalBytes !=
-                                                        null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    loadingProgress
-                                                        .expectedTotalBytes!
-                                                : null,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    errorBuilder:
-                                        (context, object, stackTrace) =>
-                                            Material(
-                                      child: Image.asset(
-                                        'assets/noimage.pngs',
                                         width: 200.0,
                                         height: 200.0,
                                         fit: BoxFit.cover,
                                       ),
                                       borderRadius: BorderRadius.all(
-                                        Radius.circular(8.0),
-                                      ),
+                                          Radius.circular(8.0)),
                                       clipBehavior: Clip.hardEdge,
                                     ),
-                                    width: 200.0,
-                                    height: 200.0,
-                                    fit: BoxFit.cover,
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => FullPhoto(
+                                                  url: document
+                                                      .get('content'))));
+                                    },
+                                    style: ButtonStyle(
+                                        padding: MaterialStateProperty.all<
+                                            EdgeInsets>(EdgeInsets.all(0))),
                                   ),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8.0)),
-                                  clipBehavior: Clip.hardEdge,
+                                  margin: EdgeInsets.only(left: 10.0),
                                 ),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => FullPhoto(
-                                              url: document.get('content'))));
-                                },
-                                style: ButtonStyle(
-                                    padding:
-                                        MaterialStateProperty.all<EdgeInsets>(
-                                            EdgeInsets.all(0))),
-                              ),
-                              margin: EdgeInsets.only(left: 10.0),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10.0, top: 2.0),
+                                  child: Text(
+                                    date.toString(),
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ),
+                              ],
                             )
                           : document.get('type') == 5
                               ? InkWell(
@@ -645,114 +765,156 @@ class ChatScreenState extends State<ChatScreen> {
                                                   url: document.get('content'),
                                                 )));
                                   },
-                                  child: Container(
-                                    padding: EdgeInsets.fromLTRB(
-                                        15.0, 10.0, 15.0, 10.0),
-                                    width: 200.0,
-                                    decoration: BoxDecoration(
-                                        color: primaryColor,
-                                        borderRadius:
-                                            BorderRadius.circular(8.0)),
-                                    margin: EdgeInsets.only(left: 10.0),
-                                    child: TextButton.icon(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    PdfViewerPage(
-                                                      url: document
-                                                          .get('content'),
-                                                    )));
-                                      },
-                                      label: Text('See File'),
-                                      icon: Icon(
-                                        Icons.file_present_outlined,
-                                        size: 15,
-                                      ),
-                                      style: TextButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.fromLTRB(
+                                            15.0, 10.0, 15.0, 10.0),
+                                        width: 200.0,
+                                        decoration: BoxDecoration(
+                                            color: primaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(8.0)),
+                                        margin: EdgeInsets.only(left: 10.0),
+                                        child: TextButton.icon(
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PdfViewerPage(
+                                                          url: document
+                                                              .get('content'),
+                                                        )));
+                                          },
+                                          label: Text('See File'),
+                                          icon: Icon(
+                                            Icons.file_present_outlined,
+                                            size: 15,
+                                          ),
+                                          style: TextButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                            primary: Colors.white,
+                                            backgroundColor:
+                                                Colors.blueGrey[700],
+                                            textStyle: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
                                         ),
-                                        primary: Colors.white,
-                                        backgroundColor: Colors.blueGrey[700],
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10.0, top: 2.0),
+                                        child: Text(
+                                          date.toString(),
+                                          style: TextStyle(color: Colors.grey),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 )
                               : document.get('type') == 3 &&
                                       document.get('lockMessage') == true &&
                                       document.get('isPaymentDone') == false
-                                  ? Container(
-                                      width: 200,
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            "You can not see this message, For unlock this message pay ${document.get('amount')}!",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 16,
-                                            ),
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: 200,
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                "You can not see this message, For unlock this message pay ${document.get('amount')}!",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              unlockMessageButton(
+                                                  amountToPay:
+                                                      document.get('amount'),
+                                                  email: user!.email,
+                                                  astrologerName: widget.name,
+                                                  name: user!.displayName,
+                                                  phoneNumber:
+                                                      user!.phoneNumber,
+                                                  descreption: "Descreption"),
+                                            ],
                                           ),
-                                          SizedBox(
-                                            height: 15,
+                                          padding: EdgeInsets.fromLTRB(
+                                              15.0, 10.0, 15.0, 10.0),
+                                          decoration: BoxDecoration(
+                                              color: primaryColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0)),
+                                          margin: EdgeInsets.only(left: 10.0),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 10.0, top: 2.0),
+                                          child: Text(
+                                            date.toString(),
+                                            style:
+                                                TextStyle(color: Colors.grey),
                                           ),
-                                          unlockMessageButton(
-                                              amountToPay:
-                                                  document.get('amount'),
-                                              email: user!.email,
-                                              astrologerName: widget.name,
-                                              name: user!.displayName,
-                                              phoneNumber: user!.phoneNumber,
-                                              descreption: "Descreption"),
-                                        ],
-                                      ),
-                                      padding: EdgeInsets.fromLTRB(
-                                          15.0, 10.0, 15.0, 10.0),
-                                      decoration: BoxDecoration(
-                                          color: primaryColor,
-                                          borderRadius:
-                                              BorderRadius.circular(8.0)),
-                                      margin: EdgeInsets.only(left: 10.0),
+                                        ),
+                                      ],
                                     )
-                                  : Container(
-                                      child: Image.asset(
-                                        'assets/images/${document.get('content')}.gif',
-                                        width: 100.0,
-                                        height: 100.0,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      margin: EdgeInsets.only(
-                                          bottom: isLastMessageRight(index)
-                                              ? 20.0
-                                              : 10.0,
-                                          right: 10.0),
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          child: Image.asset(
+                                            'assets/images/${document.get('content')}.gif',
+                                            width: 100.0,
+                                            height: 100.0,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          margin: EdgeInsets.only(right: 10.0),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 10.0, top: 2.0),
+                                          child: Text(
+                                            date.toString(),
+                                            style:
+                                                TextStyle(color: Colors.grey),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                 ],
               ),
 
               // Time
-              isLastMessageLeft(index)
-                  ? Container(
-                      child: Text(
-                        DateFormat('dd MMM kk:mm').format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                                int.parse(document.get('timestamp')))),
-                        style: TextStyle(
-                            color: greyColor,
-                            fontSize: 12.0,
-                            fontStyle: FontStyle.italic),
-                      ),
-                      margin:
-                          EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
-                    )
-                  : Container()
+              // isLastMessageLeft(index)
+              //     ? Container(
+              //         child: Text(
+              //           DateFormat('dd MMM kk:mm').format(
+              //               DateTime.fromMillisecondsSinceEpoch(
+              //                   int.parse(document.get('timestamp')))),
+              //           style: TextStyle(
+              //               color: greyColor,
+              //               fontSize: 12.0,
+              //               fontStyle: FontStyle.italic),
+              //         ),
+              //         margin:
+              //             EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
+              //       )
+              //     : Container()
             ],
             crossAxisAlignment: CrossAxisAlignment.start,
           ),
@@ -764,9 +926,32 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void _launchURL(_url) async => await canLaunch(_url)
-      ? await launch(_url)
-      : throw 'Could not launch $_url';
+  _showDialog(String content, String timeStamp) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(content: Text(content), actions: [
+            MaterialButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("No")),
+            MaterialButton(
+                onPressed: () async {
+                  FirebaseFirestore.instance
+                      .collection('messages')
+                      .doc(groupChatId)
+                      .collection(groupChatId)
+                      .doc(timeStamp)
+                      .delete()
+                      .then((value) {
+                    Navigator.pop(context);
+                  });
+                },
+                child: Text("Yes")),
+          ]);
+        });
+  }
 
   unlockMessageButton(
       {var amountToPay,
