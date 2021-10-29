@@ -308,23 +308,25 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  hello(DocumentSnapshot? document) async {
+  setMsgAsRead(DocumentSnapshot? document) async {
     print("peerId => $peerId");
+
     QuerySnapshot<Map<String, dynamic>> querySnapshots =
         await FirebaseFirestore.instance
             .collection('messages')
             .doc(groupChatId)
-            .collection(groupChatId)
-            // .where("idTo", isNotEqualTo: document!.get('idTo'))
+            .collection(groupChatId)           
             .get();
-    print(querySnapshots.docs);
-    for (var doc in querySnapshots.docs) {
-      if (doc.data()['idTo'] != 'Aum6fcP00hZMsKguo76eCmFpteI3') {
-        doc.reference.update({
-          'isRead': false,
-        });
+    // print(querySnapshots.docs);
+
+    querySnapshots.docs.forEach((doc) {
+      if (doc.data()['idFrom'] == peerId) {
+        if (doc.data()['isRead'] == false) {
+          print(doc.data()['isRead']);
+          doc.reference.update({'isRead': true});
+        }
       }
-    }
+    });
     print("called");
   }
 
@@ -332,7 +334,7 @@ class ChatScreenState extends State<ChatScreen> {
     if (document != null) {
       var datea = DateTime.parse(document.get('timestamp'));
       var date = DateFormat('dd/MM').add_jm().format(datea);
-      // hello(document);
+      setMsgAsRead(document);
 
       if (document.get('idFrom') == id) {
         // Right (my message)
