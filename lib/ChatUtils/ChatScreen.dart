@@ -294,6 +294,7 @@ class ChatScreenState extends State<ChatScreen> {
             'lockMessage': type == 3 ? true : false,
             'amount': type == 3 ? amountSelected : 0,
             'isPaymentDone': false,
+            'isRead': false,
           },
         );
       });
@@ -307,10 +308,31 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  hello(DocumentSnapshot? document) async {
+    print("peerId => $peerId");
+    QuerySnapshot<Map<String, dynamic>> querySnapshots =
+        await FirebaseFirestore.instance
+            .collection('messages')
+            .doc(groupChatId)
+            .collection(groupChatId)
+            // .where("idTo", isNotEqualTo: document!.get('idTo'))
+            .get();
+    print(querySnapshots.docs);
+    for (var doc in querySnapshots.docs) {
+      if (doc.data()['idTo'] != 'Aum6fcP00hZMsKguo76eCmFpteI3') {
+        doc.reference.update({
+          'isRead': false,
+        });
+      }
+    }
+    print("called");
+  }
+
   Widget buildItem(int index, DocumentSnapshot? document) {
     if (document != null) {
       var datea = DateTime.parse(document.get('timestamp'));
       var date = DateFormat('dd/MM').add_jm().format(datea);
+      // hello(document);
 
       if (document.get('idFrom') == id) {
         // Right (my message)
@@ -328,9 +350,18 @@ class ChatScreenState extends State<ChatScreen> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Container(
-                          child: Text(
-                            document.get('content'),
-                            style: TextStyle(color: primaryColor),
+                          child: Row(
+                            children: [
+                              Text(
+                                document.get('content'),
+                                style: TextStyle(color: primaryColor),
+                              ),
+                              Spacer(),
+                              document.get('isRead') == true
+                                  ? Icon(Icons.done_all_outlined,
+                                      color: Colors.green)
+                                  : Icon(Icons.done, color: Colors.white),
+                            ],
                           ),
                           padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                           width: 200.0,
@@ -1427,8 +1458,9 @@ class ChatScreenState extends State<ChatScreen> {
                   listMessage.addAll(snapshot.data!.docs);
                   return ListView.builder(
                     padding: EdgeInsets.all(10.0),
-                    itemBuilder: (context, index) =>
-                        buildItem(index, snapshot.data?.docs[index]),
+                    itemBuilder: (context, index) {
+                      return buildItem(index, snapshot.data?.docs[index]);
+                    },
                     itemCount: snapshot.data?.docs.length,
                     reverse: true,
                     controller: listScrollController,
