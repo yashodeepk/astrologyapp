@@ -311,12 +311,12 @@ class ChatScreenState extends State<ChatScreen> {
   setMsgAsRead(DocumentSnapshot? document) async {
     print("peerId => $peerId");
 
-    QuerySnapshot<Map<String, dynamic>> querySnapshots =
-        await FirebaseFirestore.instance
-            .collection('messages')
-            .doc(groupChatId)
-            .collection(groupChatId)           
-            .get();
+    QuerySnapshot<Map<String, dynamic>> querySnapshots = await FirebaseFirestore
+        .instance
+        .collection('messages')
+        .doc(groupChatId)
+        .collection(groupChatId)
+        .get();
     // print(querySnapshots.docs);
 
     querySnapshots.docs.forEach((doc) {
@@ -1329,6 +1329,7 @@ class ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
+          // button for lock message
           isUserAstrologer
               ? Material(
                   child: Container(

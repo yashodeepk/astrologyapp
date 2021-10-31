@@ -56,9 +56,9 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                 setState(() {});
                 final provider =
                     Provider.of<GoogleSignInProvider>(context, listen: false);
+
                 provider.googleLogin(false);
                 Navigator.of(context).pop();
-                // storeage("normaluser");
                 print('login as user');
               },
               label: Center(

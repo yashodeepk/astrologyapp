@@ -40,57 +40,71 @@ class GoogleSignInProvider extends ChangeNotifier {
 
           isLoading = true;
           final currentUser = FirebaseAuth.instance.currentUser;
+          final QuerySnapshot result = await FirebaseFirestore.instance
+              .collection('Astrologer')
+              .where('email', isEqualTo: currentUser!.email)
+              .get();
+          if (result == null) {
+            print("already alstrologer inside");
 
-          if (currentUser != null) {
-            print('user');
-            // Check is already sign up
-            final QuerySnapshot result = await FirebaseFirestore.instance
-                .collection('users')
-                .where('id', isEqualTo: currentUser.email)
-                .get();
-            final List<DocumentSnapshot> documents = result.docs;
-            if (documents.length == 0) {
-              print('user created');
-              // Update data to server if new user
-              FirebaseFirestore.instance
+            if (currentUser != null) {
+              print('user');
+              // Check is already sign up
+              final QuerySnapshot result = await FirebaseFirestore.instance
                   .collection('users')
-                  .doc(currentUser.email)
-                  .set({
-                'name': currentUser.displayName,
-                'email': currentUser.email,
-                'photoUrl': currentUser.photoURL,
-                'id': currentUser.uid,
-                'createdAt':
-                    DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
-                'chattingWith': null
-              });
+                  .where('id', isEqualTo: currentUser.email)
+                  .get();
+              final List<DocumentSnapshot> documents = result.docs;
+              if (documents.length == 0) {
+                print('user created');
+                // Update data to server if new user
+                FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(currentUser.email)
+                    .set({
+                  'name': currentUser.displayName,
+                  'email': currentUser.email,
+                  'photoUrl': currentUser.photoURL,
+                  'id': currentUser.uid,
+                  'createdAt':
+                      DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
+                });
 
-              // // Write data to local
-              await prefs!.setString('id', currentUser.uid);
-              await prefs!.setString('name', currentUser.displayName!);
-              await prefs!.setString('photoUrl', currentUser.photoURL!);
-              await prefs!.setString('type', userX);
+                // // Write data to local
+                await prefs!.setString('id', currentUser.uid);
+                await prefs!.setString('name', currentUser.displayName!);
+                await prefs!.setString('photoUrl', currentUser.photoURL!);
+                await prefs!.setString('type', userX);
+              } else {
+                DocumentSnapshot documentSnapshot = documents[0];
+                UserChat userChat = UserChat.fromDocument(documentSnapshot);
+                // Write data to local
+                await prefs!.setString('id', userChat.id);
+                await prefs!.setString('name', userChat.name);
+                await prefs!.setString('photoUrl', userChat.photoUrl);
+                await prefs!.setString('aboutMe', userChat.aboutMe);
+                await prefs!.setString('type', userX);
+              }
+              print('user data storage on cloudstore success');
+              isLoading = false;
+              notifyListeners();
+              Fluttertoast.showToast(msg: "Sign in success");
             } else {
-              DocumentSnapshot documentSnapshot = documents[0];
-              UserChat userChat = UserChat.fromDocument(documentSnapshot);
-              // Write data to local
-              await prefs!.setString('id', userChat.id);
-              await prefs!.setString('name', userChat.name);
-              await prefs!.setString('photoUrl', userChat.photoUrl);
-              await prefs!.setString('aboutMe', userChat.aboutMe);
-              await prefs!.setString('type', userX);
+              print('user data storage on cloudstore failed');
+              Fluttertoast.showToast(msg: "Sign in fail");
+              googleSignIn.disconnect();
+              FirebaseAuth.instance.signOut();
+              isLoading = false;
             }
-            print('user data storage on cloudstore success');
-            isLoading = false;
-            notifyListeners();
-            Fluttertoast.showToast(msg: "Sign in success");
           } else {
-            print('user data storage on cloudstore failed');
-            Fluttertoast.showToast(msg: "Sign in fail");
-            googleSignIn.disconnect();
             FirebaseAuth.instance.signOut();
-            isLoading = false;
+            googleSignIn.disconnect();
+            Fluttertoast.showToast(
+                msg: "You are already login as a Astrologer!");
+
+            print("already alstrologer");
           }
+
           // Fluttertoast.showToast(msg: "Sign in success");
 
         }
