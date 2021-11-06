@@ -37,7 +37,7 @@ dependencies:
   flutter_local_notifications: ^8.1.1+1
   firebase_messaging: ^10.0.4
   file_picker: ^4.1.4
-  syncfusion_flutter_pdfviewer: ^19.3.45-beta 
+  syncfusion_flutter_pdfviewer: ^19.3.48-beta 
   webview_flutter:
 
 dev_dependencies:
