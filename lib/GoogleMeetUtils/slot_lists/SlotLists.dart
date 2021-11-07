@@ -352,7 +352,7 @@ class _SlotListsState extends State<SlotLists> {
         await calendarClient
             .insert(
                 title:
-                    'Meeting with ${_user!.email} and ${widget.astrologer!.email}',
+                    'Meeting with ${_user!.displayName} and ${widget.astrologer!.name}',
                 description: response.description,
                 location: 'Online',
                 attendeeEmailList: attendeeEmails,
