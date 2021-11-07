@@ -159,7 +159,7 @@ class _SlotListsState extends State<SlotLists> {
         onPressed: () {
           _itemSelected.isEmpty
               ? ShowAction().showToast(pleaseSelectSlot, Colors.red)
-              : (_user!.phoneNumber != null)
+              : (_user!.phoneNumber!.isNotEmpty)
                   ? callPaymentMethod(
                       amountToPay: widget.astrologer!.fees,
                       name: _user!.displayName!,
