@@ -179,24 +179,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         ),
                                       ],
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: AutoSizeText(
-                                              "${_astrologer!.email}",
-                                              // overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  fontSize: sixteenDp,
-                                                  color: Colors.white70),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.only(top: 8.0),
+                                    //   child: Row(
+                                    //     mainAxisAlignment:
+                                    //         MainAxisAlignment.start,
+                                    //     children: [
+                                    //       Expanded(
+                                    //         child: AutoSizeText(
+                                    //           "${_astrologer!.email}",
+                                    //           // overflow: TextOverflow.ellipsis,
+                                    //           style: TextStyle(
+                                    //               fontSize: sixteenDp,
+                                    //               color: Colors.white70),
+                                    //         ),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 8.0),
                                       child: Row(
