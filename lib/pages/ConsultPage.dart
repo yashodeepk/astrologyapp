@@ -11,6 +11,7 @@ import 'package:astrologyapp/pages/ChatPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:googleapis/calendar/v3.dart' as cal;
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:googleapis_auth/googleapis_auth.dart';
@@ -21,9 +22,13 @@ import 'package:random_color/random_color.dart';
 Future<void> calender() async {
   var _clientID = new ClientId(Secret.getId(), "");
   const _scopes = const [cal.CalendarApi.calendarScope];
-  await clientViaUserConsent(_clientID, _scopes, prompt)
-      .then((AuthClient client) async {
+  await clientViaUserConsent(_clientID, _scopes, prompt).then(
+      (AuthClient client) async {
     CalendarClient.calendar = cal.CalendarApi(client);
+  }, onError: (e) {
+    print("Error is " + e.toString());
+  }).catchError((e) {
+    print("Error in catchError " + e.toString());
   });
 }
 
