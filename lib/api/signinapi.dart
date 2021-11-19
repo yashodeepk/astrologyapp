@@ -44,7 +44,7 @@ class GoogleSignInProvider extends ChangeNotifier {
               .collection('Astrologer')
               .where('email', isEqualTo: currentUser!.email)
               .get();
-          if (result == null) {
+          if (result.docs.isEmpty) {
             print("already alstrologer inside");
 
             if (currentUser != null) {

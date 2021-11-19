@@ -65,12 +65,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                   child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Login with Google '),
-                  Icon(
-                    LineIcons.googlePlus,
-                    size: 28,
-                    color: Colors.white,
-                  )
+                  Text('Login as User '),
                 ],
               )),
               style: TextButton.styleFrom(

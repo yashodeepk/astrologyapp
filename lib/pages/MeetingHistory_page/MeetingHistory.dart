@@ -62,11 +62,11 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                 String time = noteInfo['timeSelected'];
                 print('time check ' +
                     createdat.compareTo(Timestamp.now()).toString());
-                // if (createdat. Timestamp.now()) {
-                //   timecheck = false;
-                // } else {
-                //   timecheck = true;
-                // }
+                if (createdat.compareTo(Timestamp.now()) == -1) {
+                  timecheck = false;
+                } else {
+                  timecheck = true;
+                }
 
                 return Padding(
                   padding: const EdgeInsets.all(8),
@@ -246,14 +246,6 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Astrologer Name - ' + astrologerName,
-                                  style: TextStyle(
-                                      color: Colors.white70, fontSize: 16)),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                  'Astrologer Email - ' +
-                                      astrologerEmail.toString(),
                                   style: TextStyle(
                                       color: Colors.white70, fontSize: 16)),
                               SizedBox(
