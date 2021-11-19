@@ -94,6 +94,7 @@ class GoogleSignInProvider extends ChangeNotifier {
               Fluttertoast.showToast(msg: "Sign in fail");
               googleSignIn.disconnect();
               FirebaseAuth.instance.signOut();
+              print("working");
               isLoading = false;
             }
           } else {
