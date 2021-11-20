@@ -19,7 +19,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'constants/constants.dart';
 import 'model/meetings.dart';
 import 'model/slot.dart';
 
@@ -131,29 +131,49 @@ class _PageNavigatorState extends State<PageNavigator> {
       body: Center(
         child: _pageOptions.elementAt(widget.selectedIndex!),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.blue[900],
-        unselectedItemColor: Colors.grey[700],
-        elevation: 0,
-        // fixedColor: Color(0xff22262B),
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.star),
-              label: 'Horoscope',
-              backgroundColor: Colors.white),
-          BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.person_2_fill),
-              label: 'Consult',
-              backgroundColor: Colors.white),
-          BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.chat_bubble_2_fill),
-              label: 'Chat',
-              backgroundColor: Colors.white),
-        ],
-        onTap: _onItemTapped,
-        currentIndex: widget.selectedIndex!,
-      ),
+      bottomNavigationBar: userType == userX
+          ? BottomNavigationBar(
+              backgroundColor: Colors.white,
+              selectedItemColor: Colors.blue[900],
+              unselectedItemColor: Colors.grey[700],
+              elevation: 0,
+              // fixedColor: Color(0xff22262B),
+              items: [
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.star),
+                    label: 'Horoscope',
+                    backgroundColor: Colors.white),
+                BottomNavigationBarItem(
+                    icon: Icon(CupertinoIcons.person_2_fill),
+                    label: 'Consult',
+                    backgroundColor: Colors.white),
+                BottomNavigationBarItem(
+                    icon: Icon(CupertinoIcons.chat_bubble_2_fill),
+                    label: 'Chat',
+                    backgroundColor: Colors.white),
+              ],
+              onTap: _onItemTapped,
+              currentIndex: widget.selectedIndex!,
+            )
+          : BottomNavigationBar(
+              backgroundColor: Colors.white,
+              selectedItemColor: Colors.blue[900],
+              unselectedItemColor: Colors.grey[700],
+              elevation: 0,
+              // fixedColor: Color(0xff22262B),
+              items: [
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.star),
+                    label: 'Horoscope',
+                    backgroundColor: Colors.white),
+                BottomNavigationBarItem(
+                    icon: Icon(CupertinoIcons.chat_bubble_2_fill),
+                    label: 'Chat',
+                    backgroundColor: Colors.white),
+              ],
+              onTap: _onItemTapped,
+              currentIndex: widget.selectedIndex!,
+            ),
     );
   }
 }
