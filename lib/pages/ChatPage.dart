@@ -156,13 +156,13 @@ class _ChatWidgetState extends State<ChatWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   InkWell(
-                    // onTap: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => AccountPageWidget()),
-                    //   );
-                    // },
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AccountPageWidget()),
+                      );
+                    },
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
                       child: CircleAvatar(
