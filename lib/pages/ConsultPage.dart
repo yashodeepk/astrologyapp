@@ -287,36 +287,36 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 // mainAxisSize: MainAxisSize.max,
                 children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: TextButton.icon(
-                        onPressed: () {
-                          calender();
-                          Navigator.of(context).pushNamed(
-                              DashboardScreen.routeName,
-                              arguments: astrologer.email);
-                        },
-                        label: Text('Book Meeting'),
-                        icon: Icon(
-                          Icons.call_rounded,
-                          size: 15,
-                        ),
-                        style: TextButton.styleFrom(
-                          // padding: EdgeInsets.all(8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          primary: Colors.white,
-                          backgroundColor: Colors.orange,
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Expanded(
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  //     child: TextButton.icon(
+                  //       onPressed: () {
+                  //         calender();
+                  //         Navigator.of(context).pushNamed(
+                  //             DashboardScreen.routeName,
+                  //             arguments: astrologer.email);
+                  //       },
+                  //       label: Text('Book Meeting'),
+                  //       icon: Icon(
+                  //         Icons.call_rounded,
+                  //         size: 15,
+                  //       ),
+                  //       style: TextButton.styleFrom(
+                  //         // padding: EdgeInsets.all(8),
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius: BorderRadius.circular(20),
+                  //         ),
+                  //         primary: Colors.white,
+                  //         backgroundColor: Colors.orange,
+                  //         textStyle: TextStyle(
+                  //           fontWeight: FontWeight.normal,
+                  //           fontSize: 16,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
