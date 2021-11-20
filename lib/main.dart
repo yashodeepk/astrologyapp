@@ -117,7 +117,8 @@ class PageNavigator extends StatefulWidget {
 }
 
 class _PageNavigatorState extends State<PageNavigator> {
-  final _pageOptions = [HomePageWidget(), ConsultWidget(), ChatWidget()];
+  final _pageOptionsUser = [HomePageWidget(), ConsultWidget(), ChatWidget()];
+  final _pageOptionsAstrologer = [HomePageWidget(), ChatWidget()];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -129,7 +130,9 @@ class _PageNavigatorState extends State<PageNavigator> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: _pageOptions.elementAt(widget.selectedIndex!),
+        child: userType == userX
+            ? _pageOptionsUser.elementAt(widget.selectedIndex!)
+            : _pageOptionsAstrologer.elementAt(widget.selectedIndex!),
       ),
       bottomNavigationBar: userType == userX
           ? BottomNavigationBar(
