@@ -5,6 +5,7 @@ import 'package:astrologyapp/Colors.dart';
 import 'package:astrologyapp/GoogleMeetUtils/EventDetails.dart';
 import 'package:astrologyapp/GoogleMeetUtils/calenderevent.dart';
 import 'package:astrologyapp/GoogleMeetUtils/secrate.dart';
+import 'package:astrologyapp/jitsiMeetUtils/meetingPage.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:astrologyapp/pages/ChatPage.dart';
@@ -324,12 +325,13 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                         onPressed: () {
                           Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => Chat(
-                                        name: astrologer.name!,
-                                        peerId: astrologer.id!,
-                                        image: astrologer.photoUrl,
-                                      )));
+                              MaterialPageRoute(builder: (context) => Meeting()
+                                  // Chat(
+                                  //       name: astrologer.name!,
+                                  //       peerId: astrologer.id!,
+                                  //       image: astrologer.photoUrl,
+                                  //     )
+                                  ));
                         },
                         label: Text('Message'),
                         icon: Icon(
