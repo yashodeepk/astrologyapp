@@ -244,7 +244,7 @@ class _MeetingState extends State<Meeting> {
       ..subject = subjectText.text
       ..userDisplayName = nameText.text
       ..userEmail = emailText.text
-      // ..iosAppBarRGBAColor = iosAppBarRGBAColor.text
+      ..iosAppBarRGBAColor = '#0080FF80'
       ..audioOnly = isAudioOnly
       ..audioMuted = isAudioMuted
       ..videoMuted = isVideoMuted

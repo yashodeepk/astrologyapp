@@ -5,6 +5,7 @@ import 'package:astrologyapp/Colors.dart';
 import 'package:astrologyapp/GoogleMeetUtils/EventDetails.dart';
 import 'package:astrologyapp/GoogleMeetUtils/calenderevent.dart';
 import 'package:astrologyapp/GoogleMeetUtils/secrate.dart';
+import 'package:astrologyapp/jitsiMeetUtils/meetModel..dart';
 import 'package:astrologyapp/jitsiMeetUtils/meetingPage.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
@@ -323,14 +324,22 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextButton.icon(
                         onPressed: () {
+                          // MeetModel.joinMeeting(
+                          //     emailText: user.email!,
+                          //     isAudioMuted: true,
+                          //     isAudioOnly: true,
+                          //     isVideoMuted: true,
+                          //     nameText: user.displayName!,
+                          //     roomText: astrologer.name + user.displayName!,
+                          //     subjectText: 'Astrologer Meet');
                           Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => Meeting()
-                                  // Chat(
-                                  //       name: astrologer.name!,
-                                  //       peerId: astrologer.id!,
-                                  //       image: astrologer.photoUrl,
-                                  //     )
+                              MaterialPageRoute(builder: (context) =>
+                                  Chat(
+                                        name: astrologer.name!,
+                                        peerId: astrologer.id!,
+                                        image: astrologer.photoUrl,
+                                      )
                                   ));
                         },
                         label: Text('Message'),
