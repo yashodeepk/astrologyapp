@@ -275,7 +275,8 @@ class _SlotListsState extends State<SlotLists> {
         'paidTo': widget.astrologer!.email!,
         'from': _user!.email!,
         'paymentDateTime':
-            DateFormat.yMMMMd('en_US').add_jm().format(DateTime.now())
+            DateFormat.yMMMMd('en_US').add_jm().format(DateTime.now()),
+        'meetlink': "https://meet.jit.si/${response.id}",
       };
       FirebaseFirestore
           .instance //Don't remove this code this will help to read data in admin app otherwise it will give null error
@@ -308,91 +309,91 @@ class _SlotListsState extends State<SlotLists> {
           .set(data)
           .then((value) async {
         //get start and end time
-        var splitAndExtractTime =
-            _itemSelected.toString().replaceAll(RegExp("[\s-\s]"), '');
+        // var splitAndExtractTime =
+        //     _itemSelected.toString().replaceAll(RegExp("[\s-\s]"), '');
 
-        String startTime =
-            splitAndExtractTime.toString().split('-')[0].toString();
+        // String startTime =
+        //     splitAndExtractTime.toString().split('-')[0].toString();
 
-        String endTime =
-            splitAndExtractTime.toString().split('-')[1].toString();
+        // String endTime =
+        //     splitAndExtractTime.toString().split('-')[1].toString();
 
-        TimeOfDay startTimeOfDay = ShowAction.stringToTimeOfDay(startTime);
-        TimeOfDay endTimeOfDay =
-            ShowAction.stringToTimeOfDay(endTime.substring(1));
+        // TimeOfDay startTimeOfDay = ShowAction.stringToTimeOfDay(startTime);
+        // TimeOfDay endTimeOfDay =
+        //     ShowAction.stringToTimeOfDay(endTime.substring(1));
 
-        var startTimeToMilliseconds, endTimeToMilliseconds;
+        // var startTimeToMilliseconds, endTimeToMilliseconds;
 
-        if (widget.day == 0) {
-          var day = now.day;
-          startTimeToMilliseconds = DateTime(now.year, now.month, day,
-              startTimeOfDay.hour, startTimeOfDay.minute);
-          endTimeToMilliseconds = DateTime(
-              now.year, now.month, day, endTimeOfDay.hour, endTimeOfDay.minute);
-        } else {
-          startTimeToMilliseconds = DateTime(now.year, now.month, widget.day,
-              startTimeOfDay.hour, startTimeOfDay.minute);
-          endTimeToMilliseconds = DateTime(now.year, now.month, widget.day,
-              endTimeOfDay.hour, endTimeOfDay.minute);
-        }
+        // if (widget.day == 0) {
+        //   var day = now.day;
+        //   startTimeToMilliseconds = DateTime(now.year, now.month, day,
+        //       startTimeOfDay.hour, startTimeOfDay.minute);
+        //   endTimeToMilliseconds = DateTime(
+        //       now.year, now.month, day, endTimeOfDay.hour, endTimeOfDay.minute);
+        // } else {
+        //   startTimeToMilliseconds = DateTime(now.year, now.month, widget.day,
+        //       startTimeOfDay.hour, startTimeOfDay.minute);
+        //   endTimeToMilliseconds = DateTime(now.year, now.month, widget.day,
+        //       endTimeOfDay.hour, endTimeOfDay.minute);
+        // }
 
-        final format = DateFormat('dd/MM/yyyy');
+        // final format = DateFormat('dd/MM/yyyy');
 
-        print(" --- ${format.format(startTimeToMilliseconds)}  ?? $startTime");
-        //.remove slot ....
-        await _slotProvider.removeSelectedSlot();
+        // print(" --- ${format.format(startTimeToMilliseconds)}  ?? $startTime");
+        // //.remove slot ....
+        // await _slotProvider.removeSelectedSlot();
 
-        calendar.EventAttendee user = calendar.EventAttendee();
-        user.email = _user!.email!;
-        attendeeEmails.add(user);
-        calendar.EventAttendee astrologer = calendar.EventAttendee();
-        astrologer.email = widget.astrologer!.email!;
-        attendeeEmails.add(astrologer);
-        //create calender event
-        await calendarClient
-            .insert(
-                title:
-                    'Meeting with ${_user!.displayName} and ${widget.astrologer!.name}',
-                description: response.description,
-                location: 'Online',
-                attendeeEmailList: attendeeEmails,
-                shouldNotifyAttendees: true,
-                hasConferenceSupport: true,
-                startTime: startTimeToMilliseconds,
-                endTime: endTimeToMilliseconds)
-            .then((eventData) async {
-          String eventId = eventData['id']!;
-          String eventLink = eventData['link']!;
+        // calendar.EventAttendee user = calendar.EventAttendee();
+        // user.email = _user!.email!;
+        // attendeeEmails.add(user);
+        // calendar.EventAttendee astrologer = calendar.EventAttendee();
+        // astrologer.email = widget.astrologer!.email!;
+        // attendeeEmails.add(astrologer);
+        // //create calender event
+        // await calendarClient
+        //     .insert(
+        //         title:
+        //             'Meeting with ${_user!.displayName} and ${widget.astrologer!.name}',
+        //         description: response.description,
+        //         location: 'Online',
+        //         attendeeEmailList: attendeeEmails,
+        //         shouldNotifyAttendees: true,
+        //         hasConferenceSupport: true,
+        //         startTime: startTimeToMilliseconds,
+        //         endTime: endTimeToMilliseconds)
+        //     .then((eventData) async {
+        //   String eventId = eventData['id']!;
+        //   String eventLink = eventData['link']!;
 
-          dynamic emails = [];
+        //   dynamic emails = [];
 
-          for (int i = 0; i < attendeeEmails.length; i++)
-            emails.add(attendeeEmails[i].email!);
+        //   for (int i = 0; i < attendeeEmails.length; i++)
+        //     emails.add(attendeeEmails[i].email!);
 
-          //2.notify meeting data
-          _meetingProvider.notifyMeetingDetailsListener(
-              response.description,
-              now,
-              format.format(startTimeToMilliseconds),
-              startTime,
-              eventLink,
-              eventId,
-              emails,
-              widget.astrologer!.email!,
-              widget.astrologer!.name!,
-              widget.astrologer!.photoUrl!,
-              widget.astrologer!.id!,
-              _user!.displayName,
-              _user!.email,
-              _user!.uid,
-              _itemSelected,
-              response.id);
+        //   //2.notify meeting data
+        //   _meetingProvider.notifyMeetingDetailsListener(
+        //       response.description,
+        //       now,
+        //       format.format(startTimeToMilliseconds),
+        //       startTime,
+        //       eventLink,
+        //       eventId,
+        //       emails,
+        //       widget.astrologer!.email!,
+        //       widget.astrologer!.name!,
+        //       widget.astrologer!.photoUrl!,
+        //       widget.astrologer!.id!,
+        //       _user!.displayName,
+        //       _user!.email,
+        //       _user!.uid,
+        //       _itemSelected,
+        //       response.id);
 
-          //create meeting
-          _meetingProvider.createMeeting();
-        }).catchError((e) {
-          print(" eerrorrr ${e.toString()}");
-        });
+        //   //create meeting
+        //   _meetingProvider.createMeeting();
+        // }).catchError((e) {
+        //   print(" eerrorrr ${e.toString()}");
+        // });
         FirebaseFirestore.instance //Don't remove this code
             .collection('Payments')
             .doc(FirebaseAuth.instance.currentUser!.email)

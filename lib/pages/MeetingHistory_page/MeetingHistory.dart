@@ -60,12 +60,17 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                 String meetinglink = noteInfo['meetingLink'];
                 String meetingId = noteInfo['meetingId'];
                 String time = noteInfo['timeSelected'];
+                String meetlink = noteInfo['meetlink'];
                 print('time check ' +
                     createdat.compareTo(Timestamp.now()).toString());
                 if (createdat.compareTo(Timestamp.now()) == -1) {
-                  timecheck = false;
+                  setState(() {
+                    timecheck = false;
+                  });
                 } else {
-                  timecheck = true;
+                  setState(() {
+                    timecheck = true;
+                  });
                 }
 
                 return Padding(
@@ -221,7 +226,7 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                                         primary: Colors.amber),
                                     onPressed: () {
                                       timecheck!
-                                          ? _launchURL(meetinglink)
+                                          ? _launchURL(meetlink)
                                           : Fluttertoast.showToast(
                                               msg: "meeting not Activated");
                                     },

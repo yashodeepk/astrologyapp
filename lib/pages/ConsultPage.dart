@@ -5,15 +5,12 @@ import 'package:astrologyapp/Colors.dart';
 import 'package:astrologyapp/GoogleMeetUtils/EventDetails.dart';
 import 'package:astrologyapp/GoogleMeetUtils/calenderevent.dart';
 import 'package:astrologyapp/GoogleMeetUtils/secrate.dart';
-import 'package:astrologyapp/jitsiMeetUtils/meetModel..dart';
-import 'package:astrologyapp/jitsiMeetUtils/meetingPage.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
 import 'package:astrologyapp/pages/ChatPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:googleapis/calendar/v3.dart' as cal;
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:googleapis_auth/googleapis_auth.dart';
@@ -24,13 +21,9 @@ import 'package:random_color/random_color.dart';
 Future<void> calender() async {
   var _clientID = new ClientId(Secret.getId(), "");
   const _scopes = const [cal.CalendarApi.calendarScope];
-  await clientViaUserConsent(_clientID, _scopes, prompt).then(
-      (AuthClient client) async {
+  await clientViaUserConsent(_clientID, _scopes, prompt)
+      .then((AuthClient client) async {
     CalendarClient.calendar = cal.CalendarApi(client);
-  }, onError: (e) {
-    print("Error is " + e.toString());
-  }).catchError((e) {
-    print("Error in catchError " + e.toString());
   });
 }
 
@@ -137,7 +130,7 @@ class _ConsultWidgetState extends State<ConsultWidget> {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         width: MediaQuery.of(context).size.width - 40,
-        height: 180,
+        height: 160,
         decoration: BoxDecoration(
           // color: colors[i],
           boxShadow: [
@@ -277,91 +270,69 @@ class _ConsultWidgetState extends State<ConsultWidget> {
                   ),
                 ],
               ),
-              Text(
-                'Fess  - ${astrologer.fees} ₹',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                // mainAxisSize: MainAxisSize.max,
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  // Expanded(
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  //     child: TextButton.icon(
-                  //       onPressed: () {
-                  //         calender();
-                  //         Navigator.of(context).pushNamed(
-                  //             DashboardScreen.routeName,
-                  //             arguments: astrologer.email);
-                  //       },
-                  //       label: Text('Book Meeting'),
-                  //       icon: Icon(
-                  //         Icons.call_rounded,
-                  //         size: 15,
-                  //       ),
-                  //       style: TextButton.styleFrom(
-                  //         // padding: EdgeInsets.all(8),
-                  //         shape: RoundedRectangleBorder(
-                  //           borderRadius: BorderRadius.circular(20),
-                  //         ),
-                  //         primary: Colors.white,
-                  //         backgroundColor: Colors.orange,
-                  //         textStyle: TextStyle(
-                  //           fontWeight: FontWeight.normal,
-                  //           fontSize: 16,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: TextButton.icon(
-                        onPressed: () {
-                          // MeetModel.joinMeeting(
-                          //     emailText: user.email!,
-                          //     isAudioMuted: true,
-                          //     isAudioOnly: true,
-                          //     isVideoMuted: true,
-                          //     nameText: user.displayName!,
-                          //     roomText: astrologer.name + user.displayName!,
-                          //     subjectText: 'Astrologer Meet');
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) =>
-                                  Chat(
-                                        name: astrologer.name!,
-                                        peerId: astrologer.id!,
-                                        image: astrologer.photoUrl,
-                                      )
-                                  ));
-                        },
-                        label: Text('Message'),
-                        icon: Icon(
-                          Icons.message_rounded,
-                          size: 15,
+                  Row(
+                    children: [
+                      Text(
+                        'Fess  - ${astrologer.fees}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
-                        style: TextButton.styleFrom(
-                          // padding: EdgeInsets.all(8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          primary: Colors.white,
-                          backgroundColor: Colors.orange,
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16,
-                          ),
+                      ),
+                      Text(
+                        ' ₹',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
+                      ),
+                    ],
+                  ),
+                  TextButton.icon(
+                    onPressed: () {
+                      // calender();
+                      Navigator.of(context).pushNamed(DashboardScreen.routeName,
+                          arguments: astrologer.email);
+                    },
+                    label: Text('Book Meeting'),
+                    icon: Icon(
+                      Icons.call_rounded,
+                      size: 15,
+                    ),
+                    style: TextButton.styleFrom(
+                      // padding: EdgeInsets.all(8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      primary: Colors.white,
+                      backgroundColor: Colors.orange,
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
                       ),
                     ),
                   ),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Chat(
+                                      name: astrologer.name!,
+                                      peerId: astrologer.id!,
+                                      image: astrologer.photoUrl,
+                                    )));
+                      },
+                      icon: Icon(
+                        Icons.message_outlined,
+                        color: Colors.white,
+                      )),
                 ],
               )
             ],
