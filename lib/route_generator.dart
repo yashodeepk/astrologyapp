@@ -41,8 +41,8 @@ class RouteGenerator {
       case MeetingHistoryPage.routeName:
         return MaterialPageRoute(builder: (_) => MeetingHistoryPage());
 
-      case CreateScreen.routeName:
-        return MaterialPageRoute(builder: (_) => CreateScreen());
+      // case CreateScreen.routeName:
+      //   return MaterialPageRoute(builder: (_) => CreateScreen());
 
       case DashboardScreen.routeName:
         final data = settings.arguments as String;

@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:astrologyapp/ChatUtils/ChatScreen.dart';
-import 'package:astrologyapp/ChatUtils/loading.dart';
 import 'package:astrologyapp/ChatUtils/userchat.dart';
 import 'package:astrologyapp/Colors.dart';
-import 'package:astrologyapp/actions/actions.dart';
+import 'package:astrologyapp/jitsiMeetUtils/meetModel..dart';
 import 'package:astrologyapp/model/ChatModel.dart';
+import 'package:astrologyapp/model/MeetingHistory.dart';
 import 'package:astrologyapp/model/meetings.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -190,573 +190,365 @@ class _ChatWidgetState extends State<ChatWidget> {
         elevation: 0,
       ),
       backgroundColor: Colors.white,
-      body: Container(
-        child: chatList.length == 0
-            ? Center(
-                child: Text(
-                "No Chat Data found!!",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-              ))
-            : ListView.builder(
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: ListTile(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Chat(
-                                        name: chatList[index].idTo == user.uid
-                                            ? chatList[index].nameFrom
-                                            : chatList[index].nameTo,
-                                        peerId: chatList[index].idTo == user.uid
-                                            ? chatList[index].idFrom
-                                            : chatList[index].idTo,
-                                        image: chatList[index].idTo == user.uid
+      body: Column(
+        children: [
+          meetingcheck(),
+          Container(
+            child: chatList.length == 0
+                ? Center(
+                    child: Text(
+                    "No Chat Data found!!",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ))
+                : ListView.builder(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            border: Border.all(
+                              color: Colors.black, // red as border color
+                            ),
+                            // color: Colors.deepPurple,
+                          ),
+                          child: ListTile(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Chat(
+                                              name: chatList[index].idTo ==
+                                                      user.uid
+                                                  ? chatList[index].nameFrom
+                                                  : chatList[index].nameTo,
+                                              peerId: chatList[index].idTo ==
+                                                      user.uid
+                                                  ? chatList[index].idFrom
+                                                  : chatList[index].idTo,
+                                              image: chatList[index].idTo ==
+                                                      user.uid
+                                                  ? chatList[index].imageFrom
+                                                  : chatList[index].imageTo,
+                                            )));
+                              },
+                              trailing: Icon(Icons.arrow_forward_ios),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              contentPadding: EdgeInsets.all(8.0),
+                              leading: Material(
+                                child: chatList[index].imageTo.isNotEmpty
+                                    ? Image.network(
+                                        chatList[index].idTo == user.uid
                                             ? chatList[index].imageFrom
                                             : chatList[index].imageTo,
-                                      )));
-                        },
-                        trailing: Icon(Icons.arrow_forward_ios),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        contentPadding: EdgeInsets.all(8.0),
-                        leading: Material(
-                          child: chatList[index].imageTo.isNotEmpty
-                              ? Image.network(
-                                  chatList[index].idTo == user.uid
-                                      ? chatList[index].imageFrom
-                                      : chatList[index].imageTo,
-                                  fit: BoxFit.cover,
-                                  width: 50.0,
-                                  height: 50.0,
-                                  loadingBuilder: (BuildContext context,
-                                      Widget child,
-                                      ImageChunkEvent? loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return Container(
-                                      width: 50,
-                                      height: 50,
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                          color: primaryColor,
-                                          value: loadingProgress
-                                                          .expectedTotalBytes !=
-                                                      null &&
-                                                  loadingProgress
-                                                          .expectedTotalBytes !=
-                                                      null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                        ),
+                                        fit: BoxFit.cover,
+                                        width: 50.0,
+                                        height: 50.0,
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
+                                            ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null)
+                                            return child;
+                                          return Container(
+                                            width: 50,
+                                            height: 50,
+                                            child: Center(
+                                              child: CircularProgressIndicator(
+                                                color: primaryColor,
+                                                value: loadingProgress
+                                                                .expectedTotalBytes !=
+                                                            null &&
+                                                        loadingProgress
+                                                                .expectedTotalBytes !=
+                                                            null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes!
+                                                    : null,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        errorBuilder:
+                                            (context, object, stackTrace) {
+                                          return Icon(
+                                            Icons.account_circle,
+                                            size: 50.0,
+                                            color: Colors.black,
+                                          );
+                                        },
+                                      )
+                                    : Icon(
+                                        Icons.account_circle,
+                                        size: 50.0,
+                                        color: Colors.black,
                                       ),
-                                    );
-                                  },
-                                  errorBuilder: (context, object, stackTrace) {
-                                    return Icon(
-                                      Icons.account_circle,
-                                      size: 50.0,
-                                      color: greyColor,
-                                    );
-                                  },
-                                )
-                              : Icon(
-                                  Icons.account_circle,
-                                  size: 50.0,
-                                  color: greyColor,
-                                ),
-                          borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                          clipBehavior: Clip.hardEdge,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(25.0)),
+                                clipBehavior: Clip.hardEdge,
+                              ),
+                              title: Text(
+                                chatList[index].idTo == user.uid
+                                    ? chatList[index].nameFrom
+                                    : chatList[index].nameTo,
+                              ),
+                              tileColor: Colors.white),
                         ),
-                        title: Text(
-                          chatList[index].idTo == user.uid
-                              ? chatList[index].nameFrom
-                              : chatList[index].nameTo,
-                        ),
-                        tileColor: Colors.grey[200]),
-                  );
-                },
-                itemCount: chatList.length),
+                      );
+                    },
+                    itemCount: chatList.length),
+          ),
+        ],
       ),
     );
-
-    // MaterialApp(
-    //   debugShowCheckedModeBanner: false,
-    //   theme: ThemeData.light(),
-    //   home: Scaffold(
-    //     appBar: AppBar(
-    //       backgroundColor: Colors.white,
-    //       automaticallyImplyLeading: false,
-    //       title: Text(
-    //         'Chats',
-    //         style: TextStyle(
-    //             color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600),
-    //       ),
-    //       actions: [
-    //         Stack(
-    //           children: [
-    //             Column(
-    //               mainAxisSize: MainAxisSize.max,
-    //               mainAxisAlignment: MainAxisAlignment.center,
-    //               children: [
-    //                 InkWell(
-    //                   onTap: () {
-    //                     Navigator.push(
-    //                       context,
-    //                       MaterialPageRoute(
-    //                           builder: (context) => AccountPageWidget()),
-    //                     );
-    //                   },
-    //                   child: Padding(
-    //                     padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-    //                     child: CircleAvatar(
-    //                       child: ClipOval(
-    //                         child: Image.network(user.photoURL!),
-    //                       ),
-    //                       radius: 18,
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ],
-    //             ),
-    //             Padding(
-    //               padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
-    //               child: Icon(
-    //                 Icons.circle,
-    //                 color: Color(0xFF28FF00),
-    //                 size: 15,
-    //               ),
-    //             )
-    //           ],
-    //         ),
-    //       ],
-    //       centerTitle: true,
-    //       elevation: 0,
-    //     ),
-    //     backgroundColor: Colors.white,
-    //     body: Column(
-    //       mainAxisSize: MainAxisSize.max,
-    //       children: [
-    //         ListView.builder(
-    //           itemBuilder: (context, index) {
-    //             Meetings meet = meetings[index];
-
-    //             return Expanded(
-    //               child: SingleChildScrollView(
-    //                 child: Column(
-    //                   mainAxisSize: MainAxisSize.min,
-    //                   mainAxisAlignment: MainAxisAlignment.start,
-    //                   crossAxisAlignment: CrossAxisAlignment.start,
-    //                   children: [
-    //                     Padding(
-    //                       padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-    //                       child: Container(
-    //                         width: double.infinity,
-    //                         height: 110,
-    //                         decoration: BoxDecoration(
-    //                           color: Colors.lightBlueAccent[400],
-    //                           borderRadius: BorderRadius.circular(24),
-    //                         ),
-    //                         child: Padding(
-    //                           padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-    //                           child: Row(
-    //                             mainAxisSize: MainAxisSize.max,
-    //                             mainAxisAlignment:
-    //                                 MainAxisAlignment.spaceEvenly,
-    //                             crossAxisAlignment: CrossAxisAlignment.end,
-    //                             children: [
-    //                               Column(
-    //                                 mainAxisSize: MainAxisSize.max,
-    //                                 mainAxisAlignment: MainAxisAlignment.start,
-    //                                 crossAxisAlignment:
-    //                                     CrossAxisAlignment.start,
-    //                                 children: [
-    //                                   Padding(
-    //                                     padding:
-    //                                         EdgeInsets.fromLTRB(0, 10, 0, 0),
-    //                                     child: Text(
-    //                                       'Scheduled Meeting',
-    //                                       style: TextStyle(
-    //                                         color: Colors.black,
-    //                                         fontWeight: FontWeight.w600,
-    //                                         fontSize: 20,
-    //                                       ),
-    //                                     ),
-    //                                   ),
-    //                                   Padding(
-    //                                     padding:
-    //                                         EdgeInsets.fromLTRB(5, 10, 0, 0),
-    //                                     child: Text(
-    //                                       'Date - ${meet.scheduledDate}',
-    //                                       style: TextStyle(
-    //                                         color: Colors.black,
-    //                                         fontWeight: FontWeight.w500,
-    //                                         fontSize: 16,
-    //                                       ),
-    //                                     ),
-    //                                   ),
-    //                                   Padding(
-    //                                     padding:
-    //                                         EdgeInsets.fromLTRB(5, 5, 0, 0),
-    //                                     child: Text(
-    //                                       'Time - ${meet.scheduledTime}',
-    //                                       style: TextStyle(
-    //                                         color: Colors.black,
-    //                                         fontWeight: FontWeight.w500,
-    //                                         fontSize: 16,
-    //                                       ),
-    //                                     ),
-    //                                   )
-    //                                 ],
-    //                               ),
-    //                               Padding(
-    //                                 padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
-    //                                 child: SingleChildScrollView(
-    //                                   child: Column(
-    //                                     mainAxisSize: MainAxisSize.max,
-    //                                     mainAxisAlignment:
-    //                                         MainAxisAlignment.center,
-    //                                     children: [
-    //                                       Padding(
-    //                                         padding:
-    //                                             EdgeInsets.fromLTRB(0, 0, 0, 0),
-    //                                         child: Row(
-    //                                           mainAxisSize: MainAxisSize.max,
-    //                                           children: [
-    //                                             CircleAvatar(
-    //                                                 backgroundImage:
-    //                                                     CachedNetworkImageProvider(
-    //                                                         '${meet.astrologerPhoto}'),
-    //                                                 radius: 20),
-    //                                             CircleAvatar(
-    //                                                 backgroundImage:
-    //                                                     CachedNetworkImageProvider(
-    //                                                         '${FirebaseAuth.instance.currentUser!.photoURL}'),
-    //                                                 radius: 20),
-    //                                           ],
-    //                                         ),
-    //                                       ),
-    //                                       ElevatedButton.icon(
-    //                                         style: ElevatedButton.styleFrom(
-    //                                             shape: RoundedRectangleBorder(
-    //                                                 borderRadius:
-    //                                                     BorderRadius.circular(
-    //                                                         20)),
-    //                                             primary: Color(0xff4c3cb0)),
-    //                                         onPressed: () async {
-    //                                           //open google meet link
-    //                                           await ShowAction.launchUrl(
-    //                                                   meet.meetingLink)
-    //                                               .then((value) {});
-
-    //                                           /*    Navigator.of(context)
-    //                                               .push(MaterialPageRoute(
-    //                                             builder: (context) => Chat(
-    //                                               peerId: userType == userX
-    //                                                   ? '${meet.astrologerId}'
-    //                                                   : '${meet.userId}',
-    //                                               peerAvatar: '',
-    //                                             ),
-    //                                           ));*/
-    //                                         },
-    //                                         icon: Icon(
-    //                                           Icons.arrow_forward_ios,
-    //                                           color: Colors.white,
-    //                                           size: 16,
-    //                                         ),
-    //                                         label: Text('join'),
-    //                                       )
-    //                                     ],
-    //                                   ),
-    //                                 ),
-    //                               )
-    //                             ],
-    //                           ),
-    //                         ),
-    //                       ),
-    //                     ),
-    //                     // ChatScreen(currentUserId: prefs!.getString('id') ?? ""),
-    //                     // ListView(
-    //                     //   shrinkWrap: true,
-    //                     //   children: [
-    //                     //     InkWell(
-    //                     //       onTap: () async {
-    //                     //         prefs = await SharedPreferences.getInstance();
-    //                     //         Navigator.push(
-    //                     //             context,
-    //                     //             MaterialPageRoute(
-    //                     //                 builder: (context) => ChatScreen(
-    //                     //                     currentUserId:
-    //                     //                         prefs!.getString('id') ?? "")));
-    //                     //       },
-    //                     //       child: Padding(
-    //                     //         padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-    //                     //         child: Row(
-    //                     //           mainAxisSize: MainAxisSize.max,
-    //                     //           children: [
-    //                     //             Container(
-    //                     //               width: MediaQuery.of(context).size.width - 20,
-    //                     //               height: 80,
-    //                     //               decoration: BoxDecoration(
-    //                     //                 color: Colors.white,
-    //                     //                 border: Border(
-    //                     //                   bottom: BorderSide(
-    //                     //                     color: Colors.black,
-    //                     //                     width: 1,
-    //                     //                   ),
-    //                     //                 ),
-    //                     //               ),
-    //                     //               child: Row(
-    //                     //                 mainAxisSize: MainAxisSize.max,
-    //                     //                 children: [
-    //                     //                   Padding(
-    //                     //                     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-    //                     //                     child: Stack(
-    //                     //                       children: [
-    //                     //                         Padding(
-    //                     //                           padding:
-    //                     //                               EdgeInsets.fromLTRB(8, 0, 8, 0),
-    //                     //                           child: Column(
-    //                     //                             mainAxisSize: MainAxisSize.max,
-    //                     //                             mainAxisAlignment:
-    //                     //                                 MainAxisAlignment.center,
-    //                     //                             children: [
-    //                     //                               Container(
-    //                     //                                 width: 60,
-    //                     //                                 height: 60,
-    //                     //                                 clipBehavior: Clip.antiAlias,
-    //                     //                                 decoration: BoxDecoration(
-    //                     //                                   shape: BoxShape.circle,
-    //                     //                                 ),
-    //                     //                                 child: Image.asset(
-    //                     //                                   'assets/bro.jpg',
-    //                     //                                 ),
-    //                     //                               )
-    //                     //                             ],
-    //                     //                           ),
-    //                     //                         ),
-    //                     //                         Padding(
-    //                     //                           padding: EdgeInsets.fromLTRB(
-    //                     //                               10, 1, 0, 0),
-    //                     //                           child: Icon(
-    //                     //                             Icons.circle,
-    //                     //                             color: Color(0xFF28FF00),
-    //                     //                             size: 24,
-    //                     //                           ),
-    //                     //                         )
-    //                     //                       ],
-    //                     //                     ),
-    //                     //                   ),
-    //                     //                   Expanded(
-    //                     //                     child: Column(
-    //                     //                       mainAxisSize: MainAxisSize.max,
-    //                     //                       mainAxisAlignment:
-    //                     //                           MainAxisAlignment.center,
-    //                     //                       children: [
-    //                     //                         Row(
-    //                     //                           mainAxisSize: MainAxisSize.max,
-    //                     //                           children: [
-    //                     //                             Text(
-    //                     //                               'Kartik',
-    //                     //                               style: TextStyle(
-    //                     //                                 color: Colors.black,
-    //                     //                                 fontSize: 18,
-    //                     //                               ),
-    //                     //                             )
-    //                     //                           ],
-    //                     //                         ),
-    //                     //                         Row(
-    //                     //                           mainAxisSize: MainAxisSize.max,
-    //                     //                           children: [
-    //                     //                             Expanded(
-    //                     //                               child: Padding(
-    //                     //                                 padding: EdgeInsets.fromLTRB(
-    //                     //                                     0, 4, 4, 0),
-    //                     //                                 child: Text(
-    //                     //                                   'Hey Can i Help you',
-    //                     //                                   style: TextStyle(
-    //                     //                                     color: Colors.grey[700],
-    //                     //                                     fontWeight:
-    //                     //                                         FontWeight.w500,
-    //                     //                                     fontSize: 14,
-    //                     //                                   ),
-    //                     //                                 ),
-    //                     //                               ),
-    //                     //                             )
-    //                     //                           ],
-    //                     //                         )
-    //                     //                       ],
-    //                     //                     ),
-    //                     //                   ),
-    //                     //                 ],
-    //                     //               ),
-    //                     //             )
-    //                     //           ],
-    //                     //         ),
-    //                     //       ),
-    //                     //     ),
-    //                     //   ],
-    //                     // )
-    //                     Container(
-    //                       child: StreamBuilder<QuerySnapshot>(
-    //                         stream: FirebaseFirestore.instance
-    //                             .collection('astrologer')
-    //                             .limit(_limit)
-    //                             .snapshots(),
-    //                         builder: (BuildContext context,
-    //                             AsyncSnapshot<QuerySnapshot> snapshot) {
-    //                           if (snapshot.hasData) {
-    //                             return ListView.builder(
-    //                               shrinkWrap: true,
-    //                               padding: EdgeInsets.all(10.0),
-    //                               itemBuilder: (context, index) => buildItem(
-    //                                   context, snapshot.data?.docs[index]),
-    //                               itemCount: snapshot.data?.docs.length,
-    //                               controller: listScrollController,
-    //                             );
-    //                           } else {
-    //                             return Center(
-    //                               child: CircularProgressIndicator(
-    //                                 valueColor: AlwaysStoppedAnimation<Color>(
-    //                                     primaryColor),
-    //                               ),
-    //                             );
-    //                           }
-    //                         },
-    //                       ),
-    //                     ),
-
-    //                     // Loading
-    //                     Positioned(
-    //                       child: isLoading ? const Loading() : Container(),
-    //                     )
-    //                   ],
-    //                 ),
-    //               ),
-    //             );
-    //           },
-    //           itemCount: meetings.length,
-    //           shrinkWrap: true,
-    //         )
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 
-  Widget buildItem(BuildContext context, DocumentSnapshot? document) {
-    if (document != null) {
-      UserChat userChat = UserChat.fromDocument(document);
-      if (userChat.id == user.getIdToken()) {
-        return SizedBox.shrink();
-      } else {
-        return Container(
-          child: TextButton(
-            child: Row(
-              children: <Widget>[
-                Material(
-                  child: userChat.photoUrl.isNotEmpty
-                      ? Image.network(
-                          userChat.photoUrl,
-                          fit: BoxFit.cover,
-                          width: 50.0,
-                          height: 50.0,
-                          loadingBuilder: (BuildContext context, Widget child,
-                              ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Container(
-                              width: 50,
-                              height: 50,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  color: primaryColor,
-                                  value: loadingProgress.expectedTotalBytes !=
-                                              null &&
-                                          loadingProgress.expectedTotalBytes !=
-                                              null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
+  Widget meetingcheck() {
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: MeetingHistory.read(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('Something went wrong');
+        } else if (snapshot.hasData || snapshot.data != null) {
+          return ListView.separated(
+            shrinkWrap: true,
+            separatorBuilder: (context, index) => SizedBox(height: 8.0),
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              var noteInfo = snapshot.data!.docs[index].data();
+              // String docID = snapshot.data!.docs[index].id;
+              String astrologerPhoto = noteInfo['astrologerPhoto'];
+              String astrologerName = noteInfo['astrologerName'];
+              String astrologerEmail = noteInfo['astrologerEmail'];
+              String paymentDescription = noteInfo['paymentDescription'];
+              String date = noteInfo['scheduledDate'];
+              Timestamp createdat = noteInfo['createdAt'];
+              // String meetinglink = noteInfo['meetingLink'];
+              String paymentId = noteInfo['paymentId'];
+              String time = noteInfo['scheduledTime'];
+              String userName = noteInfo['userName'];
+
+              return Padding(
+                padding: const EdgeInsets.all(8),
+                child: Container(
+                  width: MediaQuery.of(context).size.width - 40,
+                  // height: 160,
+                  decoration: BoxDecoration(
+                    // color: colors[i],
+                    boxShadow: [
+                      BoxShadow(
+                        color: GradientTemplate.gradientTemplate[0].colors.last
+                            .withOpacity(0.5),
+                        blurRadius: 8,
+                        spreadRadius: 2.5,
+                        offset: Offset(3, 3),
+                      ),
+                    ],
+                    gradient: LinearGradient(
+                      colors: GradientTemplate.gradientTemplate[0].colors,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(26),
+                  ),
+                  child: ExpansionTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            // mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Meeting Details",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ),
-                            );
-                          },
-                          errorBuilder: (context, object, stackTrace) {
-                            return Icon(
-                              Icons.account_circle,
-                              size: 50.0,
-                              color: greyColor,
-                            );
-                          },
-                        )
-                      : Icon(
-                          Icons.account_circle,
-                          size: 50.0,
-                          color: greyColor,
-                        ),
-                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                  clipBehavior: Clip.hardEdge,
-                ),
-                Flexible(
-                  child: Container(
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          child: Text(
-                            'name: ${userChat.name}',
-                            maxLines: 1,
-                            style: TextStyle(color: primaryColor),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 3,
+                                  bottom: 8,
+                                ),
+                                child: Row(
+                                  // mainAxisAlignment: MainAxisAlignment.start,
+                                  // crossAxisAlignment:
+                                  //     CrossAxisAlignment.start,
+                                  children: [
+                                    AutoSizeText(
+                                      'Date ',
+                                      maxLines: 1,
+                                      maxFontSize: 16,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    AutoSizeText(
+                                      date,
+                                      maxLines: 1,
+                                      maxFontSize: 14,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        // fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 3, bottom: 8),
+                                child: Row(
+                                  children: [
+                                    AutoSizeText(
+                                      "Time ",
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    AutoSizeText(
+                                      time,
+                                      maxLines: 1,
+                                      maxFontSize: 14,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        // fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ]),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      child: ClipOval(
+                                        child: FadeInImage.assetNetwork(
+                                          image: astrologerPhoto,
+                                          placeholder: 'assets/images/bro.jpg',
+                                          imageErrorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Image.asset(
+                                                'assets/images/bro.jpg',
+                                                fit: BoxFit.fitWidth);
+                                          },
+                                        ),
+                                      ),
+                                      radius: 20,
+                                    ),
+                                    CircleAvatar(
+                                      child: ClipOval(
+                                        child: FadeInImage.assetNetwork(
+                                          image: FirebaseAuth
+                                              .instance.currentUser!.photoURL!,
+                                          placeholder: 'assets/images/bro.jpg',
+                                          imageErrorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Image.asset(
+                                                'assets/images/bro.jpg',
+                                                fit: BoxFit.fitWidth);
+                                          },
+                                        ),
+                                      ),
+                                      radius: 20,
+                                    ),
+                                  ],
+                                ),
+                                ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      primary: Colors.amber),
+                                  onPressed: () {
+                                    MeetModel.joinMeeting(
+                                        roomText: "trymeetingboyyyyyyyyyyy",
+                                        subjectText: "LOL",
+                                        nameText: user.displayName.toString(),
+                                        emailText: user.email.toString(),
+                                        isAudioOnly: false,
+                                        isAudioMuted: true,
+                                        isVideoMuted: true);
+                                    // timecheck!
+                                    //     ? _launchURL(meetlink)
+                                    //     : Fluttertoast.showToast(
+                                    //         msg: "meeting not Activated");
+                                  },
+                                  icon: Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                  label: Text('Join'),
+                                )
+                              ],
+                            ),
                           ),
-                          alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
                         ),
-                        Container(
-                          child: Text(
-                            'About me: ${userChat.aboutMe}',
-                            maxLines: 1,
-                            style: TextStyle(color: primaryColor),
-                          ),
-                          alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                        )
                       ],
                     ),
-                    margin: EdgeInsets.only(left: 20.0),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Astrologer Name - ' + astrologerName,
+                                style: TextStyle(
+                                    color: Colors.white70, fontSize: 16)),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text('Description - ' + paymentDescription,
+                                style: TextStyle(
+                                    color: Colors.white70, fontSize: 16)),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            // Text('meetingId - ' + meetingId,
+                            //     style: TextStyle(
+                            //         color: Colors.white70, fontSize: 16)),
+                            // SizedBox(
+                            //   height: 10,
+                            // ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                 ),
-              ],
-            ),
-            onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => Chat(
-              //       peerId: userChat.id,
-              //       peerAvatar: userChat.photoUrl,
-              //     ),
-              //   ),
-              // );
+              );
             },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(greyColor2),
-              shape: MaterialStateProperty.all<OutlinedBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-              ),
-            ),
-          ),
-          margin: EdgeInsets.only(bottom: 10.0, left: 5.0, right: 5.0),
-        );
-      }
-    } else {
-      return SizedBox.shrink();
-    }
+          );
+        }
+
+        return Container();
+      },
+    );
   }
 }
 

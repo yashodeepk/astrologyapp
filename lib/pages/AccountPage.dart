@@ -96,33 +96,32 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
               scrollDirection: Axis.vertical,
               children: [
                 //check if user type is astrologer and add slot
-                // userType == astrologerX
-                //     ? ListTile(
-                //         trailing: Icon(
-                //           Icons.arrow_forward_ios,
-                //           color: Colors.black,
-                //           size: 18,
-                //         ),
-                //         title: Text(
-                //           addSchedule,
-                //           style: TextStyle(
-                //             color: Colors.black,
-                //             fontWeight: FontWeight.w500,
-                //             fontSize: 15,
-                //           ),
-                //         ),
-                //         onTap: () async {
-                //           //push to schedules
-                //           Navigator.of(context)
-                //               .pushNamed(SchedulesPage.routeName);
-                //           /*  showModalBottomSheet(
-                //               context: context,
-                //               backgroundColor: Colors.transparent,
-                //               builder: (context) => AddDayAndTimeAvailable())*/
-                //           ;
-                //         },
-                //       )
-                //     : Container(),
+                userType == astrologerX
+                    ? ListTile(
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.black,
+                          size: 18,
+                        ),
+                        title: Text(
+                          addSchedule,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15,
+                          ),
+                        ),
+                        onTap: () async {
+                          //push to schedules
+                          Navigator.of(context)
+                              .pushNamed(SchedulesPage.routeName);
+                          /*  showModalBottomSheet(
+                              context: context,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) => AddDayAndTimeAvailable())*/
+                        },
+                      )
+                    : Container(),
                 ListTile(
                   title: Text(
                     'Payment History',
@@ -141,24 +140,24 @@ class _AccountPageWidgetState extends State<AccountPageWidget> {
                     PaymentHistory.checkPayment(context);
                   },
                 ),
-                // ListTile(
-                //   title: Text(
-                //     'Meetings History',
-                //     style: TextStyle(
-                //       color: Colors.black,
-                //       fontWeight: FontWeight.w500,
-                //       fontSize: 15,
-                //     ),
-                //   ),
-                //   trailing: Icon(
-                //     Icons.arrow_forward_ios,
-                //     color: Colors.black,
-                //     size: 18,
-                //   ),
-                //   onTap: () {
-                //     MeetingHistory.checkMeetings(context);
-                //   },
-                // ),
+                ListTile(
+                  title: Text(
+                    'Meetings History',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                    ),
+                  ),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.black,
+                    size: 18,
+                  ),
+                  onTap: () {
+                    MeetingHistory.checkMeetings(context);
+                  },
+                ),
                 ListTile(
                   title: Text(
                     'Logout',

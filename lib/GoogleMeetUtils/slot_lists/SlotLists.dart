@@ -47,7 +47,7 @@ class _SlotListsState extends State<SlotLists> {
   MeetingProvider _meetingProvider = MeetingProvider();
   Razorpay? _razorpay;
   final GlobalKey<State> loadingKey = new GlobalKey<State>();
-  CalendarClient calendarClient = CalendarClient();
+  // CalendarClient calendarClient = CalendarClient();
   List<calendar.EventAttendee> attendeeEmails = [];
   final now = new DateTime.now();
 
@@ -276,8 +276,20 @@ class _SlotListsState extends State<SlotLists> {
         'from': _user!.email!,
         'paymentDateTime':
             DateFormat.yMMMMd('en_US').add_jm().format(DateTime.now()),
-        'meetlink': "https://meet.jit.si/${response.id}",
+        // 'meetlink': "https://meet.jit.si/${response.id}",
       };
+
+      // Map<String, dynamic> meetData = <String, dynamic>{
+      //   'paymentId': response.id,
+      //   'description': response.description,
+      //   'amount': response.amount / 100,
+      //   'paidTo': widget.astrologer!.email!,
+      //   'from': _user!.email!,
+      //   'paymentDateTime':
+      //       DateFormat.yMMMMd('en_US').add_jm().format(DateTime.now()),
+      //   // 'meetlink': "https://meet.jit.si/${response.id}",
+      // };
+
       FirebaseFirestore
           .instance //Don't remove this code this will help to read data in admin app otherwise it will give null error
           .collection('Payments')

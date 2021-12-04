@@ -1,6 +1,7 @@
 import 'package:astrologyapp/ChatUtils/ChatScreen.dart';
 import 'package:astrologyapp/Colors.dart';
 import 'package:astrologyapp/constants/constants.dart';
+import 'package:astrologyapp/jitsiMeetUtils/meetModel..dart';
 import 'package:astrologyapp/model/MeetingHistory.dart';
 import 'package:astrologyapp/model/PaymentHistory.dart';
 import 'package:astrologyapp/model/meetings.dart';
@@ -23,6 +24,7 @@ class MeetingHistoryPage extends StatefulWidget {
 }
 
 class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
+  final currentUser = FirebaseAuth.instance.currentUser;
   bool? timecheck;
   void _launchURL(String url) async =>
       await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
@@ -57,21 +59,10 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                 String paymentDescription = noteInfo['paymentDescription'];
                 String date = noteInfo['scheduledDate'];
                 Timestamp createdat = noteInfo['createdAt'];
-                String meetinglink = noteInfo['meetingLink'];
-                String meetingId = noteInfo['meetingId'];
+                // String meetinglink = noteInfo['meetingLink'];
+                String paymentId = noteInfo['paymentId'];
                 String time = noteInfo['timeSelected'];
-                String meetlink = noteInfo['meetlink'];
-                print('time check ' +
-                    createdat.compareTo(Timestamp.now()).toString());
-                if (createdat.compareTo(Timestamp.now()) == -1) {
-                  setState(() {
-                    timecheck = false;
-                  });
-                } else {
-                  setState(() {
-                    timecheck = true;
-                  });
-                }
+                String userName = noteInfo['userName'];
 
                 return Padding(
                   padding: const EdgeInsets.all(8),
@@ -225,10 +216,20 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                                                 BorderRadius.circular(20)),
                                         primary: Colors.amber),
                                     onPressed: () {
-                                      timecheck!
-                                          ? _launchURL(meetlink)
-                                          : Fluttertoast.showToast(
-                                              msg: "meeting not Activated");
+                                      MeetModel.joinMeeting(
+                                          roomText: "trymeeting",
+                                          subjectText: "LOL",
+                                          nameText: currentUser!.displayName
+                                              .toString(),
+                                          emailText:
+                                              currentUser!.email.toString(),
+                                          isAudioOnly: false,
+                                          isAudioMuted: true,
+                                          isVideoMuted: true);
+                                      // timecheck!
+                                      //     ? _launchURL(meetlink)
+                                      //     : Fluttertoast.showToast(
+                                      //         msg: "meeting not Activated");
                                     },
                                     icon: Icon(
                                       Icons.arrow_forward_ios,
@@ -262,12 +263,12 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                               SizedBox(
                                 height: 10,
                               ),
-                              Text('meetingId - ' + meetingId,
-                                  style: TextStyle(
-                                      color: Colors.white70, fontSize: 16)),
-                              SizedBox(
-                                height: 10,
-                              ),
+                              // Text('meetingId - ' + meetingId,
+                              //     style: TextStyle(
+                              //         color: Colors.white70, fontSize: 16)),
+                              // SizedBox(
+                              //   height: 10,
+                              // ),
                             ],
                           ),
                         )

@@ -18,15 +18,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:random_color/random_color.dart';
 
-Future<void> calender() async {
-  var _clientID = new ClientId(Secret.getId(), "");
-  const _scopes = const [cal.CalendarApi.calendarScope];
-  await clientViaUserConsent(_clientID, _scopes, prompt)
-      .then((AuthClient client) async {
-    CalendarClient.calendar = cal.CalendarApi(client);
-  });
-}
-
 void prompt(String url) async {
   if (await canLaunch(url)) {
     await launch(url);
