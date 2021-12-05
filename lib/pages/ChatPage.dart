@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:astrologyapp/ChatUtils/ChatScreen.dart';
-import 'package:astrologyapp/ChatUtils/userchat.dart';
 import 'package:astrologyapp/Colors.dart';
 import 'package:astrologyapp/jitsiMeetUtils/meetModel..dart';
 import 'package:astrologyapp/model/ChatModel.dart';
@@ -33,6 +32,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   final user = FirebaseAuth.instance.currentUser!;
   late final meetings;
   SharedPreferences? prefs;
+  bool timecheck = false;
   List<ChatModel> chatList = [];
   int _limit = 20;
   int _limitIncrement = 20;
@@ -331,7 +331,7 @@ class _ChatWidgetState extends State<ChatWidget> {
               String astrologerEmail = noteInfo['astrologerEmail'];
               String paymentDescription = noteInfo['description'];
               String meetDate = noteInfo['meetDate'];
-              Timestamp createdat = noteInfo['paymentDateTime'];
+              Timestamp createdAt = noteInfo['paymentDateTime'];
               // String meetinglink = noteInfo['meetingLink'];
               String paymentId = noteInfo['paymentId'];
               String startTime = noteInfo['startTime'];
@@ -341,213 +341,235 @@ class _ChatWidgetState extends State<ChatWidget> {
               DateTime tempDate =
                   new DateFormat("dd/MM/yyyy hh:mm").parse(time);
               print(tempDate);
+              final datetimemin = DateTime.now().difference(tempDate).inMinutes;
+              final datetimeHR = DateTime.now().difference(tempDate).inHours;
+              final datetimedays = DateTime.now().difference(tempDate).inDays;
+              print(datetimedays + datetimeHR + datetimemin);
 
-              return Padding(
-                padding: const EdgeInsets.all(8),
-                child: Container(
-                  width: MediaQuery.of(context).size.width - 40,
-                  // height: 160,
-                  decoration: BoxDecoration(
-                    // color: colors[i],
-                    boxShadow: [
-                      BoxShadow(
-                        color: GradientTemplate.gradientTemplate[0].colors.last
-                            .withOpacity(0.5),
-                        blurRadius: 8,
-                        spreadRadius: 2.5,
-                        offset: Offset(3, 3),
-                      ),
-                    ],
-                    gradient: LinearGradient(
-                      colors: GradientTemplate.gradientTemplate[0].colors,
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(26),
-                  ),
-                  child: ExpansionTile(
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      // crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            // mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Meeting Details",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 3,
-                                  bottom: 8,
-                                ),
-                                child: Row(
-                                  // mainAxisAlignment: MainAxisAlignment.start,
-                                  // crossAxisAlignment:
-                                  //     CrossAxisAlignment.start,
-                                  children: [
-                                    AutoSizeText(
-                                      'Date ',
-                                      maxLines: 1,
-                                      maxFontSize: 16,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    AutoSizeText(
-                                      meetDate,
-                                      maxLines: 1,
-                                      maxFontSize: 14,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        // fontSize: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 3, bottom: 8),
-                                child: Row(
-                                  children: [
-                                    AutoSizeText(
-                                      "Time ",
-                                      maxLines: 1,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    AutoSizeText(
-                                      startTime,
-                                      maxLines: 1,
-                                      maxFontSize: 14,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        // fontSize: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ]),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Row(
-                                  children: [
-                                    CircleAvatar(
-                                      child: ClipOval(
-                                        child: FadeInImage.assetNetwork(
-                                          image: astrologerPhoto,
-                                          placeholder: 'assets/images/bro.jpg',
-                                          imageErrorBuilder:
-                                              (context, error, stackTrace) {
-                                            return Image.asset(
-                                                'assets/images/bro.jpg',
-                                                fit: BoxFit.fitWidth);
-                                          },
-                                        ),
-                                      ),
-                                      radius: 20,
-                                    ),
-                                    CircleAvatar(
-                                      child: ClipOval(
-                                        child: FadeInImage.assetNetwork(
-                                          image: FirebaseAuth
-                                              .instance.currentUser!.photoURL!,
-                                          placeholder: 'assets/images/bro.jpg',
-                                          imageErrorBuilder:
-                                              (context, error, stackTrace) {
-                                            return Image.asset(
-                                                'assets/images/bro.jpg',
-                                                fit: BoxFit.fitWidth);
-                                          },
-                                        ),
-                                      ),
-                                      radius: 20,
-                                    ),
-                                  ],
-                                ),
-                                ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                      primary: Colors.amber),
-                                  onPressed: () {
-                                    MeetModel.joinMeeting(
-                                        roomText: "trymeetingboyyyyyyyyyyy",
-                                        subjectText: "LOL",
-                                        nameText: user.displayName.toString(),
-                                        emailText: user.email.toString(),
-                                        isAudioOnly: false,
-                                        isAudioMuted: true,
-                                        isVideoMuted: true);
-                                    // timecheck!
-                                    //     ? _launchURL(meetlink)
-                                    //     : Fluttertoast.showToast(
-                                    //         msg: "meeting not Activated");
-                                  },
-                                  icon: Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.white,
-                                    size: 16,
-                                  ),
-                                  label: Text('Join'),
-                                )
-                              ],
+              if (datetimedays == 0) {
+                while (datetimeHR <= 0) {
+                  while (datetimemin > -5 && datetimemin < 35) {
+                    timecheck = true;
+                  }
+                }
+              } else {
+                timecheck = false;
+              }
+
+              return timecheck
+                  ? Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width - 40,
+                        // height: 160,
+                        decoration: BoxDecoration(
+                          // color: colors[i],
+                          boxShadow: [
+                            BoxShadow(
+                              color: GradientTemplate
+                                  .gradientTemplate[0].colors.last
+                                  .withOpacity(0.5),
+                              blurRadius: 8,
+                              spreadRadius: 2.5,
+                              offset: Offset(3, 3),
                             ),
+                          ],
+                          gradient: LinearGradient(
+                            colors: GradientTemplate.gradientTemplate[0].colors,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
+                          borderRadius: BorderRadius.circular(26),
                         ),
-                      ],
-                    ),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: ExpansionTile(
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            // crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Meeting Details",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 3,
+                                        bottom: 8,
+                                      ),
+                                      child: Row(
+                                        // mainAxisAlignment: MainAxisAlignment.start,
+                                        // crossAxisAlignment:
+                                        //     CrossAxisAlignment.start,
+                                        children: [
+                                          AutoSizeText(
+                                            'Date ',
+                                            maxLines: 1,
+                                            maxFontSize: 16,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          AutoSizeText(
+                                            meetDate,
+                                            maxLines: 1,
+                                            maxFontSize: 14,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              // fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 3, bottom: 8),
+                                      child: Row(
+                                        children: [
+                                          AutoSizeText(
+                                            "Time ",
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          AutoSizeText(
+                                            startTime,
+                                            maxLines: 1,
+                                            maxFontSize: 14,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              // fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ]),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Expanded(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            child: ClipOval(
+                                              child: FadeInImage.assetNetwork(
+                                                image: astrologerPhoto,
+                                                placeholder:
+                                                    'assets/images/bro.jpg',
+                                                imageErrorBuilder: (context,
+                                                    error, stackTrace) {
+                                                  return Image.asset(
+                                                      'assets/images/bro.jpg',
+                                                      fit: BoxFit.fitWidth);
+                                                },
+                                              ),
+                                            ),
+                                            radius: 20,
+                                          ),
+                                          CircleAvatar(
+                                            child: ClipOval(
+                                              child: FadeInImage.assetNetwork(
+                                                image: FirebaseAuth.instance
+                                                    .currentUser!.photoURL!,
+                                                placeholder:
+                                                    'assets/images/bro.jpg',
+                                                imageErrorBuilder: (context,
+                                                    error, stackTrace) {
+                                                  return Image.asset(
+                                                      'assets/images/bro.jpg',
+                                                      fit: BoxFit.fitWidth);
+                                                },
+                                              ),
+                                            ),
+                                            radius: 20,
+                                          ),
+                                        ],
+                                      ),
+                                      ElevatedButton.icon(
+                                        style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20)),
+                                            primary: Colors.amber),
+                                        onPressed: () {
+                                          MeetModel.joinMeeting(
+                                              roomText:
+                                                  "trymeetingboyyyyyyyyyyy",
+                                              subjectText: "LOL",
+                                              nameText:
+                                                  user.displayName.toString(),
+                                              emailText: user.email.toString(),
+                                              isAudioOnly: false,
+                                              isAudioMuted: true,
+                                              isVideoMuted: true);
+                                          // timecheck!
+                                          //     ? _launchURL(meetlink)
+                                          //     : Fluttertoast.showToast(
+                                          //         msg: "meeting not Activated");
+                                        },
+                                        icon: Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Colors.white,
+                                          size: 16,
+                                        ),
+                                        label: Text('Join'),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                           children: [
-                            Text('Astrologer Name - ' + astrologerName,
-                                style: TextStyle(
-                                    color: Colors.white70, fontSize: 16)),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text('Description - ' + paymentDescription,
-                                style: TextStyle(
-                                    color: Colors.white70, fontSize: 16)),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            // Text('meetingId - ' + meetingId,
-                            //     style: TextStyle(
-                            //         color: Colors.white70, fontSize: 16)),
-                            // SizedBox(
-                            //   height: 10,
-                            // ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Astrologer Name - ' + astrologerName,
+                                      style: TextStyle(
+                                          color: Colors.white70, fontSize: 16)),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text('Description - ' + paymentDescription,
+                                      style: TextStyle(
+                                          color: Colors.white70, fontSize: 16)),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  // Text('meetingId - ' + meetingId,
+                                  //     style: TextStyle(
+                                  //         color: Colors.white70, fontSize: 16)),
+                                  // SizedBox(
+                                  //   height: 10,
+                                  // ),
+                                ],
+                              ),
+                            )
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                ),
-              );
+                      ),
+                    )
+                  : Container();
             },
           );
         }

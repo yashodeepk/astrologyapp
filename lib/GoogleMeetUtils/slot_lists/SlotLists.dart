@@ -7,7 +7,6 @@ import 'package:astrologyapp/main.dart';
 import 'package:astrologyapp/model/PaymentInfo.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/phoneAuthUtils/getphone.dart';
-import 'package:astrologyapp/provider/meeting_provider.dart';
 import 'package:astrologyapp/provider/slot_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,8 +16,6 @@ import 'package:googleapis/calendar/v3.dart' as calendar;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-
-import '../calenderevent.dart';
 
 class SlotLists extends StatefulWidget {
   final List<String> slotList;
@@ -44,7 +41,7 @@ class _SlotListsState extends State<SlotLists> {
   String _itemSelected = '';
   User? _user;
   SlotProvider _slotProvider = SlotProvider();
-  MeetingProvider _meetingProvider = MeetingProvider();
+  // MeetingProvider _meetingProvider = MeetingProvider();
   Razorpay? _razorpay;
   final GlobalKey<State> loadingKey = new GlobalKey<State>();
   // CalendarClient calendarClient = CalendarClient();
@@ -333,6 +330,7 @@ class _SlotListsState extends State<SlotLists> {
         'startTime': startTime,
         'paymentDateTime': now,
         'meetDate': format.format(startTimeToMilliseconds),
+        'endDate': format.format(endTimeToMilliseconds),
         'meetlink': eventLink,
       };
       print("Meeting Data" + meetdata.toString());

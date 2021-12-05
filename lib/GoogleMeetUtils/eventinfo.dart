@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class EventInfo {
   final String id;
   final String name;

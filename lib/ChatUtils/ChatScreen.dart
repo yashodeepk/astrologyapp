@@ -6,10 +6,8 @@ import 'package:astrologyapp/ChatUtils/loading.dart';
 import 'package:astrologyapp/ChatUtils/pdfViewer.dart';
 import 'package:astrologyapp/Colors.dart';
 import 'package:astrologyapp/actions/actions.dart';
-import 'package:astrologyapp/actions/dialog.dart';
 import 'package:astrologyapp/constants/constants.dart';
 import 'package:astrologyapp/model/users.dart';
-import 'package:astrologyapp/phoneAuthUtils/getphone.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,8 +20,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class Chat extends StatelessWidget {
   String peerId;
@@ -134,7 +130,7 @@ class ChatScreenState extends State<ChatScreen> {
     var isMatched = false;
     List<Astrologer>? astrologersList2 =
         Provider.of<List<Astrologer>>(context, listen: false);
-    User? user = FirebaseAuth.instance.currentUser;
+    // User? user = FirebaseAuth.instance.currentUser;
     for (var i = 0; i < astrologersList!.length; i++) {
       if (astrologersList2[i].id == peerId) {
         isMatched = true;

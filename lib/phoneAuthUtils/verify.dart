@@ -1,11 +1,9 @@
 import 'package:astrologyapp/Colors.dart';
-import 'package:astrologyapp/main.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:astrologyapp/provider/phone_auth.dart';
 import 'package:astrologyapp/constants/constants.dart';
-import 'package:astrologyapp/phoneAuthUtils/widget.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart' as rv;
 

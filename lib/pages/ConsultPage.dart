@@ -3,20 +3,13 @@ import 'dart:math';
 import 'package:astrologyapp/ChatUtils/ChatScreen.dart';
 import 'package:astrologyapp/Colors.dart';
 import 'package:astrologyapp/GoogleMeetUtils/EventDetails.dart';
-import 'package:astrologyapp/GoogleMeetUtils/calenderevent.dart';
-import 'package:astrologyapp/GoogleMeetUtils/secrate.dart';
 import 'package:astrologyapp/model/users.dart';
 import 'package:astrologyapp/pages/AccountPage.dart';
-import 'package:astrologyapp/pages/ChatPage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:googleapis/calendar/v3.dart' as cal;
-import 'package:googleapis_auth/auth_io.dart';
-import 'package:googleapis_auth/googleapis_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:random_color/random_color.dart';
 
 void prompt(String url) async {
   if (await canLaunch(url)) {

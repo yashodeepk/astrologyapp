@@ -1,17 +1,10 @@
-import 'package:astrologyapp/ChatUtils/ChatScreen.dart';
 import 'package:astrologyapp/Colors.dart';
-import 'package:astrologyapp/constants/constants.dart';
 import 'package:astrologyapp/jitsiMeetUtils/meetModel..dart';
 import 'package:astrologyapp/model/MeetingHistory.dart';
-import 'package:astrologyapp/model/PaymentHistory.dart';
-import 'package:astrologyapp/model/meetings.dart';
-import 'package:astrologyapp/pages/HomePage.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MeetingHistoryPage extends StatefulWidget {
   static String? useremail;
@@ -26,8 +19,6 @@ class MeetingHistoryPage extends StatefulWidget {
 class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   bool? timecheck;
-  void _launchURL(String url) async =>
-      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 
   @override
   Widget build(BuildContext context) {
@@ -53,16 +44,16 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
               itemBuilder: (context, index) {
                 var noteInfo = snapshot.data!.docs[index].data();
                 // String docID = snapshot.data!.docs[index].id;
-                String astrologerPhoto = noteInfo['astrologerPhoto'];
-                String astrologerName = noteInfo['astrologerName'];
+                String astrologerPhoto = noteInfo['astrologerphotoUrl'];
+                String astrologerName = noteInfo['astrologername'];
                 String astrologerEmail = noteInfo['astrologerEmail'];
-                String paymentDescription = noteInfo['paymentDescription'];
-                String date = noteInfo['scheduledDate'];
-                Timestamp createdat = noteInfo['createdAt'];
+                String paymentDescription = noteInfo['description'];
+                String meetDate = noteInfo['meetDate'];
+                Timestamp createdAt = noteInfo['paymentDateTime'];
                 // String meetinglink = noteInfo['meetingLink'];
                 String paymentId = noteInfo['paymentId'];
-                String time = noteInfo['timeSelected'];
-                String userName = noteInfo['userName'];
+                String startTime = noteInfo['startTime'];
+                String startEndTime = noteInfo['startEndTime'];
 
                 return Padding(
                   padding: const EdgeInsets.all(8),
@@ -128,7 +119,7 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                                             fontWeight: FontWeight.w500),
                                       ),
                                       AutoSizeText(
-                                        date,
+                                        meetDate,
                                         maxLines: 1,
                                         maxFontSize: 14,
                                         style: TextStyle(
@@ -153,7 +144,7 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                                             fontWeight: FontWeight.w500),
                                       ),
                                       AutoSizeText(
-                                        time,
+                                        startTime,
                                         maxLines: 1,
                                         maxFontSize: 14,
                                         style: TextStyle(

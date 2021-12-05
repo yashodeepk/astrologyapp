@@ -6,14 +6,13 @@ import 'package:astrologyapp/pages/schedules_page/schedules.dart';
 import 'package:astrologyapp/paymentMethodUtils/RazorpayPayment.dart';
 import 'package:flutter/material.dart';
 
-import 'GoogleMeetUtils/AddEvent.dart';
 import 'GoogleMeetUtils/EventDetails.dart';
 import 'api/config_page.dart';
 import 'main.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    final args = settings.arguments;
+    // final args = settings.arguments;
 
     switch (settings.name) {
 //config page
