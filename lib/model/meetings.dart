@@ -6,8 +6,7 @@ String meetingsToJson(Meetings data) => json.encode(data.toJson());
 
 class Meetings {
   Meetings(
-      {required this.meetingId,
-      required this.scheduledDate,
+      {required this.scheduledDate,
       required this.scheduledTime,
       required this.paymentDescription,
       required this.createdAt,
@@ -23,7 +22,6 @@ class Meetings {
       required this.paymentId,
       required this.attendeeEmails});
 
-  final String meetingId;
   final String paymentDescription;
   final createdAt;
   final List<dynamic> attendeeEmails;
@@ -41,7 +39,6 @@ class Meetings {
   final String astrologerPhoto;
 
   factory Meetings.fromJson(Map<String, dynamic> json) => Meetings(
-        meetingId: json["meetingId"],
         scheduledDate: json["scheduledDate"],
         scheduledTime: json["scheduledTime"],
         paymentDescription: json["paymentDescription"],
@@ -61,7 +58,6 @@ class Meetings {
       );
 
   Map<String, dynamic> toJson() => {
-        "meetingId": meetingId,
         "scheduledDate": scheduledDate,
         "scheduledTime": scheduledTime,
         "paymentDescription": paymentDescription,

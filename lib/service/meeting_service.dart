@@ -29,7 +29,7 @@ class MeetingService {
         .collection('event')
         .doc(_email)
         .collection('Meetings')
-        .doc(meetings.meetingId)
+        .doc(meetings.paymentId)
         .set(meetings.toJson());
   }
 

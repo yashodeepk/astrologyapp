@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
 class MeetingProvider with ChangeNotifier {
-  String? _meetingId;
   String? _paymentDescription;
   dynamic _createdAt;
   String? _meetingLink;
@@ -29,7 +28,6 @@ class MeetingProvider with ChangeNotifier {
       scheduledDate,
       scheduledTime,
       meetingLink,
-      meetingId,
       emailList,
       astrologerEmail,
       astrologerName,
@@ -45,7 +43,6 @@ class MeetingProvider with ChangeNotifier {
     _scheduledDate = scheduledDate;
     _scheduledTime = scheduledTime;
     _meetingLink = meetingLink;
-    _meetingId = meetingId;
     _emailList = emailList;
     _astrologerEmail = astrologerEmail;
     _astrologerName = astrologerName;
@@ -63,7 +60,6 @@ class MeetingProvider with ChangeNotifier {
   //create new meeting
   createMeeting() async {
     Meetings meetings = Meetings(
-      meetingId: meetingId,
       attendeeEmails: getEmailList,
       paymentDescription: paymentDescription,
       createdAt: createdAt,
@@ -94,8 +90,6 @@ class MeetingProvider with ChangeNotifier {
   get getEmailList => _emailList;
 
   get meetingLink => _meetingLink;
-
-  get meetingId => _meetingId;
 
   get astrologerName => _astrologerName;
 

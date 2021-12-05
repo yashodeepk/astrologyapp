@@ -15,6 +15,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -325,16 +326,21 @@ class _ChatWidgetState extends State<ChatWidget> {
             itemBuilder: (context, index) {
               var noteInfo = snapshot.data!.docs[index].data();
               // String docID = snapshot.data!.docs[index].id;
-              String astrologerPhoto = noteInfo['astrologerPhoto'];
-              String astrologerName = noteInfo['astrologerName'];
+              String astrologerPhoto = noteInfo['astrologerphotoUrl'];
+              String astrologerName = noteInfo['astrologername'];
               String astrologerEmail = noteInfo['astrologerEmail'];
-              String paymentDescription = noteInfo['paymentDescription'];
-              String date = noteInfo['scheduledDate'];
-              Timestamp createdat = noteInfo['createdAt'];
+              String paymentDescription = noteInfo['description'];
+              String meetDate = noteInfo['meetDate'];
+              Timestamp createdat = noteInfo['paymentDateTime'];
               // String meetinglink = noteInfo['meetingLink'];
               String paymentId = noteInfo['paymentId'];
-              String time = noteInfo['scheduledTime'];
-              String userName = noteInfo['userName'];
+              String startTime = noteInfo['startTime'];
+              String startEndTime = noteInfo['startEndTime'];
+
+              String time = meetDate + " " + startTime;
+              DateTime tempDate =
+                  new DateFormat("dd/MM/yyyy hh:mm").parse(time);
+              print(tempDate);
 
               return Padding(
                 padding: const EdgeInsets.all(8),
@@ -399,7 +405,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                           fontWeight: FontWeight.w500),
                                     ),
                                     AutoSizeText(
-                                      date,
+                                      meetDate,
                                       maxLines: 1,
                                       maxFontSize: 14,
                                       style: TextStyle(
@@ -424,7 +430,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                           fontWeight: FontWeight.w500),
                                     ),
                                     AutoSizeText(
-                                      time,
+                                      startTime,
                                       maxLines: 1,
                                       maxFontSize: 14,
                                       style: TextStyle(
