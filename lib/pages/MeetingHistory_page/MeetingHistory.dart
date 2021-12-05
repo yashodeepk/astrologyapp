@@ -5,6 +5,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 class MeetingHistoryPage extends StatefulWidget {
   static String? useremail;
@@ -18,7 +20,7 @@ class MeetingHistoryPage extends StatefulWidget {
 
 class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
-  bool? timecheck;
+  bool timecheck = false;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +49,7 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                 String astrologerPhoto = noteInfo['astrologerphotoUrl'];
                 String astrologerName = noteInfo['astrologername'];
                 String astrologerEmail = noteInfo['astrologerEmail'];
+                String userphotoUrl = noteInfo['userphotoUrl'];
                 String paymentDescription = noteInfo['description'];
                 String meetDate = noteInfo['meetDate'];
                 Timestamp createdAt = noteInfo['paymentDateTime'];
@@ -54,6 +57,26 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                 String paymentId = noteInfo['paymentId'];
                 String startTime = noteInfo['startTime'];
                 String startEndTime = noteInfo['startEndTime'];
+
+                String time = meetDate + " " + startTime;
+                DateTime tempDate =
+                    new DateFormat("dd/MM/yyyy hh:mm").parse(time);
+                print(tempDate);
+                final datetimemin =
+                    DateTime.now().difference(tempDate).inMinutes;
+                final datetimeHR = DateTime.now().difference(tempDate).inHours;
+                final datetimedays = DateTime.now().difference(tempDate).inDays;
+                print(datetimedays + datetimeHR + datetimemin);
+
+                if (datetimedays == 0) {
+                  while (datetimeHR <= 0) {
+                    while (datetimemin > -5 && datetimemin < 35) {
+                      timecheck = true;
+                    }
+                  }
+                } else {
+                  timecheck = false;
+                }
 
                 return Padding(
                   padding: const EdgeInsets.all(8),
@@ -184,8 +207,7 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                                       CircleAvatar(
                                         child: ClipOval(
                                           child: FadeInImage.assetNetwork(
-                                            image: FirebaseAuth.instance
-                                                .currentUser!.photoURL!,
+                                            image: userphotoUrl,
                                             placeholder:
                                                 'assets/images/bro.jpg',
                                             imageErrorBuilder:
@@ -207,16 +229,19 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                                                 BorderRadius.circular(20)),
                                         primary: Colors.amber),
                                     onPressed: () {
-                                      MeetModel.joinMeeting(
-                                          roomText: "trymeeting",
-                                          subjectText: "LOL",
-                                          nameText: currentUser!.displayName
-                                              .toString(),
-                                          emailText:
-                                              currentUser!.email.toString(),
-                                          isAudioOnly: false,
-                                          isAudioMuted: true,
-                                          isVideoMuted: true);
+                                      timecheck
+                                          ? MeetModel.joinMeeting(
+                                              roomText: "trymeeting",
+                                              subjectText: "LOL",
+                                              nameText: currentUser!.displayName
+                                                  .toString(),
+                                              emailText:
+                                                  currentUser!.email.toString(),
+                                              isAudioOnly: false,
+                                              isAudioMuted: true,
+                                              isVideoMuted: true)
+                                          : Fluttertoast.showToast(
+                                              msg: "Meeting is not active");
                                       // timecheck!
                                       //     ? _launchURL(meetlink)
                                       //     : Fluttertoast.showToast(
