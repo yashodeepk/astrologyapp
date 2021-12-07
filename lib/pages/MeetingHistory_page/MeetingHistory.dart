@@ -66,17 +66,26 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                     DateTime.now().difference(tempDate).inMinutes;
                 final datetimeHR = DateTime.now().difference(tempDate).inHours;
                 final datetimedays = DateTime.now().difference(tempDate).inDays;
-                print(datetimedays + datetimeHR + datetimemin);
+                print("D " +
+                    datetimedays.toString() +
+                    "H " +
+                    datetimeHR.toString() +
+                    "M " +
+                    datetimemin.toString());
 
                 if (datetimedays == 0) {
-                  while (datetimeHR <= 0) {
-                    while (datetimemin > -5 && datetimemin < 35) {
+                  print(1);
+                  if (datetimeHR >= 0) {
+                    print(2);
+                    if (datetimemin > -5 && datetimemin < 35) {
+                      print(3);
                       timecheck = true;
                     }
                   }
                 } else {
                   timecheck = false;
                 }
+                print("timecheck " + timecheck.toString());
 
                 return Padding(
                   padding: const EdgeInsets.all(8),
@@ -230,7 +239,9 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                                         primary: Colors.amber),
                                     onPressed: () {
                                       timecheck
-                                          ? MeetModel.joinMeeting(
+                                          ? Fluttertoast.showToast(
+                                              msg: "Meeting is not active")
+                                          : MeetModel.joinMeeting(
                                               roomText: "trymeeting",
                                               subjectText: "LOL",
                                               nameText: currentUser!.displayName
@@ -239,9 +250,7 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                                                   currentUser!.email.toString(),
                                               isAudioOnly: false,
                                               isAudioMuted: true,
-                                              isVideoMuted: true)
-                                          : Fluttertoast.showToast(
-                                              msg: "Meeting is not active");
+                                              isVideoMuted: true);
                                       // timecheck!
                                       //     ? _launchURL(meetlink)
                                       //     : Fluttertoast.showToast(

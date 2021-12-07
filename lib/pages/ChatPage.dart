@@ -33,6 +33,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   late final meetings;
   SharedPreferences? prefs;
   bool timecheck = false;
+  bool datecheck = false;
   List<ChatModel> chatList = [];
   int _limit = 20;
   int _limitIncrement = 20;
@@ -347,16 +348,18 @@ class _ChatWidgetState extends State<ChatWidget> {
               print(datetimedays + datetimeHR + datetimemin);
 
               if (datetimedays == 0) {
-                while (datetimeHR <= 0) {
-                  while (datetimemin > -5 && datetimemin < 35) {
+                datecheck = true;
+                if (datetimeHR >= 0) {
+                  if (datetimemin > -5 && datetimemin < 35) {
                     timecheck = true;
                   }
                 }
               } else {
                 timecheck = false;
+                datecheck = false;
               }
 
-              return timecheck
+              return datecheck
                   ? Padding(
                       padding: const EdgeInsets.all(8),
                       child: Container(
@@ -382,6 +385,8 @@ class _ChatWidgetState extends State<ChatWidget> {
                           borderRadius: BorderRadius.circular(26),
                         ),
                         child: ExpansionTile(
+                          iconColor: Colors.black,
+                          collapsedIconColor: Colors.amber,
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             // crossAxisAlignment: CrossAxisAlignment.start,
@@ -507,29 +512,36 @@ class _ChatWidgetState extends State<ChatWidget> {
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(20)),
-                                            primary: Colors.amber),
+                                            primary: timecheck
+                                                ? Colors.amber
+                                                : Colors.black),
                                         onPressed: () {
-                                          MeetModel.joinMeeting(
-                                              roomText:
-                                                  "trymeetingboyyyyyyyyyyy",
-                                              subjectText: "LOL",
-                                              nameText:
-                                                  user.displayName.toString(),
-                                              emailText: user.email.toString(),
-                                              isAudioOnly: false,
-                                              isAudioMuted: true,
-                                              isVideoMuted: true);
+                                          timecheck
+                                              ? MeetModel.joinMeeting(
+                                                  roomText:
+                                                      "trymeetingboyyyyyyyyyyy",
+                                                  subjectText: "LOL",
+                                                  nameText: user.displayName
+                                                      .toString(),
+                                                  emailText:
+                                                      user.email.toString(),
+                                                  isAudioOnly: false,
+                                                  isAudioMuted: true,
+                                                  isVideoMuted: true)
+                                              : Fluttertoast.showToast(
+                                                  msg: "Meeting is not Active");
                                           // timecheck!
                                           //     ? _launchURL(meetlink)
-                                          //     : Fluttertoast.showToast(
-                                          //         msg: "meeting not Activated");
                                         },
                                         icon: Icon(
                                           Icons.arrow_forward_ios,
-                                          color: Colors.white,
+                                          color: Colors.amber,
                                           size: 16,
                                         ),
-                                        label: Text('Join'),
+                                        label: Text(
+                                          'Join',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                       )
                                     ],
                                   ),
@@ -574,7 +586,10 @@ class _ChatWidgetState extends State<ChatWidget> {
           );
         }
 
-        return Container();
+        return Container(
+            child: Center(
+          child: CircularProgressIndicator(),
+        ));
       },
     );
   }
