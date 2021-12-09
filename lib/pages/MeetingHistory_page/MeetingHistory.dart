@@ -21,6 +21,7 @@ class MeetingHistoryPage extends StatefulWidget {
 class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   bool timecheck = false;
+  bool datecheck = false;
 
   @override
   Widget build(BuildContext context) {
@@ -74,16 +75,15 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                     datetimemin.toString());
 
                 if (datetimedays == 0) {
-                  print(1);
+                  datecheck = true;
                   if (datetimeHR >= 0) {
-                    print(2);
                     if (datetimemin > -5 && datetimemin < 35) {
-                      print(3);
                       timecheck = true;
                     }
                   }
                 } else {
                   timecheck = false;
+                  datecheck = false;
                 }
                 print("timecheck " + timecheck.toString());
 
@@ -231,38 +231,47 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                                       ),
                                     ],
                                   ),
-                                  ElevatedButton.icon(
-                                    style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        primary: Colors.amber),
-                                    onPressed: () {
-                                      timecheck
-                                          ? Fluttertoast.showToast(
-                                              msg: "Meeting is not active")
-                                          : MeetModel.joinMeeting(
-                                              roomText: "trymeeting",
-                                              subjectText: "LOL",
-                                              nameText: currentUser!.displayName
-                                                  .toString(),
-                                              emailText:
-                                                  currentUser!.email.toString(),
-                                              isAudioOnly: false,
-                                              isAudioMuted: true,
-                                              isVideoMuted: true);
-                                      // timecheck!
-                                      //     ? _launchURL(meetlink)
-                                      //     : Fluttertoast.showToast(
-                                      //         msg: "meeting not Activated");
-                                    },
-                                    icon: Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: Colors.white,
-                                      size: 16,
-                                    ),
-                                    label: Text('Join'),
-                                  )
+                                  datecheck
+                                      ? ElevatedButton.icon(
+                                          style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20)),
+                                              primary: Colors.black),
+                                          onPressed: () {
+                                            timecheck
+                                                ? MeetModel.joinMeeting(
+                                                    roomText:
+                                                        "trymeetingboyyyyyyyyyyy",
+                                                    subjectText: "LOL",
+                                                    nameText: currentUser!
+                                                        .displayName
+                                                        .toString(),
+                                                    emailText: currentUser!
+                                                        .email
+                                                        .toString(),
+                                                    isAudioOnly: false,
+                                                    isAudioMuted: true,
+                                                    isVideoMuted: true)
+                                                : Fluttertoast.showToast(
+                                                    msg:
+                                                        "Meeting is not Active");
+                                            // timecheck!
+                                            //     ? _launchURL(meetlink)
+                                          },
+                                          icon: Icon(
+                                            Icons.arrow_forward_ios,
+                                            color: Colors.amber,
+                                            size: 16,
+                                          ),
+                                          label: Text(
+                                            'Join',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )
+                                      : Container()
                                 ],
                               ),
                             ),
