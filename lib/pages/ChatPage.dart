@@ -519,7 +519,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                                           timecheck
                                               ? MeetModel.joinMeeting(
                                                   roomText:
-                                                      "trymeetingboyyyyyyyyyyy",
+                                                      paymentId.toString(),
                                                   subjectText: "LOL",
                                                   nameText: user.displayName
                                                       .toString(),

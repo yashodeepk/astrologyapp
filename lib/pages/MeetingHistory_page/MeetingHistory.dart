@@ -243,7 +243,7 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                                             timecheck
                                                 ? MeetModel.joinMeeting(
                                                     roomText:
-                                                        "trymeetingboyyyyyyyyyyy",
+                                                        paymentId.toString(),
                                                     subjectText: "LOL",
                                                     nameText: currentUser!
                                                         .displayName
