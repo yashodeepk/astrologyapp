@@ -19,12 +19,18 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'constants/constants.dart';
 import 'model/meetings.dart';
 import 'model/slot.dart';
+import 'pages/HomePage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  if (preferences.containsKey('type')) {
+    userType = preferences.getString('type');
+  }
   await Firebase.initializeApp();
 
   runApp(MyApp());
@@ -124,6 +130,22 @@ class _PageNavigatorState extends State<PageNavigator> {
     setState(() {
       widget.selectedIndex = index;
     });
+  }
+
+  Future<void> getUserType() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (preferences.containsKey('type')) {
+      setState(() {
+        userType = preferences.getString('type');
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserType();
   }
 
   @override
