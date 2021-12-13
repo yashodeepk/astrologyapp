@@ -132,6 +132,22 @@ class _PageNavigatorState extends State<PageNavigator> {
     });
   }
 
+  Future<void> getUserType() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (preferences.containsKey('type')) {
+      setState(() {
+        userType = preferences.getString('type');
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserType();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
