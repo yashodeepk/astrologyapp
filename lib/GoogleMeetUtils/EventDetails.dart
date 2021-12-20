@@ -22,7 +22,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  Storage storage = Storage();
+  // Storage storage = Storage();
   Astrologer? _astrologer;
   List<String> slotsLists = [];
   int? _getDay = DateTime.now().weekday;

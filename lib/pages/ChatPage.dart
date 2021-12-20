@@ -347,7 +347,7 @@ class _ChatWidgetState extends State<ChatWidget> {
               final datetimedays = DateTime.now().difference(tempDate).inDays;
               print(datetimedays + datetimeHR + datetimemin);
 
-              if (datetimedays == 0) {
+              if (datetimedays <= 0) {
                 datecheck = true;
                 if (datetimeHR >= 0) {
                   if (datetimemin > -5 && datetimemin < 35) {
