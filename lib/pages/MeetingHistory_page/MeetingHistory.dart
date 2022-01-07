@@ -67,14 +67,9 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                     DateTime.now().difference(tempDate).inMinutes;
                 final datetimeHR = DateTime.now().difference(tempDate).inHours;
                 final datetimedays = DateTime.now().difference(tempDate).inDays;
-                print("D " +
-                    datetimedays.toString() +
-                    "H " +
-                    datetimeHR.toString() +
-                    "M " +
-                    datetimemin.toString());
+                print(datetimedays + datetimeHR + datetimemin);
 
-                if (datetimedays == 0) {
+                if (datetimedays <= 0) {
                   datecheck = true;
                   if (datetimeHR >= 0) {
                     if (datetimemin > -5 && datetimemin < 35) {
@@ -85,7 +80,6 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                   timecheck = false;
                   datecheck = false;
                 }
-                print("timecheck " + timecheck.toString());
 
                 return Padding(
                   padding: const EdgeInsets.all(8),
@@ -244,7 +238,7 @@ class _MeetingHistoryPageState extends State<MeetingHistoryPage> {
                                                 ? MeetModel.joinMeeting(
                                                     roomText:
                                                         paymentId.toString(),
-                                                    subjectText: "LOL",
+                                                    subjectText: "Meeting",
                                                     nameText: currentUser!
                                                         .displayName
                                                         .toString(),
